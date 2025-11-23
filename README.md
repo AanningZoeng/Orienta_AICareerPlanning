@@ -1,4 +1,4 @@
-# AI Career Path Planner
+# Orienta - AI Career Path Planner
 
 An intelligent web application that helps users discover their career paths through AI-powered analysis. Built with **SpoonOS** multi-agent framework for parallel reasoning and coordination.
 
@@ -149,38 +149,6 @@ This project showcases SpoonOS's powerful features:
 ✅ **Real-world Application**: Practical career planning use case  
 ✅ **Excellent UX**: Intuitive bubble interface with smooth animations
 
-## 📁 Project Structure
-
-```
-Hackathon25_2/
-├── backend/
-│   ├── agents/
-│   │   ├── major_research_agent.py
-│   │   ├── career_analysis_agent.py
-│   │   ├── future_path_agent.py
-│   │   └── orchestrator_agent.py
-│   ├── tools/
-│   │   ├── web_scraper_tool.py
-│   │   ├── linkedin_analyzer_tool.py
-│   │   └── media_finder_tool.py
-│   ├── api/
-│   │   └── server.py
-│   └── config.py
-├── frontend/
-│   ├── index.html
-│   ├── styles/
-│   │   ├── main.css
-│   │   ├── bubbles.css
-│   │   └── details.css
-│   └── scripts/
-│       ├── bubble-engine.js
-│       ├── detail-view.js
-│       └── main.js
-├── requirements.txt
-├── .env.example
-└── README.md
-```
-
 ## 🎨 Design Philosophy
 
 - **Vibrant & Modern**: Rich color gradients and smooth animations
@@ -208,8 +176,10 @@ MIT License - Feel free to use and modify
 
 - Built with [SpoonOS](https://xspoonai.github.io/) framework
 - Inspired by the need for intelligent career guidance
-- Created for Hackathon 2025
+- Created for SCOOP AI Hackathon 2025
 
 ---
 
 **Built with ❤️ using SpoonOS Multi-Agent Framework**
+
+
