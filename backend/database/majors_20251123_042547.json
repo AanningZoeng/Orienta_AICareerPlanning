@@ -1,0 +1,48 @@
+{
+  "timestamp": "2025-11-23T04:25:47.675487",
+  "user_query": "I enjoy programming, algorithms, and math. What majors fit me?",
+  "majors": {
+    "Help Me Feel Better About My Choice of Major": {
+      "description": "",
+      "resources": [
+        "https://help.barnesandnoble.com/hc/en-us",
+        "https://help.barnesandnoble.com/hc/en-us/articles/5202053403675-Contact-Us",
+        "https://help.barnesandnoble.com/hc/en-us/p/ebkoolsvwe",
+        "https://www.collegexpress.com/articles-and-advice/majors-and-academics/blog/5-websites-help-you-choose-college-major/",
+        "https://www.colorado.edu/orientation/2025/10/10/tips-help-your-student-decide-major",
+        "https://www.nssi.com/blog/best-websites-to-help-you-choose-a-college-major",
+        "https://think.kera.org/2025/07/31/are-your-podcasts-changing-your-personality/",
+        "https://player.fm/featured/topics",
+        "https://player.fm/podcasts/I-Was-Always-Looking"
+      ]
+    },
+    "Degree Programs": {
+      "description": "",
+      "resources": [
+        "https://techcrunch.com/2023/01/24/youtube-program-enables-students-earn-college-credits/",
+        "https://savetube.org/2022/06/how-to-earn-your-college-diploma-faster/",
+        "https://sea.mashable.com/tech-industry/38072/youtube-very-quietly-loosened-its-content-moderation-rules",
+        "https://www.cornell.edu/academics/fields.cfm",
+        "https://www.wgu.edu/online-degree-programs.html",
+        "https://www.onlineu.com/degrees",
+        "https://online.uark.edu/blog/listen-up-8-podcasts-to-turn-study-breaks-into-personal-growth.php",
+        "https://www.listening.com/blog/podcasts-for-college-students/",
+        "https://www.honorsociety.org/articles/podcasts-college-students"
+      ]
+    },
+    "10 Major and Career Options If You Want a Job in IT": {
+      "description": "",
+      "resources": [
+        "https://www.youtube.com/watch?v=8pt78Xw9YlA",
+        "https://www.youtube.com/watch?v=OhuduvuenYQ",
+        "https://www.geeksforgeeks.org/blogs/top-it-career-paths/",
+        "https://en.wikipedia.org/wiki/10",
+        "https://www.youtube.com/watch?v=0zVLWGaLi7g",
+        "https://www.thefactsite.com/number-10-facts/",
+        "https://en.wikipedia.org/wiki/Career",
+        "https://landing.jobs/blog/9-it-jobs-2023/",
+        "https://content.techgig.com/career-advice/want-to-work-remotely-list-of-career-options-techies-can-prefer/articleshow/113400525.cms"
+      ]
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "timestamp": "2025-11-23T04:45:16.621510",
+  "user_query": "I enjoy programming, algorithms, and math. What majors fit me?",
+  "majors": {
+    "Computer Science": {
+      "description": "Computer Science is the study of computers and computational systems, focusing on the theory and design of software and hardware. Students delve into core topics like programming languages, algorithms, data structures, artificial intelligence, and software engineering. Graduates are prepared for a wide range of high-demand careers, including software developer, data scientist, systems architect, and cybersecurity analyst.",
+      "resources": [
+        "https://support.google.com/youtube/?hl=en",
+        "https://support.google.com/youtube/answer/2398242?hl=es-418&co=GENIE.Platform=Desktop",
+        "https://support.google.com/youtube/answer/171664?hl=en",
+        "https://www.cs.columbia.edu/education/undergraduate/",
+        "http://coursecatalog.web.cmu.edu/schools-colleges/schoolofcomputerscience/undergraduatecomputerscience/",
+        "https://siebelschool.illinois.edu/academics/undergraduate/degree-program-options/bs-computer-science",
+        "https://player.fm/podcasts/Computer",
+        "https://player.fm/podcasts/Social-Sciences",
+        "https://player.fm/podcasts/Programming-Education"
+      ]
+    },
+    "Data Science": {
+      "description": "Data Science is an interdisciplinary field focused on extracting meaningful insights and knowledge from large, complex datasets. The curriculum combines statistics, computer science, and mathematics, covering topics like machine learning, data mining, predictive modeling, and data visualization. Graduates are prepared for high-demand roles such as data scientist, data analyst, machine learning engineer, and business intelligence developer, helping organizations make data-driven decisions.",
+      "resources": [
+        "https://www.youtube.com/playlist?list=PLxzTa0VPR9ryNLnzKjwSdn0vUqCvoncMl",
+        "https://www.analyticsvidhya.com/blog/2023/12/data-science-youtube-channels/",
+        "https://datasciencedojo.com/blog/data-science-channels-youtube/",
+        "https://www.datascienceprograms.org/",
+        "https://edurank.org/cs/data-science/",
+        "https://www.usnews.com/best-colleges/rankings/computer-science/data-analytics-science",
+        "https://www.coursera.org/articles/data-science-podcasts",
+        "https://www.datacamp.com/blog/the-ultimate-list-of-data-science-podcasts-to-listen-to-right-now",
+        "https://alexhruska.medium.com/my-top-data-science-podcasts-and-why-you-should-tune-in-a19a1a468395"
+      ]
+    },
+    "Mathematics": {
+      "description": "",
+      "resources": [
+        "https://en.wikipedia.org/wiki/Mathematics",
+        "https://en.wikipedia.org/wiki/History_of_mathematics",
+        "https://www.britannica.com/science/mathematics",
+        "https://mathvault.ca/websites/",
+        "https://edurank.org/math/",
+        "https://math.cornell.edu/"
+      ]
+    }
+  }
+}

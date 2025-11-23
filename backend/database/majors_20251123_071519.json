@@ -1,0 +1,48 @@
+{
+  "timestamp": "2025-11-23T07:15:19.421846",
+  "user_query": "I enjoy programming, algorithms, and math. What majors fit me?",
+  "majors": {
+    "Computer Science": {
+      "description": "",
+      "resources": [
+        "https://m.youtube.com/watch?v=QyiVCk8BRZ4",
+        "https://www.reddit.com/r/csMajors/comments/w35px0/what_can_i_expect_from_majoring_in_computer/",
+        "https://medium.com/@Arashhadad/what-you-can-expect-as-a-computer-science-major-and-why-it-might-be-perfect-for-you-c3577b87f3c0",
+        "https://www.cs.columbia.edu/education/undergraduate/",
+        "https://www.ceas.uc.edu/academics/departments/computer-science/degrees-programs/computer-science-bachelor-of-science.html",
+        "https://www.cs.purdue.edu/undergraduate/curriculum/",
+        "https://www.tiktok.com/discover/computer-science-major-with-finance-advice",
+        "https://www.mtu.edu/cs/what/",
+        "https://forums.studentdoctor.net/threads/non-traditional-student-computer-science-major.819534/"
+      ]
+    },
+    "Mathematics": {
+      "description": "",
+      "resources": [
+        "https://blog.larrydavidson.com/2009/01/27/not-thinking-of-youtube/",
+        "https://www.physicsforums.com/threads/using-youtube-as-an-education-resource.1080816/",
+        "https://educationalevidence.com/en/if-im-going-to-be-a-youtuber-what-do-i-need-maths-for/",
+        "https://www.marquette.edu/mathematical-and-statistical-sciences/undergraduate-program-overview.php",
+        "https://math.calpoly.edu/degree-bs",
+        "https://www.mathacademy.us/curriculum",
+        "https://podcast.feedspot.com/math_podcasts/",
+        "https://geniuslabgear.com/blogs/for-scientists/best-mathematics-blog",
+        "https://ali.medium.com/mathematics-in-your-ear-top-13-math-podcasts-for-lifelong-learners-78301d94bc22"
+      ]
+    },
+    "Data Science": {
+      "description": "Data Science is an interdisciplinary field focused on extracting knowledge and insights from large datasets by blending principles from computer science, statistics, and mathematics. Students study topics such as machine learning, statistical modeling, data visualization, and big data technologies. This major prepares graduates for high-demand careers as data scientists, data analysts, and machine learning engineers. Common career paths are found in industries like technology, finance, healthcare, and e-commerce, where data-driven decision-making is critical.",
+      "resources": [
+        "https://en.wikipedia.org/wiki/Data_science",
+        "https://www.youtube.com/watch?v=uswU1s3M2VE",
+        "https://www.coursera.org/articles/data-science-major",
+        "https://datasci.columbian.gwu.edu/undergraduate-student-resources",
+        "https://sds.wustl.edu/programs-curriculum",
+        "https://www.topuniversities.com/universities/raffles-university-malaysia/undergrad/bachelor-data-science-honours",
+        "https://podcast.feedspot.com/women_in_stem_podcasts/",
+        "https://chancellor.wisc.edu/remarks/why-bigger-is-better-address-to-admitted-students/",
+        "https://www.mtu.edu/cs/what/"
+      ]
+    }
+  }
+}

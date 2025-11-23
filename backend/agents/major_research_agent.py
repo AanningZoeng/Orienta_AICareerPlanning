@@ -3,9 +3,16 @@ Now implemented using SpoonReactAI (ReAct style) for LLM calls.
 """
 import asyncio
 import os
+import sys
 import json
 from datetime import datetime
 from typing import Dict, Any, List
+from pathlib import Path
+
+# Add project root to path for imports
+project_root = Path(__file__).resolve().parent.parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 # CRITICAL: Import Config FIRST to load .env before SpoonAI initializes
 from backend.config import Config
@@ -13,12 +20,8 @@ from backend.tools.web_scraper_tool import WebScraperTool
 from backend.utils.search_utils import safe_ddg
 from backend.utils.llm_utils import TokenEnforcingChatBot
 
-# Import SpoonAI after Config
-from spoon_ai.chat import ChatBot
-try:
-    from spoon_ai.agents import SpoonReactAI
-except Exception:
-    SpoonReactAI = None
+# DO NOT import SpoonAI at module level - it may initialize before env vars are set
+# Instead, import inside the factory function after setting environment variables
 
 
 class MajorResearchAgent:
@@ -51,17 +54,18 @@ class MajorResearchAgent:
         if llm_agent is not None:
             self.llm_agent = llm_agent
         else:
-            # Create a default SpoonReactAI if available, otherwise None
-            if SpoonReactAI is not None:
+            # Create a default SpoonReactAI if available, otherwise None (delayed import)
+            try:
+                from spoon_ai.chat import ChatBot
+                from spoon_ai.agents import SpoonReactAI
+                
                 safe_tokens = Config.get_safe_max_tokens(Config.LLM_PROVIDER)
                 try:
                     llm = ChatBot(llm_provider=Config.LLM_PROVIDER, model_name=Config.MODEL_NAME, max_tokens=safe_tokens)
                 except TypeError:
                     llm = ChatBot(llm_provider=Config.LLM_PROVIDER, model_name=Config.MODEL_NAME)
-                self.llm_agent = SpoonReactAI(
-                    llm=llm
-                )
-            else:
+                self.llm_agent = SpoonReactAI(llm=llm)
+            except (ImportError, Exception):
                 self.llm_agent = None
 
         # Tools (mock implementations) used directly by the agent logic
@@ -78,12 +82,18 @@ class MajorResearchAgent:
             List of recommended major names
         """
         # Use LLM to analyze and recommend majors
-        prompt = f"""Based on this user query, recommend 2-3 relevant university majors:
+        prompt = f"""Based on this user query, recommend 3-5 relevant university majors:
         
 User Query: "{user_query}"
 
-Recommend majors that align with their interests. Return ONLY a Python list of major names, like:
-["Computer Science", "Business Administration"]
+Recommend SPECIFIC university major names that align with their interests. 
+Return ONLY a Python list of actual major/degree names (not descriptions or article titles), like:
+["Fine Arts", "Graphic Design", "Animation"]
+
+Important: 
+- Use official major names (e.g., "Computer Science" not "10 Best Tech Degrees")
+- Be specific (e.g., "Mechanical Engineering" not "Engineering Majors")
+- Return 3-5 majors
 
 Major names:"""
         
@@ -102,30 +112,64 @@ Major names:"""
             if match:
                 items = json.loads(match.group(0))
                 if isinstance(items, list) and items:
-                    return [str(x).strip() for x in items][:3]
+                    # Filter out non-major titles (like "10 Best...", "Top Careers...")
+                    valid_majors = []
+                    for item in items:
+                        name = str(item).strip()
+                        # Skip if it looks like an article title or list
+                        if any(skip in name.lower() for skip in ['best', 'top ', 'careers', 'degrees for', '10 ', 'how to']):
+                            continue
+                        if len(name) > 3:
+                            valid_majors.append(name)
+                    if valid_majors:
+                        return valid_majors[:5]
         except Exception:
             pass
 
-        # Fallback: infer majors using DuckDuckGo search (look for program pages and lists)
-        majors = []
-        try:
-            loop = asyncio.get_event_loop()
-            q = f"what majors match: {user_query}"
-            results = await loop.run_in_executor(None, lambda: safe_ddg(q, max_results=6) or [])
-            for r in results:
-                title = (r.get('title') or r.get('heading') or '')
-                if title:
-                    # split and pick candidate tokens
-                    cand = title.split('-')[0].split('|')[0].strip()
-                    if len(cand) > 3 and cand not in majors:
-                        majors.append(cand)
-                if len(majors) >= 3:
-                    break
-        except Exception:
-            majors = []
+        # Fallback: Use another LLM prompt to extract major names from user query
+        if self.llm_agent is not None:
+            try:
+                fallback_prompt = f"""Extract specific university major names related to: "{user_query}"
 
-        # Last resort: return empty list (no hard-coded majors)
-        return majors[:3]
+For example:
+- "I love drawing" → ["Fine Arts", "Graphic Design", "Animation"]
+- "I want to build apps" → ["Computer Science", "Software Engineering"]
+
+Return only a JSON list of 3-5 major names (no explanations):"""
+                
+                response = await self.llm_agent.run(fallback_prompt)
+                import re, json
+                match = re.search(r'\[.*\]', str(response), flags=re.S)
+                if match:
+                    items = json.loads(match.group(0))
+                    if isinstance(items, list) and items:
+                        return [str(x).strip() for x in items if len(str(x).strip()) > 3][:5]
+            except Exception:
+                pass
+
+        # Last resort: return generic majors based on keywords in query
+        query_lower = user_query.lower()
+        fallback_majors = []
+        
+        keyword_map = {
+            'draw': ['Fine Arts', 'Graphic Design', 'Animation'],
+            'art': ['Fine Arts', 'Art History', 'Studio Art'],
+            'computer': ['Computer Science', 'Information Technology'],
+            'business': ['Business Administration', 'Marketing', 'Finance'],
+            'engineer': ['Mechanical Engineering', 'Electrical Engineering'],
+            'science': ['Biology', 'Chemistry', 'Physics'],
+            'write': ['English Literature', 'Creative Writing', 'Journalism'],
+            'music': ['Music Performance', 'Music Education', 'Music Production'],
+            'teach': ['Education', 'Elementary Education', 'Special Education']
+        }
+        
+        for keyword, majors in keyword_map.items():
+            if keyword in query_lower:
+                fallback_majors.extend(majors)
+                break
+        
+        # If still empty, return empty list
+        return fallback_majors[:3] if fallback_majors else []
     
     async def research_majors(self, major_names: List[str]) -> Dict[str, Dict[str, Any]]:
         """
@@ -283,7 +327,15 @@ def create_major_research_agent(llm_provider: str = None, model_name: str = None
     provider = llm_provider or Config.LLM_PROVIDER
     model = model_name or Config.MODEL_NAME
 
-    if SpoonReactAI is not None:
+    # Try to import SpoonAI (delayed import to ensure env vars are set)
+    try:
+        from spoon_ai.chat import ChatBot
+        from spoon_ai.agents import SpoonReactAI
+        spoonai_available = True
+    except ImportError:
+        spoonai_available = False
+
+    if spoonai_available:
         try:
             # Validate API keys for chosen provider; if missing, disable LLM usage gracefully
             try:
@@ -295,23 +347,33 @@ def create_major_research_agent(llm_provider: str = None, model_name: str = None
             # CRITICAL: Set API key in os.environ so spoon_ai can access it
             if provider == "gemini" and Config.GEMINI_API_KEY:
                 os.environ["GEMINI_API_KEY"] = Config.GEMINI_API_KEY
+                print(f"[LLM Factory] ✅ Set GEMINI_API_KEY in os.environ: {Config.GEMINI_API_KEY[:20]}...")
+                print(f"[LLM Factory] ✅ Verify os.environ['GEMINI_API_KEY']: {os.environ.get('GEMINI_API_KEY', 'NOT SET')[:20]}...")
             elif provider == "deepseek" and Config.DEEPSEEK_API_KEY:
                 os.environ["DEEPSEEK_API_KEY"] = Config.DEEPSEEK_API_KEY
+                print(f"[LLM Factory] ✅ Set DEEPSEEK_API_KEY in os.environ")
 
             safe_tokens = Config.get_safe_max_tokens(provider)
             # Debug: show what we'll pass to the SDK
             print(f"[LLM Factory] provider={provider}, model={model}, safe_tokens={safe_tokens}")
+            print(f"[LLM Factory] About to create ChatBot with llm_provider='{provider}', model_name='{model}'")
             # Ensure environment var visible to any underlying SDK that reads it
             try:
                 os.environ.setdefault("MAX_TOKENS", str(safe_tokens))
             except Exception:
                 pass
 
+            # Try to pass API key directly to ChatBot
+            api_key = Config.GEMINI_API_KEY if provider == "gemini" else Config.DEEPSEEK_API_KEY
+            print(f"[LLM Factory] API key to pass: {api_key[:20]}..." if api_key else "[LLM Factory] No API key!")
+            
             try:
-                llm = ChatBot(llm_provider=provider, model_name=model, max_tokens=safe_tokens)
+                # Try with api_key parameter first
+                llm = ChatBot(llm_provider=provider, model_name=model, api_key=api_key)
+                print("[LLM Factory] ✅ ChatBot created with api_key parameter")
             except TypeError:
-                # ChatBot may not accept max_tokens kw; fallback to default constructor
-                print("[LLM Factory] ChatBot() rejected max_tokens kwarg; using default constructor")
+                # If ChatBot doesn't accept api_key, try environment variable only
+                print("[LLM Factory] ChatBot doesn't accept api_key parameter, trying environment variable")
                 llm = ChatBot(llm_provider=provider, model_name=model)
             # Debug: inspect llm object for token-related attrs
             try:
@@ -327,6 +389,7 @@ def create_major_research_agent(llm_provider: str = None, model_name: str = None
             except Exception:
                 pass
 
+            from spoon_ai.agents import SpoonReactAI
             llm_agent = SpoonReactAI(llm=llm)
         except Exception as e:
             print(f"⚠️ Could not instantiate SpoonReactAI: {e}. Running without LLM.")

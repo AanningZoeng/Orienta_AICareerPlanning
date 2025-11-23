@@ -1,317 +1,339 @@
 /**
- * Detail View - Manages detail modal content
- * Renders different content based on bubble type (major/career/future)
+ * Detail View Manager
+ * 
+ * 管理模态框显示节点详细信息
  */
 
-class DetailView {
+class DetailViewManager {
     constructor(modalId) {
         this.modal = document.getElementById(modalId);
         this.overlay = document.getElementById('modalOverlay');
         this.closeBtn = document.getElementById('modalClose');
         this.modalBody = document.getElementById('modalBody');
-
-        // Bind events
+        
+        this.setupEventListeners();
+    }
+    
+    setupEventListeners() {
+        // 关闭按钮
         this.closeBtn.addEventListener('click', () => this.hide());
+        
+        // 点击遮罩层关闭
         this.overlay.addEventListener('click', () => this.hide());
-
-        // Close on escape key
+        
+        // ESC键关闭
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.modal.classList.contains('show')) {
+            if (e.key === 'Escape' && this.modal.style.display === 'flex') {
                 this.hide();
             }
         });
     }
-
+    
     /**
-     * Show the modal with specific content
+     * 显示根节点详情
      */
-    show(bubble) {
-        if (bubble.type === 'major') {
-            this.renderMajorDetail(bubble.data);
-        } else if (bubble.type === 'career') {
-            this.renderCareerDetail(bubble.data);
-        } else if (bubble.type === 'future') {
-            this.renderFutureDetail(bubble.data);
-        }
-
-        this.modal.classList.add('show');
-        document.body.style.overflow = 'hidden';
+    showRootDetails(node) {
+        const content = `
+            <div class="detail-header">
+                <div class="detail-icon root-icon">🎯</div>
+                <h2 class="detail-title">Your Career Exploration Query</h2>
+            </div>
+            <div class="detail-section">
+                <h3>Query Content</h3>
+                <p class="query-text">${this.escapeHtml(node.data.query)}</p>
+            </div>
+            <div class="detail-section">
+                <h3>AI Analysis Status</h3>
+                <p>✅ Major Research Agent has completed major research</p>
+                <p>💡 Click on major nodes to view details and expand career paths</p>
+            </div>
+        `;
+        
+        this.modalBody.innerHTML = content;
+        this.show();
     }
-
+    
     /**
-     * Hide the modal
+     * 显示Major节点详情
+     */
+    showMajorDetails(node) {
+        const data = node.data;
+        
+        let content = `
+            <div class="detail-header">
+                <div class="detail-icon major-icon">📚</div>
+                <h2 class="detail-title">${this.escapeHtml(data.name)}</h2>
+            </div>
+        `;
+        
+        // 描述 - 始终显示，即使为空
+        content += `
+            <div class="detail-section">
+                <h3>Major Overview</h3>
+                ${data.description ? 
+                    `<p>${this.escapeHtml(data.description)}</p>` : 
+                    `<p class="empty-hint">ℹ️ This major has no detailed description yet. Please check the learning resources below for more information.</p>`
+                }
+            </div>
+        `;
+        
+        // 核心课程
+        if (data.core_courses && data.core_courses.length > 0) {
+            content += `
+                <div class="detail-section">
+                    <h3>Core Courses</h3>
+                    <div class="tag-list">
+                        ${data.core_courses.map(course => 
+                            `<span class="tag">${this.escapeHtml(course)}</span>`
+                        ).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 学习资源
+        if (data.resources && data.resources.length > 0) {
+            content += `
+                <div class="detail-section">
+                    <h3>Learning Resources</h3>
+                    <div class="resource-list">
+                        ${data.resources.map((resource, index) => {
+                            // 兼容两种格式：字符串URL 或 {title, url, type} 对象
+                            let url, title, type;
+                            
+                            if (typeof resource === 'string') {
+                                url = resource;
+                                // 从URL提取标题
+                                try {
+                                    const urlObj = new URL(resource);
+                                    title = urlObj.hostname.replace('www.', '').replace('m.', '') + urlObj.pathname.split('/').filter(p => p).slice(0, 2).join('/');
+                                    // 简化显示
+                                    if (title.length > 50) {
+                                        title = urlObj.hostname.replace('www.', '').replace('m.', '');
+                                    }
+                                } catch (e) {
+                                    title = `资源 ${index + 1}`;
+                                }
+                                type = 'website';
+                            } else {
+                                url = resource.url || '#';
+                                title = resource.title || `资源 ${index + 1}`;
+                                type = resource.type || 'website';
+                            }
+                            
+                            return `
+                                <div class="resource-item">
+                                    <a href="${url}" target="_blank" rel="noopener">
+                                        ${this.getResourceIcon(type)}
+                                        ${this.escapeHtml(title)}
+                                    </a>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 院校推荐
+        if (data.universities && data.universities.length > 0) {
+            content += `
+                <div class="detail-section">
+                    <h3>Recommended Universities</h3>
+                    <div class="university-list">
+                        ${data.universities.map(uni => `
+                            <div class="university-item">
+                                <strong>${this.escapeHtml(uni.name)}</strong>
+                                ${uni.ranking ? `<span class="ranking">Rank #${uni.ranking}</span>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 展开职业路径按钮
+        if (!node.expanded) {
+            content += `
+                <div class="detail-section action-section">
+                    <button class="btn-expand-careers" data-major-id="${node.id}" data-major-name="${this.escapeHtml(data.name)}">
+                        <span class="btn-icon">💼</span>
+                        <span class="btn-text">Expand Career Paths</span>
+                        <span class="btn-hint">Call Career Analysis Agent</span>
+                    </button>
+                </div>
+            `;
+        } else {
+            content += `
+                <div class="detail-section action-hint">
+                    <p>✅ <strong>Career paths expanded</strong> - View career nodes in the tree</p>
+                </div>
+            `;
+        }
+        
+        this.modalBody.innerHTML = content;
+        this.show();
+    }
+    
+    /**
+     * 显示Career节点详情
+     */
+    showCareerDetails(node) {
+        const data = node.data;
+        
+        let content = `
+            <div class="detail-header">
+                <div class="detail-icon career-icon">💼</div>
+                <h2 class="detail-title">${this.escapeHtml(data.title)}</h2>
+            </div>
+        `;
+        
+        // 职业描述 - 始终显示
+        content += `
+            <div class="detail-section">
+                <h3>Career Overview</h3>
+                ${data.description ? 
+                    `<p>${this.escapeHtml(data.description)}</p>` : 
+                    `<p class="empty-hint">ℹ️ This career has no detailed description yet. Please check the resources and job examples below for more information.</p>`
+                }
+            </div>
+        `;
+        
+        // 薪资信息
+        if (data.salary) {
+            content += `
+                <div class="detail-section">
+                    <h3>💰 Salary Range</h3>
+                    <div class="salary-info">
+                        <div class="salary-range">
+                            <span class="salary-label">Min:</span>
+                            <span class="salary-value">${this.formatSalary(data.salary.min, data.salary.currency)}</span>
+                        </div>
+                        <div class="salary-range">
+                            <span class="salary-label">Max:</span>
+                            <span class="salary-value">${this.formatSalary(data.salary.max, data.salary.currency)}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 真实职位案例
+        if (data.job_examples && data.job_examples.length > 0) {
+            content += `
+                <div class="detail-section">
+                    <h3>🔍 Real Job Examples (from Database)</h3>
+                    <div class="job-examples">
+                        ${data.job_examples.map(job => `
+                            <div class="job-card">
+                                <h4>${this.escapeHtml(job.title)}</h4>
+                                ${job.company ? `<p class="company">🏢 ${this.escapeHtml(job.company)}</p>` : ''}
+                                ${job.location ? `<p class="location">📍 ${this.escapeHtml(job.location)}</p>` : ''}
+                                ${job.salary_range ? `<p class="salary">💵 ${this.escapeHtml(job.salary_range)}</p>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${data.db_match_count ? `<p class="match-info">✅ Matched from ${data.db_match_count} database positions</p>` : ''}
+                </div>
+            `;
+        }
+        
+        // 学习资源
+        if (data.resources && data.resources.length > 0) {
+            content += `
+                <div class="detail-section">
+                    <h3>📖 Learning Resources</h3>
+                    <div class="resource-list">
+                        ${data.resources.map((resource, index) => {
+                            // 兼容两种格式：字符串URL 或 {title, url, type} 对象
+                            let url, title, type;
+                            
+                            if (typeof resource === 'string') {
+                                url = resource;
+                                // 从URL提取标题
+                                try {
+                                    const urlObj = new URL(resource);
+                                    title = urlObj.hostname.replace('www.', '').replace('m.', '');
+                                } catch (e) {
+                                    title = `Resource ${index + 1}`;
+                                }
+                                type = 'website';
+                            } else {
+                                url = resource.url || '#';
+                                title = resource.title || `Resource ${index + 1}`;
+                                type = resource.type || 'website';
+                            }
+                            
+                            return `
+                                <div class="resource-item">
+                                    <a href="${url}" target="_blank" rel="noopener">
+                                        ${this.getResourceIcon(type)}
+                                        ${this.escapeHtml(title)}
+                                    </a>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        this.modalBody.innerHTML = content;
+        this.show();
+    }
+    
+    /**
+     * 格式化薪资
+     */
+    formatSalary(amount, currency = 'USD') {
+        const symbols = { USD: '$', CNY: '¥', EUR: '€' };
+        const symbol = symbols[currency] || currency;
+        return `${symbol}${amount.toLocaleString()}`;
+    }
+    
+    /**
+     * 获取资源图标
+     */
+    getResourceIcon(type) {
+        const icons = {
+            video: '🎥',
+            article: '📄',
+            course: '🎓',
+            book: '📚',
+            website: '🌐'
+        };
+        return icons[type] || '🔗';
+    }
+    
+    /**
+     * HTML转义
+     */
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    /**
+     * 显示模态框
+     */
+    show() {
+        this.modal.style.display = 'flex';
+        // 触发重排以启用CSS动画
+        this.modal.offsetHeight;
+        this.modal.classList.add('active');
+    }
+    
+    /**
+     * 隐藏模态框
      */
     hide() {
-        this.modal.classList.remove('show');
-        document.body.style.overflow = '';
-    }
-
-    /**
-     * Render major detail page
-     */
-    renderMajorDetail(major) {
-        const universities = major.universities || [];
-        const requirements = major.requirements || [];
-
-        const html = `
-            <div class="detail-major">
-                <h2>${major.name}</h2>
-                
-                <div class="detail-section">
-                    <h3>Overview</h3>
-                    <p>${major.description}</p>
-                </div>
-                
-                ${requirements.length > 0 ? `
-                    <div class="detail-section">
-                        <h3>Core Requirements</h3>
-                        <ul class="requirements-list">
-                            ${requirements.map(req => `<li>${req}</li>`).join('')}
-                        </ul>
-                    </div>
-                ` : ''}
-                
-                <div class="detail-section">
-                    <h3>Program Duration</h3>
-                    <p>${major.duration || '4 years'}</p>
-                </div>
-                
-                ${universities.length > 0 ? `
-                    <div class="detail-section">
-                        <h3>Top Universities</h3>
-                        <ul class="universities-list">
-                            ${universities.map(uni => `
-                                <li>
-                                    <a href="${uni.url}" target="_blank" rel="noopener">
-                                        ${uni.name} →
-                                    </a>
-                                </li>
-                            `).join('')}
-                        </ul>
-                    </div>
-                ` : ''}
-                
-                ${major.video_url ? `
-                    <div class="detail-section">
-                        <h3>Learn More</h3>
-                        <div class="video-embed">
-                            <p style="color: var(--text-muted); margin-bottom: 1rem;">
-                                Educational video about this major
-                            </p>
-                            <a href="${major.video_url}" target="_blank" style="color: hsl(220, 100%, 70%);">
-                                Watch Video →
-                            </a>
-                        </div>
-                    </div>
-                ` : ''}
-            </div>
-        `;
-
-        this.modalBody.innerHTML = html;
-    }
-
-    /**
-     * Render career detail page
-     */
-    renderCareerDetail(career) {
-        const benefits = career.benefits || [];
-        const resources = career.professional_resources || {};
-
-        const html = `
-            <div class="detail-career">
-                <h2>${career.title}</h2>
-                
-                <div class="career-grid">
-                    <div class="career-card">
-                        <h4>Salary Range</h4>
-                        <div class="value">${career.salary_range || 'N/A'}</div>
-                    </div>
-                    <div class="career-card">
-                        <h4>Work Intensity</h4>
-                        <div class="value">${career.work_intensity || 'N/A'}</div>
-                    </div>
-                    <div class="career-card">
-                        <h4>Work-Life Balance</h4>
-                        <div class="value">${career.work_life_balance || 'N/A'}</div>
-                    </div>
-                    <div class="career-card">
-                        <h4>Growth Potential</h4>
-                        <div class="value">${career.growth_potential || 'N/A'}</div>
-                    </div>
-                </div>
-                
-                ${benefits.length > 0 ? `
-                    <div class="detail-section">
-                        <h3>Common Benefits</h3>
-                        <ul class="benefits-list">
-                            ${benefits.map(benefit => `<li>${benefit}</li>`).join('')}
-                        </ul>
-                    </div>
-                ` : ''}
-                
-                <div class="detail-section">
-                    <h3>Job Outlook</h3>
-                    <p>${career.job_outlook || 'N/A'}</p>
-                </div>
-                
-                ${this.renderProfessionalResources(resources)}
-            </div>
-        `;
-
-        this.modalBody.innerHTML = html;
-    }
-
-    /**
-     * Render professional resources section
-     */
-    renderProfessionalResources(resources) {
-        if (!resources || Object.keys(resources).length === 0) {
-            return '';
-        }
-
-        let html = '<div class="detail-section"><h3>Professional Resources</h3><div class="resources-section">';
-
-        // Videos
-        if (resources.videos && resources.videos.length > 0) {
-            html += `
-                <div class="resource-category">
-                    <h4>📺 YouTube Channels & Videos</h4>
-                    ${resources.videos.map(video => `
-                        <div class="resource-item">
-                            <a href="${video.url}" target="_blank">${video.title}</a>
-                            <small>${video.channel} • ${video.views} views</small>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
-
-        // Blogs
-        if (resources.blogs && resources.blogs.length > 0) {
-            html += `
-                <div class="resource-category">
-                    <h4>📝 Blogs & Articles</h4>
-                    ${resources.blogs.map(blog => `
-                        <div class="resource-item">
-                            <a href="${blog.url}" target="_blank">${blog.title}</a>
-                            <small>${blog.author} • ${blog.platform}</small>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
-
-        // Interviews
-        if (resources.interviews && resources.interviews.length > 0) {
-            html += `
-                <div class="resource-category">
-                    <h4>🎤 Interviews & Podcasts</h4>
-                    ${resources.interviews.map(interview => `
-                        <div class="resource-item">
-                            <a href="${interview.url}" target="_blank">${interview.title}</a>
-                            <small>${interview.source} • ${interview.duration}</small>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
-
-        html += '</div></div>';
-        return html;
-    }
-
-    /**
-     * Render future path detail page
-     */
-    renderFutureDetail(future) {
-        const stats = future.statistics || {};
-        const progressions = future.common_progressions || [];
-        const insights = future.insights || [];
-
-        const html = `
-            <div class="detail-future">
-                <h2>Future Path for ${future.career}</h2>
-                
-                <div class="detail-section">
-                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
-                        Career progression analysis over ${future.timeframe || '5 years'} based on ${future.sample_size || '10,000+'} professionals
-                    </p>
-                </div>
-                
-                <div class="stats-grid">
-                    ${stats.promoted ? `
-                        <div class="stat-card">
-                            <div class="stat-percentage">${stats.promoted.percentage}%</div>
-                            <div class="stat-label">Promoted</div>
-                            <div class="stat-description">${stats.promoted.description || ''}</div>
-                        </div>
-                    ` : ''}
-                    
-                    ${stats.same_role ? `
-                        <div class="stat-card">
-                            <div class="stat-percentage">${stats.same_role.percentage}%</div>
-                            <div class="stat-label">Same Role</div>
-                            <div class="stat-description">${stats.same_role.description || ''}</div>
-                        </div>
-                    ` : ''}
-                    
-                    ${stats.changed_company ? `
-                        <div class="stat-card">
-                            <div class="stat-percentage">${stats.changed_company.percentage}%</div>
-                            <div class="stat-label">Changed Company</div>
-                            <div class="stat-description">${stats.changed_company.description || ''}</div>
-                        </div>
-                    ` : ''}
-                    
-                    ${stats.changed_career ? `
-                        <div class="stat-card">
-                            <div class="stat-percentage">${stats.changed_career.percentage}%</div>
-                            <div class="stat-label">Changed Career</div>
-                            <div class="stat-description">${stats.changed_career.description || ''}</div>
-                        </div>
-                    ` : ''}
-                    
-                    ${stats.laid_off ? `
-                        <div class="stat-card">
-                            <div class="stat-percentage">${stats.laid_off.percentage}%</div>
-                            <div class="stat-label">Laid Off</div>
-                            <div class="stat-description">${stats.laid_off.description || ''}</div>
-                        </div>
-                    ` : ''}
-                </div>
-                
-                ${progressions.length > 0 ? `
-                    <div class="detail-section">
-                        <h3>Common Career Progressions</h3>
-                        <ul class="progressions-list">
-                            ${progressions.map(prog => `<li>${prog}</li>`).join('')}
-                        </ul>
-                    </div>
-                ` : ''}
-                
-                ${future.salary_growth ? `
-                    <div class="detail-section">
-                        <h3>Average Salary Growth</h3>
-                        <p style="font-size: 1.2rem; color: hsl(140, 80%, 60%);">
-                            ${future.salary_growth}
-                        </p>
-                    </div>
-                ` : ''}
-                
-                ${insights.length > 0 ? `
-                    <div class="detail-section">
-                        <h3>Key Insights</h3>
-                        <ul class="insights-list">
-                            ${insights.map(insight => `<li>${insight}</li>`).join('')}
-                        </ul>
-                    </div>
-                ` : ''}
-            </div>
-        `;
-
-        this.modalBody.innerHTML = html;
+        this.modal.classList.remove('active');
+        setTimeout(() => {
+            this.modal.style.display = 'none';
+        }, 300);
     }
 }
 
-// Export for use in other scripts
-window.DetailView = DetailView;
+// Global instance
+window.DetailViewManager = DetailViewManager;

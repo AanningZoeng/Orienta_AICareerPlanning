@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Career Path Planner</title>
+    <title>AI Career Planning - Multi-Agent Interactive Visualization</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,45 +21,75 @@
         <div class="container">
             <h1 class="logo">
                 <span class="logo-icon">🎯</span>
-                AI Career Path Planner
+                AI Career Planning System
             </h1>
-            <p class="tagline">Discover your future through intelligent career guidance</p>
+            <p class="tagline">Multi-Agent Intelligence • Explore Your Career Future</p>
         </div>
     </header>
+
+    <!-- Query Input Section -->
+    <section class="query-section" id="querySection">
+        <div class="container">
+            <div class="query-card">
+                <h2>🚀 Start Your Career Exploration Journey</h2>
+                <p class="query-hint">Tell us about your interests, skills, or career goals, and our AI Agents will map out a complete career path for you</p>
+                <form id="queryForm" class="query-form">
+                    <div class="input-group">
+                        <textarea 
+                            id="userQuery" 
+                            name="query" 
+                            rows="4" 
+                            placeholder="Example: I love programming, algorithms, and mathematics. What major suits me?"
+                            required
+                        ></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary" id="submitBtn">
+                        <span class="btn-icon">✨</span>
+                        Start AI Analysis
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
 
     <!-- Main Content -->
     <main class="main-content">
         <!-- Tree Visualization Section -->
-        <section class="tree-section" id="treeSection">
+        <section class="tree-section" id="treeSection" style="display: none;">
             <div class="container">
                 <!-- Instructions -->
                 <div class="tree-instructions">
-                    <p>💡 <strong>Click</strong> on nodes to expand and explore • <strong>Hover</strong> to preview</p>
+                    <p>💡 <strong>Click</strong> nodes to expand • <strong>Hover</strong> to preview • <strong>Root node</strong> is your query</p>
                 </div>
 
                 <!-- Tree Canvas Container -->
                 <div class="tree-canvas-container" id="treeContainer">
-                    <svg id="treeCanvas" width="100%" height="800">
+                    <svg id="treeCanvas" width="100%" height="900">
                         <defs>
-                            <!-- Gradient definitions for nodes -->
+                            <!-- Gradient definitions -->
                             <linearGradient id="rootGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:hsl(200,80%,60%);stop-opacity:0.8" />
-                                <stop offset="100%" style="stop-color:hsl(220,90%,70%);stop-opacity:0.8" />
+                                <stop offset="0%" style="stop-color:#667eea;stop-opacity:0.9" />
+                                <stop offset="100%" style="stop-color:#764ba2;stop-opacity:0.9" />
                             </linearGradient>
                             <linearGradient id="majorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:hsl(280,90%,65%);stop-opacity:0.75" />
-                                <stop offset="100%" style="stop-color:hsl(300,80%,70%);stop-opacity:0.75" />
+                                <stop offset="0%" style="stop-color:#f093fb;stop-opacity:0.85" />
+                                <stop offset="100%" style="stop-color:#f5576c;stop-opacity:0.85" />
                             </linearGradient>
                             <linearGradient id="careerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:hsl(140,85%,55%);stop-opacity:0.7" />
-                                <stop offset="100%" style="stop-color:hsl(160,80%,60%);stop-opacity:0.7" />
-                            </linearGradient>
-                            <linearGradient id="futureGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:hsl(40,95%,60%);stop-opacity:0.65" />
-                                <stop offset="100%" style="stop-color:hsl(60,90%,65%);stop-opacity:0.65" />
+                                <stop offset="0%" style="stop-color:#4facfe;stop-opacity:0.8" />
+                                <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:0.8" />
                             </linearGradient>
                             
-                            <!-- Drop shadow filter -->
+                            <!-- Glow filter -->
+                            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                            
+                            <!-- Drop shadow -->
                             <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
                                 <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
                                 <feOffset dx="0" dy="2" result="offsetblur"/>
@@ -73,7 +103,7 @@
                             </filter>
                         </defs>
                         
-                        <!-- Links group (drawn first so nodes appear on top) -->
+                        <!-- Links group -->
                         <g id="linksGroup"></g>
                         
                         <!-- Nodes group -->
@@ -84,21 +114,27 @@
                 <!-- Legend -->
                 <div class="tree-legend">
                     <div class="legend-item">
-                        <span class="legend-dot root-dot"></span>
-                        <span>Root (Your Input)</span>
+                        <span class="legend-dot" style="background: linear-gradient(135deg, #667eea, #764ba2);"></span>
+                        <span>Query Root Node</span>
                     </div>
                     <div class="legend-item">
-                        <span class="legend-dot major-dot"></span>
-                        <span>University Majors</span>
+                        <span class="legend-dot" style="background: linear-gradient(135deg, #f093fb, #f5576c);"></span>
+                        <span>University Major</span>
                     </div>
                     <div class="legend-item">
-                        <span class="legend-dot career-dot"></span>
-                        <span>Career Paths</span>
+                        <span class="legend-dot" style="background: linear-gradient(135deg, #4facfe, #00f2fe);"></span>
+                        <span>Career Path</span>
                     </div>
-                    <div class="legend-item">
-                        <span class="legend-dot future-dot"></span>
-                        <span>Future Directions</span>
-                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn-secondary" id="newQueryBtn">
+                        <span>🔄</span> New Query
+                    </button>
+                    <button class="btn-secondary" id="exportBtn">
+                        <span>💾</span> Export Data
+                    </button>
                 </div>
             </div>
         </section>
@@ -110,9 +146,7 @@
         <div class="modal-content" id="modalContent">
             <button class="modal-close" id="modalClose">&times;</button>
             <div id="modalBody">
-                <h2 id="modalTitle"></h2>
-                <div id="modalDescription" class="modal-section"></div>
-                <div id="modalResources" class="modal-section"></div>
+                <!-- Dynamic content loaded here -->
             </div>
         </div>
     </div>
@@ -121,13 +155,26 @@
     <div class="loading-overlay" id="loadingOverlay" style="display: none;">
         <div class="loading-content">
             <div class="loading-spinner"></div>
-            <h3>AI is analyzing your career path...</h3>
-            <p>Please wait while our agents research majors, careers, and future possibilities</p>
+            <h3 id="loadingTitle">AI is analyzing your career path...</h3>
+            <p id="loadingText">Please wait, our Agents are researching majors, careers, and future possibilities</p>
+            <div class="loading-steps" id="loadingSteps">
+                <div class="step" data-step="major">
+                    <span class="step-icon">📚</span>
+                    <span class="step-text">Major Research Agent is working...</span>
+                    <span class="step-status"></span>
+                </div>
+                <div class="step" data-step="career">
+                    <span class="step-icon">💼</span>
+                    <span class="step-text">Career Analysis Agent is standing by...</span>
+                    <span class="step-status"></span>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Scripts -->
-    <script src="scripts/tree-engine.js"></script>
+    <script src="scripts/bubble-engine.js"></script>
+    <script src="scripts/detail-view.js"></script>
     <script src="scripts/main.js"></script>
 </body>
 </html>

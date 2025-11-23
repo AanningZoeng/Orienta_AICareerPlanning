@@ -1,0 +1,254 @@
+{
+  "timestamp": "2025-11-23T07:29:29.822713",
+  "source_timestamp": "2025-11-23T07:27:16.785221",
+  "user_query": "I love drawing",
+  "careers": {
+    "Fine Arts": {
+      "Graphic Designer": {
+        "description": "Graphic Designers with a Fine Arts degree use their understanding of composition, color theory, and visual storytelling to create concepts for branding, websites, and marketing materials. They often work in collaborative environments such as design agencies or in-house corporate teams, though many also succeed as freelancers. Career progression can lead to senior roles like Art Director or Creative Director, where they oversee entire projects and manage creative teams.",
+        "resources": [
+          "https://forums.professionalko.com/index.php?/topic/8821-31012025-bugfixes/",
+          "https://forums.professionalko.com/index.php?/topic/8183-02052024-content-update-notes/",
+          "https://forums.professionalko.com/index.php?/topic/9566-iilll_schlange_ilili-is-back-and-events-are-being-sabotaged/",
+          "https://www.zoro.com/office-school-furniture/c/9075/?msockid=3c266c368953692b28c17a9b88446860",
+          "https://www.zoro.com/media-stands-carts/c/10086/?msockid=3c266c368953692b28c17a9b88446860",
+          "https://www.zoro.com/desk-grommets-and-cable-organizers/c/10037/?msockid=3c266c368953692b28c17a9b88446860",
+          "https://www.youtube.com/live/azgXlVveTbk",
+          "https://www.tiktok.com/discover/how-to-get-recognized-for-graphic-fesign",
+          "https://www.coinsurges.com/5-youtube-channels-for-learning-graphic-design/"
+        ],
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "currency": "USD"
+        },
+        "job_examples": [],
+        "db_match_count": 0
+      },
+      "Art Curator": {
+        "description": "",
+        "resources": [
+          "https://www.artcurators.org/",
+          "https://www.artadvisors.org/",
+          "https://curatorsintl.org/",
+          "https://www.zippia.com/salaries/museum-curator/",
+          "https://www.payscale.com/research/US/Job=Curator/Salary",
+          "https://www.onlinedegree.com/careers/arts-design-entertainment/curator/",
+          "https://www.deviantart.com/",
+          "https://www.deviantart.com/about/",
+          "https://www.deviantart.com/tag/comics"
+        ],
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "currency": "USD"
+        },
+        "job_examples": [],
+        "db_match_count": 0
+      },
+      "Illustrator": {
+        "description": "",
+        "resources": [
+          "https://www.adobe.com/products/illustrator/free-trial-download.html?msockid=1e229293bd466cf61552843ebcd86d5e",
+          "https://www.adobe.com/products/illustrator.html?msockid=1e229293bd466cf61552843ebcd86d5e",
+          "https://www.adobe.com/products/illustrator/pricing-info.html?msockid=1e229293bd466cf61552843ebcd86d5e",
+          "https://www.adobe.com/products/illustrator/free-trial-download.html?msockid=21bbdab994ec628615e0cc14959f6318",
+          "https://www.adobe.com/products/illustrator.html?msockid=21bbdab994ec628615e0cc14959f6318",
+          "https://www.adobe.com/products/illustrator/pricing-info.html?msockid=21bbdab994ec628615e0cc14959f6318",
+          "https://www.adobe.com/products/illustrator/free-trial-download.html?msockid=2c3cf7978f9e697923cde13a8eb06881",
+          "https://www.adobe.com/products/illustrator.html?msockid=2c3cf7978f9e697923cde13a8eb06881",
+          "https://www.adobe.com/products/illustrator/pricing-info.html?msockid=2c3cf7978f9e697923cde13a8eb06881"
+        ],
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "currency": "USD"
+        },
+        "job_examples": [],
+        "db_match_count": 0
+      }
+    },
+    "Graphic Design": {
+      "Graphic Design Specialist": {
+        "description": "",
+        "resources": [
+          "https://academicearth.org/graphic-design/",
+          "https://www.freshgulfjob.com/jobs/graphic-design-specialist/",
+          "https://graphic-design.thecreativeloft.com/graphic-design/jobs/graphic-design-specialis-189",
+          "https://research.com/careers/graphic-design-careers",
+          "https://research.com/careers/best-careers-to-pursue-with-a-graphics-design-masters-degree",
+          "https://www.coursera.org/articles/graphic-design-jobs",
+          "https://m.youtube.com/watch?v=O2rWvvDCxEo",
+          "https://interviewprep.org/graphic-design-interview-questions/",
+          "https://inkbotdesign.com/graphic-design-interview/"
+        ],
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "currency": "USD"
+        },
+        "job_examples": [],
+        "db_match_count": 0
+      },
+      "Graphic Design Analyst": {
+        "description": "```json",
+        "resources": [
+          "https://datadrivendesign.net/services-beaverton-or/web-analytics-services",
+          "https://www.linkedin.com/pulse/data-driven-marketing-decisions-harnessing-analytics-success-arka-23zdc",
+          "https://johnnyholland.org/2024/03/data-driven-marketing-in-fintech-leveraging-analytics-and-insights-to-inform-strategy-and-decision-making/",
+          "https://www.bls.gov/ooh/Arts-and-Design/Graphic-designers.htm",
+          "https://www.glassdoor.com/Salaries/analyst-graphic-designer-salary-SRCH_KO0,24.htm",
+          "https://www.nhcc.edu/news/graphic-design-careers-salary-education-and-job-paths-2025-guide",
+          "https://creativelivesinprogress.com/articles/creative-career-podcasts-to-tune-into",
+          "https://www.careerstrategylab.com/podcasts/",
+          "https://www.lummi.ai/blog/best-design-podcasts"
+        ],
+        "salary": {
+          "min": 90000.0,
+          "max": 150000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Data Analyst",
+            "company": "Airbnb",
+            "description": "Analyze user behavior and business metrics. Create data visualizations.",
+            "salary_range": "$90k - $140k"
+          },
+          {
+            "job_title": "Cybersecurity Analyst",
+            "company": "Microsoft",
+            "description": "Monitor and respond to security incidents. Implement security controls.",
+            "salary_range": "$100k - $150k"
+          }
+        ],
+        "db_match_count": 2
+      },
+      "Graphic Design Consultant": {
+        "description": "A Graphic Design Consultant operates as an independent expert, advising clients on visual strategy, branding, and communication challenges. They analyze business goals to develop and guide the implementation of effective design solutions, often overseeing brand identity systems or large-scale marketing campaigns. Typically self-employed, consultants build their own business, with growth potential focused on attracting higher-value clients, specializing in a lucrative niche, or expanding into a full-service creative agency.",
+        "resources": [
+          "https://thepgda.com/about-us/",
+          "https://www.dexigner.com/directory/cat/Graphic-Design/Organizations",
+          "https://dealstream.com/industry-guides/graphic-design-businesses/associations",
+          "https://www.bls.gov/ooh/Arts-and-Design/Graphic-designers.htm",
+          "https://www.zippia.com/graphic-design-consultant-jobs/trends/",
+          "https://www.salary.com/research/salary/recruiting/graphic-design-consultant-salary",
+          "https://www.youtube.com/watch?v=a7QQkb_dBGo",
+          "https://www.tiktok.com/discover/graphic-design-interview",
+          "https://www.linkedin.com/advice/0/how-can-you-avoid-common-graphic-design-interview-nsnse"
+        ],
+        "salary": {
+          "min": 90000.0,
+          "max": 145000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Software Consultant",
+            "company": "Accenture",
+            "description": "Advise clients on technology solutions. Implement custom software.",
+            "salary_range": "$90k - $140k"
+          },
+          {
+            "job_title": "Technical Consultant",
+            "company": "Deloitte",
+            "description": "Provide technical expertise to enterprise clients.",
+            "salary_range": "$95k - $145k"
+          }
+        ],
+        "db_match_count": 2
+      }
+    },
+    "Animation": {
+      "Animation Specialist": {
+        "description": "",
+        "resources": [
+          "https://en.wikipedia.org/wiki/Professional_association",
+          "https://explore.jobs.ufl.edu/en-us/job/534806/animation-specialist",
+          "https://careers.massachusetts.edu/en-us/job/524319/animation-specialist-hybrid-opportunity",
+          "https://www.bestcolleges.com/careers/art-and-design/animation/",
+          "https://careerfoundry.com/en/blog/ui-design/animation-designer-salary/",
+          "https://research.com/degrees/best-online-animation-degree-programs",
+          "https://www.animaker.com/hub/12-principles-of-animation/",
+          "https://www.animaker.com/2d-animation-software",
+          "https://www.animaker.com/blog/10-types-of-animations/"
+        ],
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "currency": "USD"
+        },
+        "job_examples": [],
+        "db_match_count": 0
+      },
+      "Animation Analyst": {
+        "description": "",
+        "resources": [
+          "https://animationguild.org/",
+          "https://greggazzopardi.com/connecting-with-like-minded-animators-find-helpful-animation-communities-now/",
+          "https://www.artcentercpd.com/professional-organizations",
+          "https://www.bls.gov/ooh/arts-and-design/multimedia-artists-and-animators.htm",
+          "https://www.zippia.com/animator-jobs/trends/",
+          "https://research.com/careers/animation-careers",
+          "http://animationguildblog.blogspot.com/2014/03/the-tag-interview-randal-myers-part-i.html",
+          "https://www.insightmedia.info/analyst-blog/",
+          "https://thefincheranalyst.com/2017/10/25/the-mindhunter-teaser-blood-animation-by-joe-fleming/2017-03-02-joe-fleming-mindhunter-teaser-animation-01/"
+        ],
+        "salary": {
+          "min": 90000.0,
+          "max": 150000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Data Analyst",
+            "company": "Airbnb",
+            "description": "Analyze user behavior and business metrics. Create data visualizations.",
+            "salary_range": "$90k - $140k"
+          },
+          {
+            "job_title": "Cybersecurity Analyst",
+            "company": "Microsoft",
+            "description": "Monitor and respond to security incidents. Implement security controls.",
+            "salary_range": "$100k - $150k"
+          }
+        ],
+        "db_match_count": 2
+      },
+      "Animation Consultant": {
+        "description": "",
+        "resources": [
+          "https://thecartooncollective.org/",
+          "https://www.artcentercpd.com/professional-organizations",
+          "https://www.consultingsuccess.com/consulting-associations-list-and-websites",
+          "https://www.bls.gov/ooh/arts-and-design/multimedia-artists-and-animators.htm",
+          "https://research.com/careers/animation-careers",
+          "https://www.croner.com/croner-animation-and-visual-effects-survey",
+          "https://www.youtube.com/playlist?list=PLvUDn7TI43nFsD6W91S7dLuMCsP0kYhO1",
+          "https://harveynewman.com/what-is-animation-consultancy/",
+          "https://www.cgtoday.com/interview-studios/anjan-cariappa-an-independent-animation-consultant"
+        ],
+        "salary": {
+          "min": 90000.0,
+          "max": 145000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Software Consultant",
+            "company": "Accenture",
+            "description": "Advise clients on technology solutions. Implement custom software.",
+            "salary_range": "$90k - $140k"
+          },
+          {
+            "job_title": "Technical Consultant",
+            "company": "Deloitte",
+            "description": "Provide technical expertise to enterprise clients.",
+            "salary_range": "$95k - $145k"
+          }
+        ],
+        "db_match_count": 2
+      }
+    }
+  }
+}

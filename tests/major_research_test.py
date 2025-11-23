@@ -20,6 +20,16 @@ if project_root not in sys.path:
 
 # CRITICAL: Import Config FIRST to load .env before SpoonAI classes initialize
 from backend.config import Config
+
+# CRITICAL: Set environment variables explicitly before creating agents
+# This ensures SpoonAI can read them when ChatBot is instantiated
+import os
+if Config.GEMINI_API_KEY:
+    os.environ["GEMINI_API_KEY"] = Config.GEMINI_API_KEY
+    print(f"✅ Set GEMINI_API_KEY in os.environ: {Config.GEMINI_API_KEY[:20]}...")
+if Config.DEEPSEEK_API_KEY:
+    os.environ["DEEPSEEK_API_KEY"] = Config.DEEPSEEK_API_KEY
+
 from backend.agents.major_research_agent import create_major_research_agent
 
 

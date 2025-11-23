@@ -1,0 +1,43 @@
+{
+  "timestamp": "2025-11-23T04:03:46.620479",
+  "user_query": "I enjoy programming, algorithms, and math. What majors fit me?",
+  "majors": {
+    "10 Best Degrees for People Who Like Math": {
+      "description": "",
+      "resources": [
+        "https://learn.org/articles/degrees_for_people_who_like_math.html",
+        "https://m.youtube.com/watch?v=OW6N4twS70k",
+        "https://www.collegeconsensus.com/majors/highest-paying-careers-math-majors/",
+        "https://www.niche.com/colleges/search/best-colleges-for-math/",
+        "https://www.collegefactual.com/majors/mathematics-and-statistics/mathematics/rankings/top-ranked/",
+        "https://en.wikipedia.org/wiki/10",
+        "https://mathworld.wolfram.com/10.html",
+        "https://www.thefactsite.com/number-10-facts/"
+      ]
+    },
+    "Should I major in CS or math if I want to work in AI in the ...": {
+      "description": "",
+      "resources": [
+        "https://www.reddit.com/r/csMajors/comments/14d5y7a/should_i_major_in_cs_or_math_if_i_want_to_work_in/",
+        "https://completeaitraining.com/news/degrees-that-lead-to-high-paying-ai-jobs-math-and-cs-first/",
+        "https://schmidscience.com/with-ai-is-computer-science-still-a-worthwhile.html",
+        "https://ejje.weblio.jp/content/should",
+        "https://ejje.weblio.jp/sentence/content/should",
+        "https://ejje.weblio.jp/content/should+be"
+      ]
+    },
+    "Which majors align best for math enthusiasts?": {
+      "description": "",
+      "resources": [
+        "https://innovativetricks.com/best-youtube-channels-for-bsc-maths/",
+        "https://mathtuition88.com/category/math-2/",
+        "https://livelovelifeschool.com/best-homeschool-math-curriculum/",
+        "https://www.collegevine.com/faq/103813/which-majors-align-best-for-math-enthusiasts",
+        "https://learn.org/best-degrees/degrees-for-people-who-like-math",
+        "https://www.collegefactual.com/majors/mathematics-and-statistics/mathematics/related-majors/",
+        "https://learn.org/articles/degrees_for_people_who_like_math.html",
+        "https://www.arcamax.com/knowledge/eduadvice/s-3118154"
+      ]
+    }
+  }
+}

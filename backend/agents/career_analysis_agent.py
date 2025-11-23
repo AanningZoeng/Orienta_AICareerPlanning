@@ -23,7 +23,16 @@ except ImportError:
     cosine_similarity = None
 
 # CRITICAL: Import Config and tools FIRST before SpoonAI
-from backend.tools.media_finder_tool import MediaFinderTool
+# Try absolute import first, then relative import as fallback
+try:
+    from backend.tools.media_finder_tool import MediaFinderTool
+except ImportError:
+    try:
+        from tools.media_finder_tool import MediaFinderTool
+    except ImportError:
+        # If both fail, create a dummy MediaFinderTool
+        print("Warning: MediaFinderTool not available. Media features will be disabled.")
+        MediaFinderTool = None
 
 # Import SpoonAI after backend imports
 from spoon_ai.chat import ChatBot
@@ -33,9 +42,16 @@ except Exception:
     SpoonReactAI = None
 
 from bs4 import BeautifulSoup
-from backend.utils.search_utils import safe_ddg, http_get_text
-from backend.utils.llm_utils import TokenEnforcingChatBot
-from backend.config import Config
+
+# Try absolute import first, then relative import
+try:
+    from backend.utils.search_utils import safe_ddg, http_get_text
+    from backend.utils.llm_utils import TokenEnforcingChatBot
+    from backend.config import Config
+except ImportError:
+    from utils.search_utils import safe_ddg, http_get_text
+    from utils.llm_utils import TokenEnforcingChatBot
+    from config import Config
 
 
 class CareerAnalysisAgent:
@@ -69,7 +85,7 @@ Return data in structured JSON format.
                 self.llm_agent = None
 
         # Media finder tool used directly
-        self.media_finder = MediaFinderTool()
+        self.media_finder = MediaFinderTool() if MediaFinderTool is not None else None
         
         # Database path setup for real job data
         if db_path:
@@ -105,31 +121,31 @@ Return data in structured JSON format.
             except Exception:
                 pass
 
-        # Fallback: use DuckDuckGo search snippets to infer career titles
-        careers = []
-        try:
-            loop = asyncio.get_event_loop()
-            query = f"careers for {major_name}"
-            results = await loop.run_in_executor(None, lambda: safe_ddg(query, max_results=6) or [])
-            for r in results:
-                title = (r.get('title') or r.get('heading') or '')
-                # simple cleanup: split on common separators
-                if title:
-                    cand = title.split("-")[0].split("|", 1)[0].strip()
-                    if len(cand) > 3 and cand not in careers:
-                        careers.append(cand)
-                if len(careers) >= 3:
-                    break
-        except Exception:
-            careers = []
-
-        # Last-resort fallback: generic professional titles derived from major name
-        if not careers:
-            base = major_name.split()[:2]
-            base_label = " ".join(base)
-            careers = [f"{base_label} Professional", f"{base_label} Specialist", f"{base_label} Consultant"]
-
-        return careers[:3]
+        # Fallback: use predefined career mapping for common majors
+        major_lower = major_name.lower()
+        career_mapping = {
+            'computer science': ['Software Engineer', 'Data Scientist', 'Software Developer'],
+            'mathematics': ['Data Analyst', 'Actuary', 'Financial Analyst'],
+            'computer engineering': ['Hardware Engineer', 'Embedded Systems Engineer', 'Network Engineer'],
+            'electrical engineering': ['Electrical Engineer', 'Electronics Engineer', 'Power Systems Engineer'],
+            'mechanical engineering': ['Mechanical Engineer', 'Manufacturing Engineer', 'Design Engineer'],
+            'business': ['Business Analyst', 'Management Consultant', 'Product Manager'],
+            'economics': ['Economist', 'Financial Analyst', 'Data Analyst'],
+            'biology': ['Research Scientist', 'Biotech Researcher', 'Lab Technician'],
+            'chemistry': ['Chemist', 'Research Scientist', 'Chemical Engineer'],
+            'physics': ['Physicist', 'Research Scientist', 'Data Scientist'],
+            'psychology': ['Psychologist', 'Counselor', 'Human Resources Specialist'],
+        }
+        
+        # Try to find a match in the mapping
+        for key, careers in career_mapping.items():
+            if key in major_lower:
+                return careers[:3]
+        
+        # Last-resort fallback: generic professional titles
+        base = major_name.split()[:2]
+        base_label = " ".join(base)
+        return [f"{base_label} Specialist", f"{base_label} Analyst", f"{base_label} Consultant"]
 
     # --- Job Database Helper Methods (from agent2) ---
 
@@ -435,12 +451,13 @@ Return data in structured JSON format.
         others = []
 
         # 1) Use MediaFinderTool for media (if it can)
-        try:
-            mf = await self.media_finder.execute(career_or_major=career_title, content_type="video")
-            for item in mf.get("content", [])[:2]:
-                media.append({"type": item.get("type", "video"), "title": item.get("title"), "url": item.get("url")})
-        except Exception:
-            pass
+        if self.media_finder is not None:
+            try:
+                mf = await self.media_finder.execute(career_or_major=career_title, content_type="video")
+                for item in mf.get("content", [])[:2]:
+                    media.append({"type": item.get("type", "video"), "title": item.get("title"), "url": item.get("url")})
+            except Exception:
+                pass
 
         # 2) Use DuckDuckGo to find YouTube videos and podcasts
         try:
@@ -497,17 +514,18 @@ Return data in structured JSON format.
             pass
 
         # Ensure minimum items: try MediaFinderTool for podcasts/videos/universities if missing
-        try:
-            if len(media) < 2:
-                mf2 = await self.media_finder.execute(career_or_major=career_title, content_type="all")
-                for item in mf2.get("content", [])[: (2 - len(media))]:
-                    media.append({"type": item.get("type","video"), "title": item.get("title"), "url": item.get("url")})
-            if len(universities) < 2:
-                mfu = await self.media_finder.execute(career_or_major=career_title, content_type="university")
-                for u in mfu.get("content", [])[: (2 - len(universities))]:
-                    universities.append({"title": u.get("title"), "url": u.get("url")})
-        except Exception:
-            pass
+        if self.media_finder is not None:
+            try:
+                if len(media) < 2:
+                    mf2 = await self.media_finder.execute(career_or_major=career_title, content_type="all")
+                    for item in mf2.get("content", [])[: (2 - len(media))]:
+                        media.append({"type": item.get("type","video"), "title": item.get("title"), "url": item.get("url")})
+                if len(universities) < 2:
+                    mfu = await self.media_finder.execute(career_or_major=career_title, content_type="university")
+                    for u in mfu.get("content", [])[: (2 - len(universities))]:
+                        universities.append({"title": u.get("title"), "url": u.get("url")})
+            except Exception:
+                pass
 
         return {
             "media": media,
@@ -754,7 +772,7 @@ def create_career_analysis_agent(llm_provider: str = None, model_name: str = Non
             try:
                 Config.validate()
             except Exception as e:
-                print(f"⚠️ LLM config validation failed: {e}. Falling back to non-LLM mode.")
+                print(f"[WARNING] LLM config validation failed: {e}. Falling back to non-LLM mode.")
                 return CareerAnalysisAgent(llm_agent=None)
 
             # CRITICAL: Set API key in os.environ so spoon_ai can access it
@@ -793,9 +811,10 @@ def create_career_analysis_agent(llm_provider: str = None, model_name: str = Non
 
             llm_agent = SpoonReactAI(llm=llm)
         except Exception as e:
-            print(f"⚠️ Could not instantiate SpoonReactAI: {e}. Running without LLM.")
+            print(f"[WARNING] Could not instantiate SpoonReactAI: {e}. Running without LLM.")
             llm_agent = None
     else:
         llm_agent = None
 
     return CareerAnalysisAgent(llm_agent=llm_agent)
+

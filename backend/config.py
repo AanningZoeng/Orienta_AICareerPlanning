@@ -5,9 +5,18 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 
-# Load .env from backend directory
-env_path = Path(__file__).parent / '.env'
-load_dotenv(dotenv_path=env_path)
+# config.py 在 backend/ 目录，项目根目录在上一层
+ROOT_DIR = Path(__file__).resolve().parent.parent  # backend/config.py -> Orienta_AICareerPlanning/
+env_path = ROOT_DIR / ".env"
+
+# Debug output
+if env_path.exists():
+    print(f"✅ Found .env at: {env_path}")
+else:
+    print(f"❌ No .env file at: {env_path}")
+
+# Load with override=True to ensure .env values take precedence
+load_dotenv(dotenv_path=env_path, override=True)
 
 class Config:
     """Application configuration."""

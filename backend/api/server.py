@@ -195,6 +195,104 @@ def research_majors():
         return jsonify({"error": str(e)}), 500
 
 
+@app.route('/api/major-research', methods=['POST'])
+def major_research():
+    """
+    Frontend-friendly endpoint for Major Research Agent.
+    Returns list of majors in a format ready for the bubble tree.
+    """
+    try:
+        from backend.agents.major_research_agent import create_major_research_agent
+        
+        data = request.get_json()
+        query = data.get('query', '')
+        
+        if not query:
+            return jsonify({
+                'success': False,
+                'error': 'Query cannot be empty'
+            }), 400
+        
+        # Create and run agent
+        agent = create_major_research_agent(
+            llm_provider=Config.LLM_PROVIDER,
+            model_name=Config.MODEL_NAME
+        )
+        
+        result = asyncio.run(agent.process_query(query))
+        
+        # Transform to frontend format
+        majors_list = []
+        for major_name, major_data in result.items():
+            # 处理resources：将字符串URL转换为对象格式
+            resources = major_data.get("resources", [])
+            formatted_resources = []
+            
+            for resource in resources:
+                if isinstance(resource, str):
+                    # 从URL提取标题
+                    try:
+                        from urllib.parse import urlparse
+                        parsed = urlparse(resource)
+                        hostname = parsed.hostname or ''
+                        hostname = hostname.replace('www.', '').replace('m.', '')
+                        
+                        # 根据域名判断类型
+                        if 'youtube' in hostname or 'youtu.be' in hostname:
+                            resource_type = 'video'
+                            title = f"YouTube: {hostname}"
+                        elif 'medium' in hostname or 'blog' in hostname:
+                            resource_type = 'article'
+                            title = f"文章: {hostname}"
+                        elif 'coursera' in hostname or 'udemy' in hostname or 'edu' in hostname:
+                            resource_type = 'course'
+                            title = f"课程: {hostname}"
+                        elif 'reddit' in hostname or 'forum' in hostname:
+                            resource_type = 'website'
+                            title = f"论坛: {hostname}"
+                        else:
+                            resource_type = 'website'
+                            title = hostname
+                        
+                        formatted_resources.append({
+                            "url": resource,
+                            "title": title,
+                            "type": resource_type
+                        })
+                    except Exception as e:
+                        # 如果解析失败，使用原始URL
+                        formatted_resources.append({
+                            "url": resource,
+                            "title": resource,
+                            "type": "website"
+                        })
+                else:
+                    # 已经是对象格式
+                    formatted_resources.append(resource)
+            
+            majors_list.append({
+                "name": major_name,
+                "description": major_data.get("description", ""),
+                "core_courses": major_data.get("core_courses", []),
+                "resources": formatted_resources,
+                "universities": major_data.get("universities", [])
+            })
+        
+        return jsonify({
+            'success': True,
+            'majors': majors_list
+        })
+        
+    except Exception as e:
+        print(f"[ERROR] Major research failed: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+
 @app.route('/api/analyze-careers', methods=['POST'])
 def analyze_careers():
     """
@@ -252,6 +350,69 @@ def analyze_careers():
         import traceback
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/career-analysis', methods=['POST'])
+def career_analysis():
+    """
+    Frontend-friendly endpoint for Career Analysis Agent.
+    Returns list of careers in a format ready for the bubble tree.
+    """
+    try:
+        from backend.agents.career_analysis_agent import create_career_analysis_agent
+        
+        data = request.get_json()
+        major_name = data.get('major_name', '')
+        
+        if not major_name:
+            return jsonify({
+                'success': False,
+                'error': 'Major name cannot be empty'
+            }), 400
+        
+        # Create agent
+        agent = create_career_analysis_agent(
+            llm_provider=Config.LLM_PROVIDER,
+            model_name=Config.MODEL_NAME
+        )
+        
+        # Process all majors (agent reads from majors_latest.json)
+        result = asyncio.run(agent.process_query())
+        
+        # Extract careers for requested major
+        if major_name not in result:
+            return jsonify({
+                'success': False,
+                'error': f'No careers found for major: {major_name}'
+            }), 404
+        
+        careers_data = result[major_name]
+        
+        # Transform to frontend format
+        careers_list = []
+        for career_title, career_info in careers_data.items():
+            careers_list.append({
+                "title": career_title,
+                "description": career_info.get("description", ""),
+                "salary": career_info.get("salary", {}),
+                "resources": career_info.get("resources", []),
+                "job_examples": career_info.get("job_examples", []),
+                "db_match_count": career_info.get("db_match_count", 0)
+            })
+        
+        return jsonify({
+            'success': True,
+            'careers': careers_list
+        })
+        
+    except Exception as e:
+        print(f"[ERROR] Career analysis failed: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
 
 
 @app.route('/api/detail/major/<major_id>', methods=['GET'])

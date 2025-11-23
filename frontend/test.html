@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试页面 - AI职业规划系统</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #eee;
+        }
+        h1 {
+            text-align: center;
+            color: #667eea;
+        }
+        .test-section {
+            background: #16213e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            border: 1px solid #667eea;
+        }
+        h2 {
+            color: #f093fb;
+            margin-top: 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 10px 10px 10px 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        .info {
+            background: rgba(74, 222, 128, 0.1);
+            border-left: 4px solid #4ade80;
+            padding: 12px;
+            margin: 10px 0;
+        }
+        .warning {
+            background: rgba(251, 191, 36, 0.1);
+            border-left: 4px solid #fbbf24;
+            padding: 12px;
+            margin: 10px 0;
+        }
+        code {
+            background: #0f172a;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #f093fb;
+        }
+        pre {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        .checklist li {
+            padding: 8px 0;
+        }
+        .checklist li::before {
+            content: "✓ ";
+            color: #4ade80;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎯 AI职业规划系统 - 测试页面</h1>
+
+    <div class="test-section">
+        <h2>📋 新功能说明</h2>
+        <div class="info">
+            <strong>调整后的交互流程：</strong>
+            <ol>
+                <li><strong>输入查询</strong> → 提交后调用 Major Research Agent</li>
+                <li><strong>显示专业节点</strong> → 树中出现3-5个专业泡泡</li>
+                <li><strong>点击专业节点</strong> → 弹出模态框，显示专业详情（从JSON读取）</li>
+                <li><strong>点击"展开职业路径"按钮</strong> → 调用 Career Analysis Agent</li>
+                <li><strong>职业节点展开</strong> → 树中该专业下出现职业子节点</li>
+                <li><strong>点击职业节点</strong> → 显示职业详情（薪资、案例、资源）</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🚀 快速开始</h2>
+        
+        <h3>1. 启动后端服务器</h3>
+        <pre><code>cd d:\python\Orienta_AICareerPlanning
+python backend/api/server.py</code></pre>
+        
+        <div class="warning">
+            <strong>⚠️ 注意：</strong>确保后端服务器运行在 <code>http://localhost:5000</code>
+        </div>
+
+        <h3>2. 访问前端页面</h3>
+        <a href="index.html" class="btn">🎨 打开主页面</a>
+        
+        <h3>3. 测试流程</h3>
+        <ul class="checklist">
+            <li>输入测试查询，例如："我喜欢编程和数学，想学AI"</li>
+            <li>等待 Major Research Agent 返回结果</li>
+            <li>观察专业节点出现动画（从中心扩散）</li>
+            <li>点击任意专业节点，查看详情模态框</li>
+            <li>在模态框中点击"展开职业路径"按钮</li>
+            <li>等待 Career Analysis Agent 返回结果</li>
+            <li>观察职业节点出现（该专业下方）</li>
+            <li>点击职业节点查看详情</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>🎨 视觉变化</h2>
+        <ul>
+            <li><strong>专业节点指示器</strong>：
+                <ul>
+                    <li>未展开：黄色圆圈 + <code>+</code> 符号</li>
+                    <li>已展开：绿色圆圈 + <code>✓</code> 符号</li>
+                </ul>
+            </li>
+            <li><strong>展开按钮</strong>：渐变紫色，带图标和提示文字</li>
+            <li><strong>模态框</strong>：专业详情完整显示（简介、课程、资源、院校）</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>🔍 调试技巧</h2>
+        <ol>
+            <li>打开浏览器开发者工具（F12）</li>
+            <li>查看 Console 标签的日志输出</li>
+            <li>查看 Network 标签的 API 请求</li>
+        </ol>
+        
+        <h3>关键日志信息：</h3>
+        <pre><code>✅ AI Career Planning App initialized
+Node clicked: {type: 'major', name: '...', ...}
+[INFO] Expanding major: 计算机科学
+✅ 职业分析完成！</code></pre>
+    </div>
+
+    <div class="test-section">
+        <h2>📊 API端点测试</h2>
+        <p>你可以手动测试API端点：</p>
+        
+        <h3>测试 Major Research Agent</h3>
+        <pre><code>POST http://localhost:5000/api/major-research
+Content-Type: application/json
+
+{
+  "query": "我喜欢编程和数学"
+}</code></pre>
+
+        <h3>测试 Career Analysis Agent</h3>
+        <pre><code>POST http://localhost:5000/api/career-analysis
+Content-Type: application/json
+
+{
+  "major_name": "计算机科学 (Computer Science)"
+}</code></pre>
+    </div>
+
+    <div class="test-section">
+        <h2>✨ 新增的CSS类</h2>
+        <ul>
+            <li><code>.action-section</code> - 操作区域容器</li>
+            <li><code>.btn-expand-careers</code> - 展开职业路径按钮</li>
+            <li><code>.btn-icon</code>, <code>.btn-text</code>, <code>.btn-hint</code> - 按钮内部元素</li>
+            <li><code>.action-hint</code> - 已展开提示框</li>
+            <li><code>.expand-indicator</code> - 节点状态指示器</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>🐛 常见问题</h2>
+        
+        <h3>Q: 点击专业节点没有弹出模态框？</h3>
+        <p><strong>A:</strong> 检查 Console 是否有 JavaScript 错误，确认三个 JS 文件正确加载。</p>
+        
+        <h3>Q: 点击"展开职业路径"按钮没反应？</h3>
+        <p><strong>A:</strong> 检查：</p>
+        <ul>
+            <li>后端服务器是否运行</li>
+            <li>是否已生成 <code>majors_latest.json</code></li>
+            <li>Network 标签查看 API 请求状态</li>
+        </ul>
+        
+        <h3>Q: 职业节点没有出现？</h3>
+        <p><strong>A:</strong> 查看后端 Console 日志，可能是 Career Analysis Agent 出错。</p>
+    </div>
+
+    <div class="test-section">
+        <h2>📁 相关文件</h2>
+        <ul>
+            <li><code>frontend/scripts/bubble-engine.js</code> - SVG树渲染引擎</li>
+            <li><code>frontend/scripts/detail-view.js</code> - 模态框管理器</li>
+            <li><code>frontend/scripts/main.js</code> - 主应用控制器</li>
+            <li><code>frontend/styles/details.css</code> - 新增按钮样式</li>
+            <li><code>backend/api/server.py</code> - API端点</li>
+            <li><code>backend/database/majors_latest.json</code> - 专业数据</li>
+            <li><code>backend/database/careers_latest.json</code> - 职业数据</li>
+        </ul>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #667eea;">
+        <p style="color: #888;">AI Career Planning System v2.1</p>
+        <p style="color: #667eea;">✨ 交互式泡泡树可视化 + 分步Agent调用 ✨</p>
+    </div>
+</body>
+</html>

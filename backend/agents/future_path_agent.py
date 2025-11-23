@@ -5,7 +5,14 @@ Now uses SpoonReactAI (ReAct style) for optional LLM calls and calls
 
 import asyncio
 import os
+import sys
 from typing import Dict, Any, List
+from pathlib import Path
+
+# Add project root to path for imports
+project_root = Path(__file__).resolve().parent.parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 # CRITICAL: Import Config and backend modules FIRST before SpoonAI
 from backend.config import Config
@@ -14,12 +21,7 @@ from backend.tools.media_finder_tool import MediaFinderTool
 from backend.utils.search_utils import safe_ddg
 from backend.utils.llm_utils import TokenEnforcingChatBot
 
-# Import SpoonAI after backend imports
-from spoon_ai.chat import ChatBot
-try:
-    from spoon_ai.agents import SpoonReactAI
-except Exception:
-    SpoonReactAI = None
+# DO NOT import SpoonAI at module level - delay until needed
 
 class FuturePathAgent:
     """Agent specialized in analyzing future career progression patterns."""
@@ -44,16 +46,18 @@ Return data in structured JSON format with clear statistics and progression path
         if llm_agent is not None:
             self.llm_agent = llm_agent
         else:
-            if SpoonReactAI is not None:
+            # Delayed import of SpoonAI
+            try:
+                from spoon_ai.chat import ChatBot
+                from spoon_ai.agents import SpoonReactAI
+                
                 safe_tokens = Config.get_safe_max_tokens(Config.LLM_PROVIDER)
                 try:
                     llm = ChatBot(llm_provider=Config.LLM_PROVIDER, model_name=Config.MODEL_NAME, max_tokens=safe_tokens)
                 except TypeError:
                     llm = ChatBot(llm_provider=Config.LLM_PROVIDER, model_name=Config.MODEL_NAME)
-                self.llm_agent = SpoonReactAI(
-                    llm=llm
-                )
-            else:
+                self.llm_agent = SpoonReactAI(llm=llm)
+            except (ImportError, Exception):
                 self.llm_agent = None
 
         # Tool used directly for simulated LinkedIn analysis
@@ -255,7 +259,15 @@ def create_future_path_agent(llm_provider: str = None, model_name: str = None) -
     provider = llm_provider or Config.LLM_PROVIDER
     model = model_name or Config.MODEL_NAME
 
-    if SpoonReactAI is not None:
+    # Delayed import
+    try:
+        from spoon_ai.chat import ChatBot
+        from spoon_ai.agents import SpoonReactAI
+        spoonai_available = True
+    except ImportError:
+        spoonai_available = False
+
+    if spoonai_available:
         try:
             try:
                 Config.validate()
@@ -270,10 +282,23 @@ def create_future_path_agent(llm_provider: str = None, model_name: str = None) -
                 os.environ["DEEPSEEK_API_KEY"] = Config.DEEPSEEK_API_KEY
 
             safe_tokens = Config.get_safe_max_tokens(provider)
+            print(f"[LLM Factory] provider={provider}, model={model}, safe_tokens={safe_tokens}")
             try:
-                llm = ChatBot(llm_provider=provider, model_name=model, max_tokens=safe_tokens)
+                os.environ.setdefault("MAX_TOKENS", str(safe_tokens))
+            except Exception:
+                pass
+
+            # Try to pass API key directly to ChatBot
+            api_key = Config.GEMINI_API_KEY if provider == "gemini" else Config.DEEPSEEK_API_KEY
+            print(f"[LLM Factory] API key to pass: {api_key[:20]}..." if api_key else "[LLM Factory] No API key!")
+            
+            try:
+                # Try with api_key parameter first
+                llm = ChatBot(llm_provider=provider, model_name=model, api_key=api_key)
+                print("[LLM Factory] ✅ ChatBot created with api_key parameter")
             except TypeError:
-                print("[LLM Factory] ChatBot() rejected max_tokens kwarg; using default constructor")
+                # If ChatBot doesn't accept api_key, try environment variable only
+                print("[LLM Factory] ChatBot doesn't accept api_key parameter, trying environment variable")
                 llm = ChatBot(llm_provider=provider, model_name=model)
 
             # Debug: inspect llm object for token-related attrs
@@ -290,6 +315,7 @@ def create_future_path_agent(llm_provider: str = None, model_name: str = None) -
             except Exception:
                 pass
 
+            from spoon_ai.agents import SpoonReactAI
             llm_agent = SpoonReactAI(llm=llm)
         except Exception as e:
             print(f"⚠️ Could not instantiate SpoonReactAI: {e}. Running without LLM.")

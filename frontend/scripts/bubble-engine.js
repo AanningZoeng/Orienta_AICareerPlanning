@@ -1,330 +1,418 @@
 /**
- * Bubble Engine - Manages bubble visualization and interactions
- * Creates interactive, animated bubbles on canvas with physics-based positioning
+ * Bubble Tree Engine
+ * 
+ * 管理交互式泡泡树可视化的核心引擎
+ * 支持动态节点扩展、力导向布局和平滑动画
  */
 
-class BubbleEngine {
-    constructor(canvasId) {
-        this.canvas = document.getElementById(canvasId);
-        if (!this.canvas) {
-            console.error('[BubbleEngine] Canvas element not found!');
-            return;
-        }
-        this.ctx = this.canvas.getContext('2d');
-        this.bubbles = [];
-        this.currentLayer = 'majors'; // 'majors', 'careers', 'futures'
-        this.selectedMajor = null;
-        this.selectedCareer = null;
-        this.hoveredBubble = null;
-        this.isRendering = false;
-
-        console.log('[BubbleEngine] Initializing...');
-
-        // Setup canvas
-        this.setupCanvas();
-
-        console.log('[BubbleEngine] Canvas setup complete:', this.canvas.width, 'x', this.canvas.height);
-
-        // Bind events
-        this.canvas.addEventListener('click', this.handleClick.bind(this));
-        this.canvas.addEventListener('mousemove', this.handleMouseMove.bind(this));
-        window.addEventListener('resize', this.setupCanvas.bind(this));
+class BubbleTreeEngine {
+    constructor(svgId) {
+        this.svg = document.getElementById(svgId);
+        
+        // 确保获取实际容器宽度
+        const container = this.svg.parentElement;
+        this.width = container.clientWidth || window.innerWidth;
+        this.height = 900;
+        
+        this.svg.setAttribute('width', this.width);
+        this.svg.setAttribute('height', this.height);
+        
+        this.nodesGroup = document.getElementById('nodesGroup');
+        this.linksGroup = document.getElementById('linksGroup');
+        
+        // Tree data structure
+        this.nodes = [];
+        this.links = [];
+        
+        // Node type configurations
+        this.nodeConfig = {
+            root: { radius: 60, gradient: 'rootGradient', color: '#667eea' },
+            major: { radius: 50, gradient: 'majorGradient', color: '#f093fb' },
+            career: { radius: 40, gradient: 'careerGradient', color: '#4facfe' }
+        };
+        
+        // Layout settings - 使用实际宽度的中心
+        this.centerX = this.width / 2;
+        this.centerY = 200;
+        this.levelSpacing = 280;
+        
+        // Animation settings
+        this.animationDuration = 600;
+        
+        // Event handlers
+        this.onNodeClick = null;
+        this.onNodeHover = null;
+        
+        // 监听窗口大小变化
+        window.addEventListener('resize', () => this.handleResize());
     }
-
-    setupCanvas() {
-        const rect = this.canvas.getBoundingClientRect();
-        this.canvas.width = rect.width;
-        this.canvas.height = rect.height;
-
-        if (this.bubbles.length > 0) {
+    
+    /**
+     * 处理窗口大小变化
+     */
+    handleResize() {
+        const container = this.svg.parentElement;
+        const newWidth = container.clientWidth || window.innerWidth;
+        
+        if (Math.abs(newWidth - this.width) > 50) {
+            this.width = newWidth;
+            this.svg.setAttribute('width', this.width);
+            this.centerX = this.width / 2;
+            
+            // 重新计算所有节点位置
+            this.recalculatePositions();
             this.render();
         }
     }
-
+    
     /**
-     * Display bubbles for majors
+     * 重新计算节点位置
      */
-    showMajors(majors) {
-        console.log('[BubbleEngine] showMajors called with', majors.length, 'majors');
-        console.log('[BubbleEngine] Canvas dimensions:', this.canvas.width, 'x', this.canvas.height);
-        this.currentLayer = 'majors';
-        this.selectedMajor = null;
-        this.selectedCareer = null;
-        this.bubbles = this.createBubbles(majors, 'major');
-        console.log('[BubbleEngine] Created', this.bubbles.length, 'bubbles');
-        if (this.bubbles.length > 0) {
-            console.log('[BubbleEngine] First bubble:', this.bubbles[0]);
+    recalculatePositions() {
+        // 更新根节点
+        const rootNode = this.nodes.find(n => n.type === 'root');
+        if (rootNode) {
+            rootNode.x = this.centerX;
         }
-        this.startRender();
+        
+        // 更新major节点
+        const majorNodes = this.nodes.filter(n => n.type === 'major');
+        const majorCount = majorNodes.length;
+        if (majorCount > 0) {
+            const angleStep = (2 * Math.PI) / majorCount;
+            const radius = 250;
+            
+            majorNodes.forEach((node, index) => {
+                const angle = angleStep * index - Math.PI / 2;
+                const x = this.centerX + radius * Math.cos(angle);
+                node.x = x;
+                if (node.targetX !== undefined) {
+                    node.targetX = x;
+                }
+            });
+        }
     }
-
+    
     /**
-     * Display bubbles for careers (when a major is clicked)
+     * 初始化树 - 创建根节点
      */
-    showCareers(careers, majorName) {
-        this.currentLayer = 'careers';
-        this.selectedCareer = null;
-        this.bubbles = this.createBubbles(careers, 'career');
-        this.startRender();
+    initializeTree(userQuery) {
+        this.clear();
+        
+        const rootNode = {
+            id: 'root',
+            type: 'root',
+            name: userQuery,
+            x: this.centerX,
+            y: this.centerY,
+            children: [],
+            data: { query: userQuery }
+        };
+        
+        this.nodes.push(rootNode);
+        this.render();
+        return rootNode;
     }
-
+    
     /**
-     * Display bubbles for future paths (when a career is clicked)
+     * 添加Major节点
      */
-    showFutures(futures, careerName) {
-        this.currentLayer = 'futures';
-        this.bubbles = this.createBubbles(futures, 'future');
-        this.startRender();
-    }
-
-    /**
-     * Create bubble objects from data
-     */
-    createBubbles(items, type) {
-        const bubbles = [];
-        const centerX = this.canvas.width / 2;
-        const centerY = this.canvas.height / 2;
-        const count = items.length;
-
-        items.forEach((item, index) => {
-            // Calculate size based on type
-            let radius;
-            if (type === 'major') {
-                radius = 60 + Math.random() * 20; // 60-80px
-            } else if (type === 'career') {
-                radius = 50 + Math.random() * 15; // 50-65px
-            } else {
-                radius = 45 + Math.random() * 10; // 45-55px
-            }
-
-            // Calculate position in a circle around center
-            const angle = (index / count) * Math.PI * 2;
-            const distance = Math.min(centerX, centerY) * 0.5;
-
-            const bubble = {
-                id: item.id,
-                name: item.name || item.title || item.career,
-                type: type,
-                data: item,
-                x: centerX + Math.cos(angle) * distance,
-                y: centerY + Math.sin(angle) * distance,
-                radius: radius,
-                targetX: centerX + Math.cos(angle) * distance,
-                targetY: centerY + Math.sin(angle) * distance,
-                vx: 0,
-                vy: 0
+    addMajors(majors) {
+        const rootNode = this.nodes.find(n => n.type === 'root');
+        if (!rootNode) return;
+        
+        const majorCount = majors.length;
+        const angleStep = (2 * Math.PI) / majorCount;
+        const radius = 250;
+        
+        majors.forEach((major, index) => {
+            const angle = angleStep * index - Math.PI / 2;
+            const x = this.centerX + radius * Math.cos(angle);
+            const y = this.centerY + this.levelSpacing + radius * Math.sin(angle) * 0.3;
+            
+            const majorNode = {
+                id: `major-${index}`,
+                type: 'major',
+                name: major.name,
+                x: this.centerX,  // Start from center for animation
+                y: this.centerY,
+                targetX: x,
+                targetY: y,
+                children: [],
+                expanded: false,
+                data: major
             };
-
-            bubbles.push(bubble);
+            
+            this.nodes.push(majorNode);
+            this.links.push({
+                source: rootNode.id,
+                target: majorNode.id
+            });
+            
+            rootNode.children.push(majorNode.id);
         });
-
-        return bubbles;
+        
+        this.animateNodes();
     }
-
+    
     /**
-     * Start the render loop
+     * 展开Major节点 - 添加Career子节点
      */
-    startRender() {
-        if (!this.isRendering) {
-            console.log('[BubbleEngine] Starting render loop');
-            this.isRendering = true;
-            this.render();
-        }
+    expandMajor(majorId, careers) {
+        const majorNode = this.nodes.find(n => n.id === majorId);
+        if (!majorNode || majorNode.expanded) return;
+        
+        majorNode.expanded = true;
+        
+        // 使用majorNode的当前位置(x, y)而不是targetX/targetY
+        const parentX = majorNode.x;
+        const parentY = majorNode.y;
+        
+        const careerCount = careers.length;
+        const angleStep = (Math.PI * 1.2) / Math.max(careerCount - 1, 1);
+        const startAngle = -Math.PI / 3;
+        const radius = 180;
+        
+        careers.forEach((career, index) => {
+            const angle = startAngle + angleStep * index;
+            const x = parentX + radius * Math.cos(angle);
+            const y = parentY + radius * Math.sin(angle) + 120;
+            
+            const careerId = `${majorId}-career-${index}`;
+            const careerNode = {
+                id: careerId,
+                type: 'career',
+                name: career.title,
+                x: parentX,  // Start from parent for animation
+                y: parentY,
+                targetX: x,
+                targetY: y,
+                data: career,
+                parent: majorId
+            };
+            
+            this.nodes.push(careerNode);
+            this.links.push({
+                source: majorId,
+                target: careerId
+            });
+            
+            majorNode.children.push(careerId);
+        });
+        
+        // 先渲染连线，再执行动画
+        this.render();
+        this.animateNodes();
     }
-
+    
     /**
-     * Render all bubbles with animations
+     * 渲染树结构
      */
     render() {
-        if (!this.isRendering) return;
-
-        // Clear canvas
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        // Update bubble positions (simple physics)
-        this.bubbles.forEach(bubble => {
-            // Move towards target position
-            const dx = bubble.targetX - bubble.x;
-            const dy = bubble.targetY - bubble.y;
-            bubble.vx += dx * 0.1;
-            bubble.vy += dy * 0.1;
-
-            // Apply friction
-            bubble.vx *= 0.8;
-            bubble.vy *= 0.8;
-
-            bubble.x += bubble.vx;
-            bubble.y += bubble.vy;
-        });
-
-        // Draw bubbles
-        this.bubbles.forEach(bubble => {
-            this.drawBubble(bubble);
-        });
-
-        // Continue animation
-        requestAnimationFrame(() => this.render());
+        this.renderLinks();
+        this.renderNodes();
     }
-
+    
     /**
-     * Draw a single bubble
+     * 渲染连接线
      */
-    drawBubble(bubble) {
-        const isHovered = this.hoveredBubble === bubble;
-        const radius = isHovered ? bubble.radius * 1.15 : bubble.radius;
-
-        // Create gradient based on type
-        let gradient;
-        if (bubble.type === 'major') {
-            gradient = this.ctx.createLinearGradient(
-                bubble.x - radius, bubble.y - radius,
-                bubble.x + radius, bubble.y + radius
-            );
-            gradient.addColorStop(0, 'hsl(220, 100%, 60%)');
-            gradient.addColorStop(1, 'hsl(240, 100%, 70%)');
-        } else if (bubble.type === 'career') {
-            gradient = this.ctx.createLinearGradient(
-                bubble.x - radius, bubble.y - radius,
-                bubble.x + radius, bubble.y + radius
-            );
-            gradient.addColorStop(0, 'hsl(140, 80%, 50%)');
-            gradient.addColorStop(1, 'hsl(160, 90%, 60%)');
-        } else {
-            gradient = this.ctx.createLinearGradient(
-                bubble.x - radius, bubble.y - radius,
-                bubble.x + radius, bubble.y + radius
-            );
-            gradient.addColorStop(0, 'hsl(280, 90%, 60%)');
-            gradient.addColorStop(1, 'hsl(300, 100%, 70%)');
+    renderLinks() {
+        this.linksGroup.innerHTML = '';
+        
+        this.links.forEach(link => {
+            const sourceNode = this.nodes.find(n => n.id === link.source);
+            const targetNode = this.nodes.find(n => n.id === link.target);
+            
+            if (sourceNode && targetNode) {
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                
+                // 曲线路径 (三次贝塞尔曲线)
+                const midY = (sourceNode.y + targetNode.y) / 2;
+                const d = `M ${sourceNode.x} ${sourceNode.y} 
+                           C ${sourceNode.x} ${midY}, 
+                             ${targetNode.x} ${midY}, 
+                             ${targetNode.x} ${targetNode.y}`;
+                
+                line.setAttribute('d', d);
+                line.setAttribute('class', 'tree-link');
+                line.setAttribute('data-source', link.source);
+                line.setAttribute('data-target', link.target);
+                
+                this.linksGroup.appendChild(line);
+            }
+        });
+    }
+    
+    /**
+     * 渲染节点
+     */
+    renderNodes() {
+        this.nodesGroup.innerHTML = '';
+        
+        this.nodes.forEach(node => {
+            const config = this.nodeConfig[node.type];
+            
+            // 创建节点组
+            const nodeGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            nodeGroup.setAttribute('class', `tree-node ${node.type}-node`);
+            nodeGroup.setAttribute('data-id', node.id);
+            nodeGroup.setAttribute('transform', `translate(${node.x}, ${node.y})`);
+            
+            // 主圆圈
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('r', config.radius);
+            circle.setAttribute('fill', `url(#${config.gradient})`);
+            circle.setAttribute('filter', 'url(#dropShadow)');
+            circle.setAttribute('class', 'node-circle');
+            
+            // 添加点击和悬停事件
+            nodeGroup.style.cursor = 'pointer';
+            nodeGroup.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (this.onNodeClick) {
+                    this.onNodeClick(node);
+                }
+            });
+            
+            nodeGroup.addEventListener('mouseenter', () => {
+                circle.setAttribute('filter', 'url(#glow)');
+                if (this.onNodeHover) {
+                    this.onNodeHover(node);
+                }
+            });
+            
+            nodeGroup.addEventListener('mouseleave', () => {
+                circle.setAttribute('filter', 'url(#dropShadow)');
+            });
+            
+            nodeGroup.appendChild(circle);
+            
+            // 文本标签
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('class', 'node-label');
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('dy', '0.35em');
+            text.setAttribute('fill', 'white');
+            text.setAttribute('font-size', node.type === 'root' ? '16' : '14');
+            text.setAttribute('font-weight', node.type === 'root' ? 'bold' : '500');
+            text.textContent = this.truncateText(node.name, config.radius);
+            
+            nodeGroup.appendChild(text);
+            
+            // 扩展状态指示器 (for majors)
+            if (node.type === 'major') {
+                const indicator = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                indicator.setAttribute('r', '10');
+                indicator.setAttribute('cx', config.radius - 10);
+                indicator.setAttribute('cy', -config.radius + 10);
+                indicator.setAttribute('fill', node.expanded ? '#4ade80' : '#fbbf24');
+                indicator.setAttribute('class', 'expand-indicator');
+                indicator.setAttribute('stroke', '#fff');
+                indicator.setAttribute('stroke-width', '2');
+                
+                const icon = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                icon.setAttribute('x', config.radius - 10);
+                icon.setAttribute('y', -config.radius + 10);
+                icon.setAttribute('text-anchor', 'middle');
+                icon.setAttribute('dy', '0.35em');
+                icon.setAttribute('fill', '#fff');
+                icon.setAttribute('font-size', '14');
+                icon.setAttribute('font-weight', 'bold');
+                icon.textContent = node.expanded ? '✓' : '+';
+                
+                nodeGroup.appendChild(indicator);
+                nodeGroup.appendChild(icon);
+            }
+            
+            this.nodesGroup.appendChild(nodeGroup);
+        });
+    }
+    
+    /**
+     * 动画更新节点位置
+     */
+    animateNodes() {
+        const nodesToAnimate = this.nodes.filter(n => n.targetX !== undefined);
+        
+        if (nodesToAnimate.length === 0) {
+            this.render();
+            return;
         }
-
-        // Draw bubble circle
-        this.ctx.beginPath();
-        this.ctx.arc(bubble.x, bubble.y, radius, 0, Math.PI * 2);
-        this.ctx.fillStyle = gradient;
-        this.ctx.fill();
-
-        // Add shadow
-        if (isHovered) {
-            this.ctx.shadowBlur = 30;
-            this.ctx.shadowColor = gradient;
-            this.ctx.fill();
-            this.ctx.shadowBlur = 0;
-        }
-
-        // Add highlight
-        const highlightGradient = this.ctx.createRadialGradient(
-            bubble.x - radius * 0.3,
-            bubble.y - radius * 0.3,
-            0,
-            bubble.x,
-            bubble.y,
-            radius
-        );
-        highlightGradient.addColorStop(0, 'rgba(255, 255, 255, 0.3)');
-        highlightGradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.1)');
-        highlightGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-
-        this.ctx.beginPath();
-        this.ctx.arc(bubble.x, bubble.y, radius, 0, Math.PI * 2);
-        this.ctx.fillStyle = highlightGradient;
-        this.ctx.fill();
-
-        // Draw text
-        this.ctx.fillStyle = 'white';
-        this.ctx.font = 'bold 14px Inter, sans-serif';
-        this.ctx.textAlign = 'center';
-        this.ctx.textBaseline = 'middle';
-        this.ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
-        this.ctx.shadowBlur = 4;
-
-        // Wrap text if too long
-        const maxWidth = radius * 1.6;
-        const words = bubble.name.split(' ');
-        let line = '';
-        const lines = [];
-
-        for (let word of words) {
-            const testLine = line + word + ' ';
-            const metrics = this.ctx.measureText(testLine);
-            if (metrics.width > maxWidth && line !== '') {
-                lines.push(line);
-                line = word + ' ';
+        
+        const startTime = Date.now();
+        const animate = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / this.animationDuration, 1);
+            
+            // Easing function (easeOutCubic)
+            const eased = 1 - Math.pow(1 - progress, 3);
+            
+            nodesToAnimate.forEach(node => {
+                const startX = node.x;
+                const startY = node.y;
+                node.x = startX + (node.targetX - startX) * eased;
+                node.y = startY + (node.targetY - startY) * eased;
+            });
+            
+            this.render();
+            
+            if (progress < 1) {
+                requestAnimationFrame(animate);
             } else {
-                line = testLine;
+                // 完成动画后清理target属性
+                nodesToAnimate.forEach(node => {
+                    node.x = node.targetX;
+                    node.y = node.targetY;
+                    delete node.targetX;
+                    delete node.targetY;
+                });
             }
-        }
-        lines.push(line);
-
-        // Draw lines
-        const lineHeight = 18;
-        const startY = bubble.y - (lines.length - 1) * lineHeight / 2;
-        lines.forEach((line, i) => {
-            this.ctx.fillText(line.trim(), bubble.x, startY + i * lineHeight);
-        });
-
-        this.ctx.shadowBlur = 0;
+        };
+        
+        requestAnimationFrame(animate);
     }
-
+    
     /**
-     * Handle click events
+     * 截断文本以适应节点
      */
-    handleClick(event) {
-        const rect = this.canvas.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-
-        // Check if any bubble was clicked
-        for (let bubble of this.bubbles) {
-            const dx = bubble.x - x;
-            const dy = bubble.y - y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance <= bubble.radius) {
-                this.onBubbleClick(bubble);
-                break;
-            }
-        }
+    truncateText(text, radius) {
+        const maxLength = Math.floor(radius / 4);
+        if (text.length <= maxLength) return text;
+        return text.substring(0, maxLength - 2) + '...';
     }
-
+    
     /**
-     * Handle mouse move events (for hover effects)
+     * 清除树
      */
-    handleMouseMove(event) {
-        const rect = this.canvas.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-
-        let found = false;
-
-        // Check if hovering over any bubble
-        for (let bubble of this.bubbles) {
-            const dx = bubble.x - x;
-            const dy = bubble.y - y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance <= bubble.radius) {
-                this.hoveredBubble = bubble;
-                this.canvas.style.cursor = 'pointer';
-                found = true;
-                break;
-            }
-        }
-
-        if (!found) {
-            this.hoveredBubble = null;
-            this.canvas.style.cursor = 'default';
-        }
+    clear() {
+        this.nodes = [];
+        this.links = [];
+        this.nodesGroup.innerHTML = '';
+        this.linksGroup.innerHTML = '';
     }
-
+    
     /**
-     * Callback when a bubble is clicked (to be set externally)
+     * 获取节点数据
      */
-    onBubbleClick(bubble) {
-        // This will be overridden by main.js
-        console.log('Bubble clicked:', bubble);
+    getNode(nodeId) {
+        return this.nodes.find(n => n.id === nodeId);
+    }
+    
+    /**
+     * 导出树数据
+     */
+    exportData() {
+        return {
+            nodes: this.nodes.map(n => ({
+                id: n.id,
+                type: n.type,
+                name: n.name,
+                data: n.data
+            })),
+            links: this.links
+        };
     }
 }
 
-// Export for use in other scripts
-window.BubbleEngine = BubbleEngine;
+// Global instance
+window.BubbleTreeEngine = BubbleTreeEngine;

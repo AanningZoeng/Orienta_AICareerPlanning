@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资源显示测试</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #eee;
+        }
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 40px;
+        }
+        .test-card {
+            background: #16213e;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 12px;
+            border: 1px solid #667eea;
+        }
+        h2 {
+            color: #f093fb;
+            margin-top: 0;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .resource-list {
+            list-style: none;
+            padding: 0;
+        }
+        .resource-item {
+            background: #0f172a;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #4ade80;
+        }
+        .resource-item a {
+            color: #4ade80;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .resource-item a:hover {
+            color: #6ee7b7;
+        }
+        .icon {
+            font-size: 1.5rem;
+        }
+        pre {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            color: #a5f3fc;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin: 10px 0;
+        }
+        .status.success {
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+            border: 1px solid #4ade80;
+        }
+        .status.error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid #ef4444;
+        }
+        .btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        .btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 资源显示测试页面</h1>
+
+    <div class="test-card">
+        <h2>测试1: 字符串URL数组（后端原始格式）</h2>
+        <p>模拟从 <code>majors_latest.json</code> 读取的数据格式</p>
+        <pre id="test1-input"></pre>
+        <button class="btn" onclick="runTest1()">运行测试</button>
+        <div id="test1-result"></div>
+    </div>
+
+    <div class="test-card">
+        <h2>测试2: 对象数组（API转换后格式）</h2>
+        <p>模拟API endpoint转换后的数据格式</p>
+        <pre id="test2-input"></pre>
+        <button class="btn" onclick="runTest2()">运行测试</button>
+        <div id="test2-result"></div>
+    </div>
+
+    <div class="test-card">
+        <h2>测试3: 完整API调用</h2>
+        <p>测试实际API调用和资源显示</p>
+        <button class="btn" onclick="testAPI()">调用 /api/major-research</button>
+        <div id="api-status"></div>
+        <pre id="api-result"></pre>
+    </div>
+
+    <script>
+        // 工具函数：从URL提取标题
+        function extractTitle(url, index) {
+            try {
+                const urlObj = new URL(url);
+                let hostname = urlObj.hostname.replace('www.', '').replace('m.', '');
+                
+                // 根据域名判断类型
+                if (hostname.includes('youtube') || hostname.includes('youtu.be')) {
+                    return { title: `YouTube: ${hostname}`, type: 'video', icon: '🎥' };
+                } else if (hostname.includes('medium') || hostname.includes('blog')) {
+                    return { title: `文章: ${hostname}`, type: 'article', icon: '📄' };
+                } else if (hostname.includes('coursera') || hostname.includes('udemy') || hostname.includes('edu')) {
+                    return { title: `课程: ${hostname}`, type: 'course', icon: '🎓' };
+                } else if (hostname.includes('reddit') || hostname.includes('forum')) {
+                    return { title: `论坛: ${hostname}`, type: 'website', icon: '💬' };
+                } else {
+                    return { title: hostname, type: 'website', icon: '🌐' };
+                }
+            } catch (e) {
+                return { title: `资源 ${index + 1}`, type: 'website', icon: '🔗' };
+            }
+        }
+
+        // 测试1: 字符串URL数组
+        function runTest1() {
+            const testData = [
+                "https://m.youtube.com/watch?v=QyiVCk8BRZ4",
+                "https://www.reddit.com/r/csMajors/comments/w35px0/",
+                "https://medium.com/@Arashhadad/what-you-can-expect",
+                "https://www.cs.columbia.edu/education/undergraduate/",
+                "https://www.coursera.org/articles/data-science-major"
+            ];
+
+            document.getElementById('test1-input').textContent = JSON.stringify(testData, null, 2);
+
+            let html = '<div class="status success">✅ 转换成功</div><ul class="resource-list">';
+            
+            testData.forEach((url, index) => {
+                const { title, type, icon } = extractTitle(url, index);
+                html += `
+                    <li class="resource-item">
+                        <a href="${url}" target="_blank">
+                            <span class="icon">${icon}</span>
+                            <span>${title}</span>
+                        </a>
+                    </li>
+                `;
+            });
+            
+            html += '</ul>';
+            document.getElementById('test1-result').innerHTML = html;
+        }
+
+        // 测试2: 对象数组
+        function runTest2() {
+            const testData = [
+                { title: "MIT计算机科学课程", url: "https://ocw.mit.edu/courses/", type: "course" },
+                { title: "算法导论", url: "https://mitpress.mit.edu/books/introduction-algorithms", type: "book" },
+                { title: "Kaggle数据科学课程", url: "https://www.kaggle.com/learn", type: "course" }
+            ];
+
+            document.getElementById('test2-input').textContent = JSON.stringify(testData, null, 2);
+
+            const iconMap = {
+                video: '🎥',
+                article: '📄',
+                course: '🎓',
+                book: '📚',
+                website: '🌐'
+            };
+
+            let html = '<div class="status success">✅ 格式正确</div><ul class="resource-list">';
+            
+            testData.forEach(resource => {
+                const icon = iconMap[resource.type] || '🔗';
+                html += `
+                    <li class="resource-item">
+                        <a href="${resource.url}" target="_blank">
+                            <span class="icon">${icon}</span>
+                            <span>${resource.title}</span>
+                        </a>
+                    </li>
+                `;
+            });
+            
+            html += '</ul>';
+            document.getElementById('test2-result').innerHTML = html;
+        }
+
+        // 测试3: API调用
+        async function testAPI() {
+            const statusDiv = document.getElementById('api-status');
+            const resultDiv = document.getElementById('api-result');
+            
+            statusDiv.innerHTML = '<div class="status">⏳ 正在调用API...</div>';
+            resultDiv.textContent = '';
+
+            try {
+                const response = await fetch('http://localhost:5000/api/major-research', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: "我喜欢编程和数学" })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.success && data.majors && data.majors.length > 0) {
+                    statusDiv.innerHTML = '<div class="status success">✅ API调用成功</div>';
+                    
+                    // 显示第一个专业的资源
+                    const firstMajor = data.majors[0];
+                    resultDiv.textContent = JSON.stringify({
+                        major: firstMajor.name,
+                        resources: firstMajor.resources
+                    }, null, 2);
+
+                    // 显示资源列表
+                    if (firstMajor.resources && firstMajor.resources.length > 0) {
+                        const iconMap = {
+                            video: '🎥',
+                            article: '📄',
+                            course: '🎓',
+                            book: '📚',
+                            website: '🌐'
+                        };
+
+                        let html = '<h3 style="color: #4ade80; margin-top: 20px;">资源列表:</h3><ul class="resource-list">';
+                        
+                        firstMajor.resources.forEach(resource => {
+                            const icon = iconMap[resource.type] || '🔗';
+                            html += `
+                                <li class="resource-item">
+                                    <a href="${resource.url}" target="_blank">
+                                        <span class="icon">${icon}</span>
+                                        <span>${resource.title}</span>
+                                    </a>
+                                </li>
+                            `;
+                        });
+                        
+                        html += '</ul>';
+                        statusDiv.innerHTML += html;
+                    }
+                } else {
+                    throw new Error('API返回格式错误');
+                }
+
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">❌ 错误: ${error.message}</div>`;
+                resultDiv.textContent = error.stack || error.message;
+            }
+        }
+
+        // 页面加载时自动运行测试1和2
+        window.onload = () => {
+            runTest1();
+            runTest2();
+        };
+    </script>
+</body>
+</html>

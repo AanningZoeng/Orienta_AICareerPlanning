@@ -22,7 +22,8 @@ print(f"  os.environ.get('GEMINI_API_KEY'): {os.environ.get('GEMINI_API_KEY', 'N
 
 print("\n检查 .env 文件路径:")
 from pathlib import Path
-env_path = Path(__file__).parent.parent / 'backend' / '.env'
+# .env 文件在项目根目录，不是在 backend/ 目录
+env_path = Path(__file__).parent.parent / '.env'
 print(f"  {env_path}")
 print(f"  存在: {env_path.exists()}")
 

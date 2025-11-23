@@ -16,6 +16,14 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 # CRITICAL: Import Config FIRST to load .env before SpoonAI classes initialize
 from backend.config import Config
+
+# CRITICAL: Set environment variables explicitly before creating agents
+if Config.GEMINI_API_KEY:
+    os.environ["GEMINI_API_KEY"] = Config.GEMINI_API_KEY
+    print(f"✅ Set GEMINI_API_KEY in os.environ")
+if Config.DEEPSEEK_API_KEY:
+    os.environ["DEEPSEEK_API_KEY"] = Config.DEEPSEEK_API_KEY
+
 from backend.agents.career_analysis_agent import create_career_analysis_agent
 
 
