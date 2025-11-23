@@ -1,219 +1,209 @@
 /**
- * Main application logic
- * Coordinates between UI, BubbleEngine, DetailView, and API
+ * Main application logic for tree-based career path planner
+ * Coordinates between UI, TreeEngine, and API
  */
 
 // API Configuration
 const API_BASE_URL = 'http://localhost:5000/api';
 
 // Global state
-let careerData = null;
-let bubbleEngine = null;
-let detailView = null;
-let currentMajor = null;
-let currentCareer = null;
+let treeEngine = null;
+let currentData = {
+    majors: null,
+    careers: {},  // Keyed by major name
+    futurePaths: {}  // Keyed by career node id
+};
 
 /**
  * Initialize the application
  */
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize components
-    bubbleEngine = new BubbleEngine('bubbleCanvas');
-    detailView = new DetailView();
-
-    // Setup event handlers
-    setupFormHandler();
-    setupBubbleClickHandler();
-
-    console.log('✅ AI Career Path Planner initialized');
+    console.log('🌳 Initializing Tree-based Career Path Planner...');
+    
+    // Initialize tree engine
+    treeEngine = new TreeEngine('treeCanvas');
+    
+    // Setup tree node click handler
+    treeEngine.onNodeClick = handleNodeClick;
+    
+    // Initialize tree with root node
+    treeEngine.initializeTree('');
+    
+    console.log('✅ Tree engine initialized');
 });
 
+
 /**
- * Setup form submission handler
+ * Handle node click events
  */
-function setupFormHandler() {
-    const form = document.getElementById('careerForm');
-    const analyzeBtn = document.getElementById('analyzeBtn');
-    const btnIcon = analyzeBtn.querySelector('.btn-icon');
-    const btnLoader = analyzeBtn.querySelector('.btn-loader');
-
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const userQuery = document.getElementById('userQuery').value.trim();
-        if (!userQuery) {
-            alert('Please describe your interests and goals');
-            return;
+async function handleNodeClick(node) {
+    console.log('Node clicked:', node);
+    
+    if (node.type === 'root') {
+        // Root node clicked - fetch majors
+        if (!node.expanded) {
+            await fetchAndDisplayMajors(node.userQuery);
+        } else {
+            // Show root details
+            treeEngine.showNodeDetails(node);
         }
+        
+    } else if (node.type === 'major') {
+        // Major node clicked
+        if (!node.expanded) {
+            // Fetch careers for this major
+            await fetchAndDisplayCareers(node);
+        } else {
+            // Show major details (description + resources)
+            treeEngine.showNodeDetails(node);
+        }
+        
+    } else if (node.type === 'career') {
+        // Career node clicked
+        if (!node.expanded) {
+            // Fetch future paths for this career (mock for now)
+            fetchAndDisplayFuturePaths(node);
+        } else {
+            // Show career details (description + resources)
+            treeEngine.showNodeDetails(node);
+        }
+        
+    } else if (node.type === 'future') {
+        // Future path node clicked - show details
+        treeEngine.showNodeDetails(node);
+    }
+}
 
-        // Show loading state
-        analyzeBtn.disabled = true;
-        btnIcon.style.display = 'none';
-        btnLoader.style.display = 'flex';
-        showLoadingOverlay();
 
-        try {
-            // Call API
-            const response = await fetch(`${API_BASE_URL}/analyze`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ query: userQuery })
-            });
+/**
+ * Fetch and display majors from API
+ */
+async function fetchAndDisplayMajors(userQuery) {
+    if (!userQuery || !userQuery.trim()) {
+        alert('Please enter your interests and goals first');
+        return;
+    }
+    
+    showLoadingOverlay('🔍 Researching university majors...');
+    
+    try {
+        // Call MajorResearchAgent via API
+        const response = await fetch(`${API_BASE_URL}/research-majors`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ query: userQuery })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Majors data received:', data);
+        
+        // Store majors data
+        currentData.majors = data.majors;
+        
+        // Add major nodes to tree
+        treeEngine.addMajors(data.majors);
+        
+        hideLoadingOverlay();
+        
+    } catch (error) {
+        console.error('Error fetching majors:', error);
+        hideLoadingOverlay();
+        alert('Failed to fetch majors. Please check:\n1. Flask server is running on localhost:5000\n2. MajorResearchAgent is configured correctly\n\nError: ' + error.message);
+    }
+}
 
-            if (!response.ok) {
-                throw new Error(`API error: ${response.status}`);
+/**
+ * Fetch and display careers for a major
+ */
+async function fetchAndDisplayCareers(majorNode) {
+    const majorName = majorNode.label;
+    
+    showLoadingOverlay(`💼 Analyzing careers for ${majorName}...`);
+    
+    try {
+        // Call CareerAnalysisAgent via API
+        const response = await fetch(`${API_BASE_URL}/analyze-careers`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ major_name: majorName })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Careers data received:', data);
+        
+        // Store careers data
+        currentData.careers[majorName] = data.careers;
+        
+        // Add career nodes to tree
+        treeEngine.addCareers(majorNode.id, data.careers);
+        
+        hideLoadingOverlay();
+        
+    } catch (error) {
+        console.error('Error fetching careers:', error);
+        hideLoadingOverlay();
+        alert('Failed to fetch careers. Please check:\n1. Flask server is running\n2. CareerAnalysisAgent is configured\n3. careers_latest.json exists\n\nError: ' + error.message);
+    }
+}
+
+/**
+ * Fetch and display future paths for a career
+ */
+function fetchAndDisplayFuturePaths(careerNode) {
+    // Mock implementation - FuturePathAgent not yet implemented
+    showLoadingOverlay('🔮 Projecting future paths...');
+    
+    setTimeout(() => {
+        // Mock future paths
+        const mockFutures = [
+            {
+                title: '5-Year Outlook',
+                description: 'Expected growth and opportunities within 5 years',
+                resources: []
+            },
+            {
+                title: '10-Year Outlook',
+                description: 'Long-term career trajectory and advancement',
+                resources: []
+            },
+            {
+                title: 'Industry Trends',
+                description: 'Emerging trends affecting this career path',
+                resources: []
             }
-
-            const data = await response.json();
-            careerData = data;
-
-            // Display results
-            displayMajors(data.majors);
-
-        } catch (error) {
-            console.error('Error analyzing career path:', error);
-            alert('Failed to analyze career path. Make sure the API server is running on localhost:5000');
-        } finally {
-            // Hide loading state
-            analyzeBtn.disabled = false;
-            btnIcon.style.display = '';
-            btnLoader.style.display = 'none';
-            hideLoadingOverlay();
-        }
-    });
+        ];
+        
+        currentData.futurePaths[careerNode.id] = mockFutures;
+        
+        treeEngine.addFuturePaths(careerNode.id, mockFutures);
+        
+        hideLoadingOverlay();
+    }, 1000);
 }
 
-/**
- * Setup bubble click handler
- */
-function setupBubbleClickHandler() {
-    bubbleEngine.onBubbleClick = (bubble) => {
-        console.log('Bubble clicked:', bubble);
-
-        if (bubble.type === 'major') {
-            // Show major detail in modal
-            detailView.showMajorDetail(bubble.data);
-
-            // Also navigate to careers for this major
-            currentMajor = bubble.data;
-            displayCareers(bubble.data.careers || []);
-
-        } else if (bubble.type === 'career') {
-            // Show career detail in modal
-            detailView.showCareerDetail(bubble.data);
-
-            // Also navigate to future paths for this career
-            currentCareer = bubble.data;
-            displayFuturePaths(bubble.data.future_paths || []);
-
-        } else if (bubble.type === 'future') {
-            // Show future path detail in modal
-            detailView.showFutureDetail(bubble.data);
-        }
-    };
-}
-
-/**
- * Display major bubbles
- */
-function displayMajors(majors) {
-    if (!majors || majors.length === 0) {
-        alert('No majors found. Please try a different query.');
-        return;
-    }
-
-    currentMajor = null;
-    currentCareer = null;
-
-    // Show visualization section
-    document.getElementById('searchSection').style.display = 'none';
-    document.getElementById('visualizationSection').style.display = 'block';
-
-    // Update breadcrumb
-    updateBreadcrumb('Majors');
-
-    // Display bubbles
-    bubbleEngine.showMajors(majors);
-
-    console.log(`Displaying ${majors.length} major bubbles`);
-}
-
-/**
- * Display career bubbles for a major
- */
-function displayCareers(careers) {
-    if (!careers || careers.length === 0) {
-        console.log('No careers found for this major');
-        return;
-    }
-
-    currentCareer = null;
-
-    // Update breadcrumb
-    updateBreadcrumb('Majors', currentMajor.name, 'Careers');
-
-    // Display bubbles
-    bubbleEngine.showCareers(careers, currentMajor.name);
-
-    console.log(`Displaying ${careers.length} career bubbles for ${currentMajor.name}`);
-}
-
-/**
- * Display future path bubbles for a career
- */
-function displayFuturePaths(futurePaths) {
-    if (!futurePaths || futurePaths.length === 0) {
-        console.log('No future paths found for this career');
-        return;
-    }
-
-    // Update breadcrumb
-    updateBreadcrumb('Majors', currentMajor.name, 'Careers', currentCareer.title, 'Future Paths');
-
-    // Display bubbles
-    bubbleEngine.showFutures(futurePaths, currentCareer.title);
-
-    console.log(`Displaying ${futurePaths.length} future path bubbles for ${currentCareer.title}`);
-}
-
-/**
- * Update breadcrumb navigation
- */
-function updateBreadcrumb(...items) {
-    const breadcrumb = document.getElementById('breadcrumb');
-
-    const html = items.map((item, index) => {
-        const isActive = index === items.length - 1;
-        return `<span class="breadcrumb-item ${isActive ? 'active' : ''}">${item}</span>`;
-    }).join('');
-
-    breadcrumb.innerHTML = html;
-
-    // Make breadcrumb items clickable to navigate back
-    const breadcrumbItems = breadcrumb.querySelectorAll('.breadcrumb-item');
-    breadcrumbItems.forEach((item, index) => {
-        if (index < items.length - 1) {
-            item.style.cursor = 'pointer';
-            item.addEventListener('click', () => {
-                if (index === 0) {
-                    // Navigate to majors
-                    displayMajors(careerData.majors);
-                } else if (index === 2 && currentMajor) {
-                    // Navigate to careers
-                    displayCareers(currentMajor.careers);
-                }
-            });
-        }
-    });
-}
 
 /**
  * Show loading overlay
  */
-function showLoadingOverlay() {
-    document.getElementById('loadingOverlay').style.display = 'flex';
+function showLoadingOverlay(message = 'Loading...') {
+    const overlay = document.getElementById('loadingOverlay');
+    const content = overlay.querySelector('.loading-content h3');
+    if (content) {
+        content.textContent = message;
+    }
+    overlay.style.display = 'flex';
 }
 
 /**

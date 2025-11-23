@@ -3,17 +3,22 @@ Now implemented using SpoonReactAI (ReAct style) for LLM calls.
 """
 import asyncio
 import os
+import json
+from datetime import datetime
 from typing import Dict, Any, List
+
+# CRITICAL: Import Config FIRST to load .env before SpoonAI initializes
+from backend.config import Config
+from backend.tools.web_scraper_tool import WebScraperTool
+from backend.utils.search_utils import safe_ddg
+from backend.utils.llm_utils import TokenEnforcingChatBot
+
+# Import SpoonAI after Config
 from spoon_ai.chat import ChatBot
 try:
     from spoon_ai.agents import SpoonReactAI
 except Exception:
     SpoonReactAI = None
-from backend.tools.web_scraper_tool import WebScraperTool
-from backend.utils.search_utils import safe_ddg
-from backend.utils.llm_utils import TokenEnforcingChatBot
-from backend.config import Config
-import asyncio
 
 
 class MajorResearchAgent:
@@ -73,12 +78,12 @@ class MajorResearchAgent:
             List of recommended major names
         """
         # Use LLM to analyze and recommend majors
-        prompt = f"""Based on this user query, recommend 3-5 relevant university majors:
+        prompt = f"""Based on this user query, recommend 2-3 relevant university majors:
         
 User Query: "{user_query}"
 
 Recommend majors that align with their interests. Return ONLY a Python list of major names, like:
-["Computer Science", "Business Administration", "Psychology"]
+["Computer Science", "Business Administration"]
 
 Major names:"""
         
@@ -97,7 +102,7 @@ Major names:"""
             if match:
                 items = json.loads(match.group(0))
                 if isinstance(items, list) and items:
-                    return [str(x).strip() for x in items][:5]
+                    return [str(x).strip() for x in items][:3]
         except Exception:
             pass
 
@@ -114,13 +119,13 @@ Major names:"""
                     cand = title.split('-')[0].split('|')[0].strip()
                     if len(cand) > 3 and cand not in majors:
                         majors.append(cand)
-                if len(majors) >= 5:
+                if len(majors) >= 3:
                     break
         except Exception:
             majors = []
 
         # Last resort: return empty list (no hard-coded majors)
-        return majors[:5]
+        return majors[:3]
     
     async def research_majors(self, major_names: List[str]) -> Dict[str, Dict[str, Any]]:
         """
@@ -231,7 +236,42 @@ Major names:"""
         # Step 2: Research each major in detail
         major_details = await self.research_majors(major_names)
         
+        # Step 3: Save results to database
+        self._save_to_database(user_query, major_details)
+        
         return major_details
+
+    def _save_to_database(self, user_query: str, major_details: Dict[str, Dict[str, Any]]):
+        """Save major research results to JSON database file."""
+        try:
+            # Create database directory if it doesn't exist
+            db_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'database')
+            os.makedirs(db_dir, exist_ok=True)
+            
+            # Create timestamped filename
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            filename = f"majors_{timestamp}.json"
+            filepath = os.path.join(db_dir, filename)
+            
+            # Prepare data structure
+            data = {
+                'timestamp': datetime.now().isoformat(),
+                'user_query': user_query,
+                'majors': major_details
+            }
+            
+            # Write to file
+            with open(filepath, 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+            
+            # Also save as latest.json for easy access
+            latest_path = os.path.join(db_dir, 'majors_latest.json')
+            with open(latest_path, 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+            
+            print(f"[Database] Saved major research results to {filename}")
+        except Exception as e:
+            print(f"[Database] Failed to save results: {e}")
 
 
 # Factory function for easy instantiation
@@ -251,6 +291,12 @@ def create_major_research_agent(llm_provider: str = None, model_name: str = None
             except Exception as e:
                 print(f"⚠️ LLM config validation failed: {e}. Falling back to non-LLM mode.")
                 return MajorResearchAgent(llm_agent=None)
+
+            # CRITICAL: Set API key in os.environ so spoon_ai can access it
+            if provider == "gemini" and Config.GEMINI_API_KEY:
+                os.environ["GEMINI_API_KEY"] = Config.GEMINI_API_KEY
+            elif provider == "deepseek" and Config.DEEPSEEK_API_KEY:
+                os.environ["DEEPSEEK_API_KEY"] = Config.DEEPSEEK_API_KEY
 
             safe_tokens = Config.get_safe_max_tokens(provider)
             # Debug: show what we'll pass to the SDK

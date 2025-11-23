@@ -7,6 +7,14 @@ import json
 import os
 from datetime import datetime
 import uuid
+
+# CRITICAL: Import Config and backend agents FIRST before SpoonAI
+from backend.config import Config
+from backend.agents.major_research_agent import create_major_research_agent
+from backend.agents.career_analysis_agent import create_career_analysis_agent
+from backend.agents.future_path_agent import create_future_path_agent
+
+# Import SpoonAI graph modules after backend imports
 from spoon_ai.graph import StateGraph, END
 from spoon_ai.graph.builder import (
     DeclarativeGraphBuilder,
@@ -17,10 +25,6 @@ from spoon_ai.graph.builder import (
     ParallelGroupConfig
 )
 from spoon_ai.graph.config import GraphConfig
-from backend.agents.major_research_agent import create_major_research_agent
-from backend.agents.career_analysis_agent import create_career_analysis_agent
-from backend.agents.future_path_agent import create_future_path_agent
-from backend.config import Config
 
 
 class CareerPlanningState(TypedDict):

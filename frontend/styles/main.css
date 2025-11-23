@@ -219,67 +219,57 @@ textarea::placeholder {
 }
 
 /* ============================================
-   Visualization Section
+   Tree Visualization Section
    ============================================ */
-.visualization-section {
+.tree-section {
     padding: var(--spacing-lg) 0;
 }
 
-.breadcrumb {
-    display: flex;
-    gap: var(--spacing-sm);
+.tree-instructions {
+    text-align: center;
     margin-bottom: var(--spacing-md);
-    flex-wrap: wrap;
-}
-
-.breadcrumb-item {
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-
-.breadcrumb-item:hover {
     color: var(--text-secondary);
+    font-size: 0.95rem;
 }
 
-.breadcrumb-item.active {
-    color: var(--text-primary);
-    font-weight: 600;
-}
-
-.breadcrumb-item:not(:last-child)::after {
-    content: '›';
-    margin-left: var(--spacing-sm);
-    color: var(--text-muted);
-}
-
-.bubble-canvas-container {
+.tree-canvas-container {
     background: var(--bg-card);
     backdrop-filter: blur(20px);
     border-radius: 24px;
     border: 1px solid var(--border-color);
     box-shadow: var(--shadow-lg);
-    position: relative;
-    min-height: 600px;
     overflow: hidden;
+    position: relative;
 }
 
-#bubbleCanvas {
-    width: 100%;
-    height: 600px;
+#treeCanvas {
     display: block;
+    width: 100%;
 }
 
-/* Legend */
-.legend {
-    position: absolute;
-    top: var(--spacing-md);
-    right: var(--spacing-md);
-    background: var(--bg-darker);
-    backdrop-filter: blur(10px);
-    border-radius: 12px;
+/* Tree node styles */
+.tree-node {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tree-node:hover {
+    filter: brightness(1.2);
+}
+
+.tree-link {
+    transition: stroke 0.3s ease;
+}
+
+/* Tree Legend */
+.tree-legend {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-md);
     padding: var(--spacing-md);
+    background: var(--bg-card);
+    border-radius: 16px;
     border: 1px solid var(--border-color);
 }
 
@@ -287,39 +277,131 @@ textarea::placeholder {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
-    margin-bottom: var(--spacing-xs);
     font-size: 0.9rem;
     color: var(--text-secondary);
 }
 
-.legend-item:last-child {
-    margin-bottom: 0;
-}
-
-.legend-color {
+.legend-dot {
     width: 16px;
     height: 16px;
-    border-radius: 4px;
+    border-radius: 50%;
 }
 
-.major-color {
-    background: linear-gradient(135deg, hsl(220, 100%, 60%) 0%, hsl(240, 100%, 70%) 100%);
+.root-dot {
+    background: linear-gradient(135deg, hsl(200,80%,60%) 0%, hsl(220,90%,70%) 100%);
 }
 
-.career-color {
-    background: linear-gradient(135deg, hsl(140, 80%, 50%) 0%, hsl(160, 90%, 60%) 100%);
+.major-dot {
+    background: linear-gradient(135deg, hsl(280,90%,65%) 0%, hsl(300,80%,70%) 100%);
 }
 
-.future-color {
-    background: linear-gradient(135deg, hsl(280, 90%, 60%) 0%, hsl(300, 100%, 70%) 100%);
+.career-dot {
+    background: linear-gradient(135deg, hsl(140,85%,55%) 0%, hsl(160,80%,60%) 100%);
 }
 
-/* Instructions */
-.instructions {
-    text-align: center;
-    margin-top: var(--spacing-lg);
+.future-dot {
+    background: linear-gradient(135deg, hsl(40,95%,60%) 0%, hsl(60,90%,65%) 100%);
+}
+
+/* Modal Styles */
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+}
+
+.modal-content {
+    position: relative;
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+    max-width: 700px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: var(--spacing-xl);
+    z-index: 10001;
+}
+
+.modal-close {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    background: none;
+    border: none;
     color: var(--text-secondary);
-    font-size: 0.95rem;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+    color: var(--text-primary);
+}
+
+#modalTitle {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.modal-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.modal-section h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-primary);
+}
+
+.modal-section p {
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.modal-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.modal-section li {
+    margin-bottom: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    background: var(--bg-darker);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.modal-section a {
+    color: hsl(200, 100%, 70%);
+    text-decoration: none;
+    word-break: break-all;
+    transition: color 0.2s ease;
+}
+
+.modal-section a:hover {
+    color: hsl(200, 100%, 80%);
+    text-decoration: underline;
 }
 
 /* ============================================

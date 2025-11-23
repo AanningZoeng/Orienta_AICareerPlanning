@@ -4,19 +4,22 @@ Now uses SpoonReactAI (ReAct style) for optional LLM calls and calls
 """
 
 import asyncio
+import os
 from typing import Dict, Any, List
+
+# CRITICAL: Import Config and backend modules FIRST before SpoonAI
+from backend.config import Config
+from backend.tools.linkedin_analyzer_tool import LinkedInAnalyzerTool
+from backend.tools.media_finder_tool import MediaFinderTool
+from backend.utils.search_utils import safe_ddg
+from backend.utils.llm_utils import TokenEnforcingChatBot
+
+# Import SpoonAI after backend imports
 from spoon_ai.chat import ChatBot
 try:
     from spoon_ai.agents import SpoonReactAI
 except Exception:
     SpoonReactAI = None
-
-from backend.tools.linkedin_analyzer_tool import LinkedInAnalyzerTool
-from backend.config import Config
-from backend.tools.media_finder_tool import MediaFinderTool
-from backend.utils.search_utils import safe_ddg
-import os
-from backend.utils.llm_utils import TokenEnforcingChatBot
 
 class FuturePathAgent:
     """Agent specialized in analyzing future career progression patterns."""
@@ -259,6 +262,12 @@ def create_future_path_agent(llm_provider: str = None, model_name: str = None) -
             except Exception as e:
                 print(f"⚠️ LLM config validation failed: {e}. Falling back to non-LLM mode.")
                 return FuturePathAgent(llm_agent=None)
+
+            # CRITICAL: Set API key in os.environ so spoon_ai can access it
+            if provider == "gemini" and Config.GEMINI_API_KEY:
+                os.environ["GEMINI_API_KEY"] = Config.GEMINI_API_KEY
+            elif provider == "deepseek" and Config.DEEPSEEK_API_KEY:
+                os.environ["DEEPSEEK_API_KEY"] = Config.DEEPSEEK_API_KEY
 
             safe_tokens = Config.get_safe_max_tokens(provider)
             try:

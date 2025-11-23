@@ -1,0 +1,48 @@
+{
+  "timestamp": "2025-11-23T00:56:28.851261",
+  "user_query": "I enjoy programming, algorithms, and math. What majors fit me?",
+  "majors": {
+    "Computer Science": {
+      "description": "Computer Science is the study of computers and computational systems, focusing on the theory, design, development, and application of software. Students delve into core topics such as algorithms, data structures, programming languages, operating systems, and artificial intelligence. Upon graduation, common career paths include software developer, data scientist, cybersecurity analyst, and systems architect. This major provides a strong foundation for solving complex problems in virtually any industry.",
+      "resources": [
+        "https://www.youtube.com/watch?v=NgQ4FewQvj0",
+        "https://www.youtube.com/watch?v=MmihGDXoAMI",
+        "https://study.com/academy/lesson/video/what-is-computer-science-definition-lesson.html",
+        "https://www.admitadvantage.com/blog/best-computer-science-undergraduate-programs/",
+        "https://catalog.southernct.edu/graduate/programs-and-degrees/curriculum-and-instruction-ms-computer-science.html",
+        "https://cs.unc.edu/graduate/graduate-overview/",
+        "https://podcast.feedspot.com/computer_science_podcasts/",
+        "https://oxfordsummercourses.com/articles/podcasts-for-computer-science-students",
+        "https://medium.com/yetkingencler/podcasts-for-cs-majors-fb66b2b81b7f"
+      ]
+    },
+    "Mathematics": {
+      "description": "Mathematics is the rigorous study of abstract structures, patterns, and logical reasoning, focusing on topics like quantity, space, and change. Students explore fundamental areas such as calculus, linear algebra, abstract algebra, and real analysis, developing powerful analytical and problem-solving abilities. This versatile degree opens doors to careers in finance as an actuary or quantitative analyst, in technology as a data scientist or cryptographer, and in research and education. The skills learned are highly valued across numerous industries for their precision and logical depth.",
+      "resources": [
+        "https://www.math.arizona.edu/about/why-math",
+        "https://www.math.utah.edu/applied-math/why/",
+        "https://www.montclair.edu/admissions/wp-content/uploads/sites/2/2020/04/Why-Study-Mathematics.pdf",
+        "https://catalog.uta.edu/science/math/undergraduate/",
+        "https://appliedmath.brown.edu/academics/undergraduate-program",
+        "https://www.maths.cam.ac.uk/undergrad/course",
+        "https://podcast.feedspot.com/math_podcasts/",
+        "https://makemathmoments.com/podcast/",
+        "https://illustrativemathematics.org/im-experience/im-presents-podcasts/"
+      ]
+    },
+    "Data Science": {
+      "description": "Data Science is an interdisciplinary field focused on extracting knowledge and insights from structured and unstructured data. The curriculum blends computer science, statistics, and mathematics, covering topics like machine learning, data mining, statistical modeling, and big data technologies. Graduates are prepared for high-demand careers such as data scientist, data analyst, machine learning engineer, and business intelligence analyst. This major equips students with the skills to solve complex, data-driven problems across finance, healthcare, technology, and more.",
+      "resources": [
+        "https://m.youtube.com/watch?v=dcQOgiIHdq0",
+        "https://m.youtube.com/watch?v=VlwIDJV7OO8",
+        "https://www.geeksforgeeks.org/blogs/a-day-in-the-life-of-a-data-scientist/",
+        "https://www.topuniversities.com/universities/clarkson-university/undergrad/bs-data-science",
+        "https://www.mindler.com/blog/data-science-programs/",
+        "https://datascienceparichay.com/schools/washington/",
+        "https://www.belmontforum.org/wp-content/uploads/2019/10/CRA-Data-Management-language-v.1.4.pdf",
+        "https://www.belmontforum.org/wp-content/uploads/2019/10/CRA_Data_Digital_Outputs_Management_V2.pdf",
+        "https://www.belmontforum.org/wp-content/uploads/2017/10/Data-policy-1.pdf"
+      ]
+    }
+  }
+}

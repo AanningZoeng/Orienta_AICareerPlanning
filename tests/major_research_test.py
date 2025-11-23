@@ -18,6 +18,8 @@ project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
+# CRITICAL: Import Config FIRST to load .env before SpoonAI classes initialize
+from backend.config import Config
 from backend.agents.major_research_agent import create_major_research_agent
 
 
@@ -72,6 +74,11 @@ async def run_test():
 
     print("Test succeeded. Summary:")
     print(json.dumps(summary, indent=2, ensure_ascii=False))
+    
+    print("\n[Database] Check backend/database/ folder for saved JSON files:")
+    print("  - majors_<timestamp>.json (timestamped version)")
+    print("  - majors_latest.json (always points to most recent)")
+
 
 
 

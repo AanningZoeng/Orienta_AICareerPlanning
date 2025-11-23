@@ -29,77 +29,90 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Search Section -->
-        <section class="search-section" id="searchSection">
+        <!-- Tree Visualization Section -->
+        <section class="tree-section" id="treeSection">
             <div class="container">
-                <div class="search-card">
-                    <h2>Tell us about your interests</h2>
-                    <p>Our AI will analyze your passions and recommend personalized career paths</p>
-                    
-                    <form id="careerForm">
-                        <textarea 
-                            id="userQuery" 
-                            placeholder="e.g., I love technology and helping people. I enjoy problem-solving and creative thinking..."
-                            rows="4"
-                            required
-                        ></textarea>
-                        
-                        <button type="submit" class="btn-primary" id="analyzeBtn">
-                            <span class="btn-icon">✨</span>
-                            <span>Analyze My Path</span>
-                            <span class="btn-loader" style="display: none;">
-                                <span class="loader"></span>
-                            </span>
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </section>
-
-        <!-- Visualization Section -->
-        <section class="visualization-section" id="visualizationSection" style="display: none;">
-            <div class="container">
-                <!-- Breadcrumb Navigation -->
-                <div class="breadcrumb" id="breadcrumb">
-                    <span class="breadcrumb-item active" data-level="0">Majors</span>
-                </div>
-
-                <!-- Visualization Canvas -->
-                <div class="bubble-canvas-container">
-                    <canvas id="bubbleCanvas"></canvas>
-                    
-                    <!-- Legend -->
-                    <div class="legend">
-                        <div class="legend-item">
-                            <span class="legend-color major-color"></span>
-                            <span>University Majors</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-color career-color"></span>
-                            <span>Career Paths</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-color future-color"></span>
-                            <span>Future Directions</span>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Instructions -->
-                <div class="instructions">
-                    <p>💡 <strong>Hover</strong> over bubbles to see details • <strong>Click</strong> to explore further</p>
+                <div class="tree-instructions">
+                    <p>💡 <strong>Click</strong> on nodes to expand and explore • <strong>Hover</strong> to preview</p>
+                </div>
+
+                <!-- Tree Canvas Container -->
+                <div class="tree-canvas-container" id="treeContainer">
+                    <svg id="treeCanvas" width="100%" height="800">
+                        <defs>
+                            <!-- Gradient definitions for nodes -->
+                            <linearGradient id="rootGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:hsl(200,80%,60%);stop-opacity:0.8" />
+                                <stop offset="100%" style="stop-color:hsl(220,90%,70%);stop-opacity:0.8" />
+                            </linearGradient>
+                            <linearGradient id="majorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:hsl(280,90%,65%);stop-opacity:0.75" />
+                                <stop offset="100%" style="stop-color:hsl(300,80%,70%);stop-opacity:0.75" />
+                            </linearGradient>
+                            <linearGradient id="careerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:hsl(140,85%,55%);stop-opacity:0.7" />
+                                <stop offset="100%" style="stop-color:hsl(160,80%,60%);stop-opacity:0.7" />
+                            </linearGradient>
+                            <linearGradient id="futureGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:hsl(40,95%,60%);stop-opacity:0.65" />
+                                <stop offset="100%" style="stop-color:hsl(60,90%,65%);stop-opacity:0.65" />
+                            </linearGradient>
+                            
+                            <!-- Drop shadow filter -->
+                            <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                                <feOffset dx="0" dy="2" result="offsetblur"/>
+                                <feComponentTransfer>
+                                    <feFuncA type="linear" slope="0.3"/>
+                                </feComponentTransfer>
+                                <feMerge>
+                                    <feMergeNode/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        
+                        <!-- Links group (drawn first so nodes appear on top) -->
+                        <g id="linksGroup"></g>
+                        
+                        <!-- Nodes group -->
+                        <g id="nodesGroup"></g>
+                    </svg>
+                </div>
+
+                <!-- Legend -->
+                <div class="tree-legend">
+                    <div class="legend-item">
+                        <span class="legend-dot root-dot"></span>
+                        <span>Root (Your Input)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot major-dot"></span>
+                        <span>University Majors</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot career-dot"></span>
+                        <span>Career Paths</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot future-dot"></span>
+                        <span>Future Directions</span>
+                    </div>
                 </div>
             </div>
         </section>
     </main>
 
     <!-- Detail Modal -->
-    <div class="modal" id="detailModal">
+    <div class="modal" id="detailModal" style="display: none;">
         <div class="modal-overlay" id="modalOverlay"></div>
         <div class="modal-content" id="modalContent">
             <button class="modal-close" id="modalClose">&times;</button>
             <div id="modalBody">
-                <!-- Content will be dynamically loaded -->
+                <h2 id="modalTitle"></h2>
+                <div id="modalDescription" class="modal-section"></div>
+                <div id="modalResources" class="modal-section"></div>
             </div>
         </div>
     </div>
@@ -114,8 +127,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="scripts/bubble-engine.js"></script>
-    <script src="scripts/detail-view.js"></script>
+    <script src="scripts/tree-engine.js"></script>
     <script src="scripts/main.js"></script>
 </body>
 </html>

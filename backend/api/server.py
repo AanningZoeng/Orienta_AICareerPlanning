@@ -16,7 +16,9 @@ from backend.config import Config
 from backend.agents.orchestrator_agent import create_orchestrator
 
 # Initialize Flask app
-app = Flask(__name__)
+app = Flask(__name__, 
+            static_folder='../../frontend',
+            static_url_path='')
 CORS(app)  # Enable CORS for frontend access
 
 # Global orchestrator instance
@@ -48,7 +50,22 @@ def init_orchestrator():
 async def process_query_async(user_query: str) -> dict:
     """Process user query through the orchestrator."""
     if orchestrator:
-        return await orchestrator.process_query(user_query)
+        result = await orchestrator.process_query(user_query)
+        # Transform new format (dict keyed by major) to frontend-compatible format
+        majors_list = []
+        for major_name, major_data in result.items():
+            majors_list.append({
+                "id": major_name.lower().replace(" ", "_"),
+                "name": major_name,
+                "description": major_data.get("description", ""),
+                "resources": major_data.get("resources", []),
+                "careers": [],  # Will be populated by career agent if orchestrator includes it
+                "future_paths": []
+            })
+        return {
+            "user_query": user_query,
+            "majors": majors_list
+        }
     else:
         # Return mock data if orchestrator not initialized
         return {
@@ -58,25 +75,24 @@ async def process_query_async(user_query: str) -> dict:
                     "id": "computer_science",
                     "name": "Computer Science",
                     "description": "Study of computers and computational systems",
+                    "resources": [],
                     "careers": [
                         {
                             "id": "software_engineer",
                             "title": "Software Engineer",
                             "salary_range": "$80,000 - $180,000",
-                            "future_paths": [
-                                {
-                                    "career": "Software Engineer",
-                                    "statistics": {
-                                        "promoted": {"percentage": 45},
-                                        "same_role": {"percentage": 30}
-                                    }
-                                }
-                            ]
+                            "future_paths": []
                         }
                     ]
                 }
             ]
         }
+
+
+@app.route('/')
+def index():
+    """Serve the main frontend page."""
+    return app.send_static_file('index.html')
 
 
 @app.route('/api/health', methods=['GET'])
@@ -132,6 +148,109 @@ def analyze():
         
     except Exception as e:
         print(f"Error processing request: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/research-majors', methods=['POST'])
+def research_majors():
+    """
+    Research majors based on user query.
+    Calls MajorResearchAgent directly.
+    
+    Request body:
+        {
+            "query": "User's interests and goals"
+        }
+    
+    Response:
+        {
+            "majors": {
+                "Computer Science": {
+                    "description": "...",
+                    "resources": ["url1", "url2", ...]
+                },
+                ...
+            }
+        }
+    """
+    try:
+        from backend.agents.major_research_agent import create_major_research_agent
+        
+        data = request.get_json()
+        if not data or 'query' not in data:
+            return jsonify({"error": "Missing 'query' field"}), 400
+        
+        user_query = data['query']
+        
+        # Create and run MajorResearchAgent
+        agent = create_major_research_agent()
+        result = asyncio.run(agent.process_query(user_query))
+        
+        return jsonify({"majors": result})
+        
+    except Exception as e:
+        print(f"Error researching majors: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/analyze-careers', methods=['POST'])
+def analyze_careers():
+    """
+    Analyze careers for a specific major.
+    Calls CareerAnalysisAgent directly.
+    
+    Request body:
+        {
+            "major_name": "Computer Science"
+        }
+    
+    Response:
+        {
+            "careers": {
+                "Software Engineer": {
+                    "description": "...",
+                    "resources": ["url1", "url2", ...]
+                },
+                ...
+            }
+        }
+    """
+    try:
+        from backend.agents.career_analysis_agent import create_career_analysis_agent
+        
+        data = request.get_json()
+        if not data or 'major_name' not in data:
+            return jsonify({"error": "Missing 'major_name' field"}), 400
+        
+        major_name = data['major_name']
+        
+        # Create and run CareerAnalysisAgent
+        agent = create_career_analysis_agent()
+        
+        # Load latest major data and filter for this major
+        import json
+        db_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'database')
+        majors_path = os.path.join(db_dir, 'majors_latest.json')
+        
+        if not os.path.exists(majors_path):
+            return jsonify({"error": "No major data found. Please run major research first."}), 404
+        
+        # For now, use the existing process_query which processes all majors
+        # Then filter for the requested major
+        result = asyncio.run(agent.process_query())
+        
+        if major_name in result:
+            return jsonify({"careers": result[major_name]})
+        else:
+            # Major not found, return empty
+            return jsonify({"careers": {}})
+        
+    except Exception as e:
+        print(f"Error analyzing careers: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return jsonify({"error": str(e)}), 500
 
 
@@ -208,7 +327,9 @@ def main():
     # Start Flask server
     print(f"\n[START] Starting server on {Config.API_HOST}:{Config.API_PORT}")
     print(f"[INFO] API documentation:")
-    print(f"   POST /api/analyze - Analyze career interests")
+    print(f"   POST /api/analyze - Analyze career interests (full pipeline)")
+    print(f"   POST /api/research-majors - Research majors only")
+    print(f"   POST /api/analyze-careers - Analyze careers for a major")
     print(f"   GET  /api/health - Health check")
     print(f"   GET  /api/detail/major/<id> - Get major details")
     print(f"   GET  /api/detail/career/<id> - Get career details")

@@ -5,17 +5,20 @@ Now uses SpoonReactAI (ReAct style) for optional LLM reasoning and invokes
 
 import asyncio
 import os
-from typing import Dict, Any, List
+import json
+import glob
+from datetime import datetime
+from typing import Dict, Any, List, Optional
+
+# CRITICAL: Import Config and tools FIRST before SpoonAI
+from backend.tools.media_finder_tool import MediaFinderTool
+
+# Import SpoonAI after backend imports
 from spoon_ai.chat import ChatBot
 try:
     from spoon_ai.agents import SpoonReactAI
 except Exception:
     SpoonReactAI = None
-
-from backend.tools.media_finder_tool import MediaFinderTool
-import json
-import asyncio
-from typing import Optional
 
 from bs4 import BeautifulSoup
 from backend.utils.search_utils import safe_ddg, http_get_text
@@ -69,8 +72,8 @@ Return data in structured JSON format.
         # Prefer LLM-generated career titles
         if self.llm_agent is not None:
             prompt = (
-                f"List 3-5 common career titles that graduates with a degree in '{major_name}' pursue. "
-                "Return a JSON array of short title strings only, for example: [\"Software Engineer\", \"Data Scientist\"]"
+                f"List exactly 3 common career titles that graduates with a degree in '{major_name}' pursue. "
+                "Return a JSON array of short title strings only, for example: [\"Software Engineer\", \"Data Scientist\", \"Product Manager\"]"
             )
             try:
                 resp = await self.llm_agent.run(prompt)
@@ -79,7 +82,7 @@ Return data in structured JSON format.
                 if match:
                     items = json.loads(match.group(0))
                     if isinstance(items, list) and items:
-                        return [str(x).strip() for x in items][:5]
+                        return [str(x).strip() for x in items][:3]
             except Exception:
                 pass
 
@@ -96,7 +99,7 @@ Return data in structured JSON format.
                     cand = title.split("-")[0].split("|", 1)[0].strip()
                     if len(cand) > 3 and cand not in careers:
                         careers.append(cand)
-                if len(careers) >= 4:
+                if len(careers) >= 3:
                     break
         except Exception:
             careers = []
@@ -105,9 +108,99 @@ Return data in structured JSON format.
         if not careers:
             base = major_name.split()[:2]
             base_label = " ".join(base)
-            careers = [f"{base_label} Professional", f"{base_label} Specialist"]
+            careers = [f"{base_label} Professional", f"{base_label} Specialist", f"{base_label} Consultant"]
 
-        return careers[:5]
+        return careers[:3]
+
+    async def analyze_career_simple(self, career_title: str, major_name: str = "") -> Dict[str, Any]:
+        """Analyze a career and return simplified {description, resources} structure.
+        
+        Args:
+            career_title: The career to analyze
+            major_name: The major this career relates to (for context)
+        
+        Returns:
+            Dict with 'description' (LLM-generated text) and 'resources' (list of URLs)
+        """
+        # Step 1: Generate description via LLM
+        description = ""
+        if self.llm_agent is not None:
+            try:
+                context = f" for graduates with a {major_name} degree" if major_name else ""
+                prompt = (
+                    f"Provide a concise 2-4 sentence description of the career '{career_title}'{context}. "
+                    "Include typical responsibilities, work environment, and career growth potential. "
+                    "Return plain text only (no markdown, no formatting)."
+                )
+                resp = await self.llm_agent.run(prompt)
+                text = str(resp or "").strip()
+                # Take first paragraph
+                if "\n\n" in text:
+                    description = text.split("\n\n")[0].strip()
+                elif "\n" in text:
+                    description = text.split("\n")[0].strip()
+                else:
+                    description = text
+            except Exception as e:
+                print(f"[CareerAnalysisAgent] LLM description failed for {career_title}: {e}")
+                description = ""
+        
+        # Step 2: Generate resource URLs via LLM-generated search queries + DuckDuckGo
+        resources = await self._generate_career_resources(career_title, major_name)
+        
+        return {
+            'description': description,
+            'resources': resources
+        }
+    
+    async def _generate_career_resources(self, career_title: str, major_name: str = "") -> List[str]:
+        """Use LLM to generate search queries, then collect URLs via DuckDuckGo."""
+        # Ask LLM to generate 3 targeted search queries
+        queries = []
+        if self.llm_agent is not None:
+            try:
+                context = f" for {major_name} graduates" if major_name else ""
+                prompt = (
+                    f"Generate 3 search queries to find online resources about the career '{career_title}'{context}:\n"
+                    "1. A query to find professional organizations, associations, or industry websites.\n"
+                    "2. A query to find salary data, job outlook reports, or career guides.\n"
+                    "3. A query to find YouTube videos, podcasts, or blogs about this career.\n\n"
+                    'Return the queries as a JSON array of 3 strings, e.g.: ["query1", "query2", "query3"]'
+                )
+                resp = await self.llm_agent.run(prompt)
+                import re
+                match = re.search(r'\[.*\]', str(resp), flags=re.S)
+                if match:
+                    queries = json.loads(match.group(0))
+                    if not isinstance(queries, list) or len(queries) < 3:
+                        raise ValueError("LLM did not return 3 queries")
+            except Exception as e:
+                print(f"[CareerAnalysisAgent] LLM query generation failed for {career_title}: {e}")
+                queries = []
+        
+        # Fallback: use simple queries if LLM failed
+        if not queries:
+            queries = [
+                f"{career_title} professional association",
+                f"{career_title} salary data career outlook",
+                f"{career_title} youtube interview blog"
+            ]
+        
+        # Execute each query and collect unique URLs
+        urls = []
+        loop = asyncio.get_event_loop()
+        for q in queries[:3]:
+            try:
+                results = await loop.run_in_executor(None, lambda query=q: safe_ddg(query, max_results=3) or [])
+                for r in results:
+                    href = r.get('href') or r.get('url') or r.get('link')
+                    if href and href not in urls:
+                        urls.append(href)
+            except Exception as e:
+                print(f"[CareerAnalysisAgent] DuckDuckGo search failed for query '{q}': {e}")
+                continue
+        
+        return urls[:9]  # Cap at 9 URLs total (3 per category)
 
     async def analyze_career(self, career_title: str) -> Dict[str, Any]:
         """
@@ -321,6 +414,115 @@ Return data in structured JSON format.
 
         return {"source": "", "summary": ""}
 
+    async def process_query(self, major_json_path: str = None) -> Dict[str, Dict[str, Dict[str, Any]]]:
+        """Read major JSON file and generate career analysis for each major.
+        
+        Args:
+            major_json_path: Path to specific major JSON file. If None, uses latest.
+        
+        Returns:
+            Dict[major_name, Dict[career_title, {description, resources}]]
+        """
+        # Step 1: Load major data from JSON
+        major_data = self._load_major_json(major_json_path)
+        if not major_data:
+            print("[CareerAnalysisAgent] No major data found")
+            return {}
+        
+        majors = major_data.get('majors', {})
+        user_query = major_data.get('user_query', '')
+        
+        # Step 2: Process each major
+        results = {}
+        for major_name in majors.keys():
+            print(f"[CareerAnalysisAgent] Processing major: {major_name}")
+            
+            # Identify 3 careers for this major
+            career_titles = await self.identify_careers(major_name)
+            
+            # Analyze each career
+            major_careers = {}
+            for career_title in career_titles:
+                print(f"[CareerAnalysisAgent]   Analyzing career: {career_title}")
+                career_data = await self.analyze_career_simple(career_title, major_name)
+                major_careers[career_title] = career_data
+            
+            results[major_name] = major_careers
+        
+        # Step 3: Save results to database
+        self._save_to_database(user_query, results, major_data.get('timestamp', ''))
+        
+        return results
+    
+    def _load_major_json(self, json_path: str = None) -> Dict[str, Any]:
+        """Load major research data from JSON file.
+        
+        Args:
+            json_path: Specific file path. If None, loads majors_latest.json
+        
+        Returns:
+            Parsed JSON data or empty dict if failed
+        """
+        try:
+            db_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'database')
+            
+            if json_path is None:
+                # Use latest file
+                json_path = os.path.join(db_dir, 'majors_latest.json')
+            
+            if not os.path.exists(json_path):
+                print(f"[CareerAnalysisAgent] JSON file not found: {json_path}")
+                return {}
+            
+            with open(json_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            
+            print(f"[CareerAnalysisAgent] Loaded major data from {os.path.basename(json_path)}")
+            return data
+        
+        except Exception as e:
+            print(f"[CareerAnalysisAgent] Failed to load JSON: {e}")
+            return {}
+    
+    def _save_to_database(self, user_query: str, career_data: Dict[str, Dict[str, Dict[str, Any]]], source_timestamp: str = ""):
+        """Save career analysis results to JSON database.
+        
+        Args:
+            user_query: Original user query from major research
+            career_data: Dict[major_name, Dict[career_title, {description, resources}]]
+            source_timestamp: Timestamp from source major JSON file
+        """
+        try:
+            db_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'database')
+            os.makedirs(db_dir, exist_ok=True)
+            
+            # Create timestamped filename
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            filename = f"careers_{timestamp}.json"
+            filepath = os.path.join(db_dir, filename)
+            
+            # Prepare data structure
+            data = {
+                'timestamp': datetime.now().isoformat(),
+                'source_timestamp': source_timestamp,
+                'user_query': user_query,
+                'careers': career_data
+            }
+            
+            # Write to timestamped file
+            with open(filepath, 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+            
+            # Also save as careers_latest.json
+            latest_path = os.path.join(db_dir, 'careers_latest.json')
+            with open(latest_path, 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+            
+            print(f"[Database] Saved career analysis results to {filename}")
+        
+        except Exception as e:
+            print(f"[Database] Failed to save career results: {e}")
+
     async def process_major(self, major_name: str) -> Dict[str, Any]:
         """
         Analyze all careers for a given major.
@@ -360,6 +562,12 @@ def create_career_analysis_agent(llm_provider: str = None, model_name: str = Non
             except Exception as e:
                 print(f"⚠️ LLM config validation failed: {e}. Falling back to non-LLM mode.")
                 return CareerAnalysisAgent(llm_agent=None)
+
+            # CRITICAL: Set API key in os.environ so spoon_ai can access it
+            if provider == "gemini" and Config.GEMINI_API_KEY:
+                os.environ["GEMINI_API_KEY"] = Config.GEMINI_API_KEY
+            elif provider == "deepseek" and Config.DEEPSEEK_API_KEY:
+                os.environ["DEEPSEEK_API_KEY"] = Config.DEEPSEEK_API_KEY
 
             safe_tokens = Config.get_safe_max_tokens(provider)
             print(f"[LLM Factory] provider={provider}, model={model}, safe_tokens={safe_tokens}")

@@ -1,0 +1,45 @@
+{
+  "timestamp": "2025-11-23T00:58:59.006542",
+  "user_query": "I enjoy programming, algorithms, and math. What majors fit me?",
+  "majors": {
+    "Computer Science": {
+      "description": "Computer Science is the study of computers and computational systems, focusing on the theory, design, development, and application of software. Students delve into core topics such as programming languages, algorithms, data structures, and artificial intelligence. Graduates are well-prepared for high-demand careers like software engineering, data science, cybersecurity analysis, and systems architecture.",
+      "resources": [
+        "https://www.theverge.com/2022/9/13/23349037/mark-bergen-youtube-creators-tiktok-algorithm",
+        "https://www.researchgate.net/publication/353481754_YouTube_for_Academics_Exploring_Learning_Habits_of_Post_Graduate_Students",
+        "https://wikipediabacklinksservice28158.wikiconverse.com/3436866/not_known_facts_about_youtube_video_in_video",
+        "https://www.admitadvantage.com/blog/best-computer-science-undergraduate-programs/",
+        "https://catalog.southernct.edu/graduate/programs-and-degrees/curriculum-and-instruction-ms-computer-science.html",
+        "https://cs.unc.edu/graduate/graduate-overview/",
+        "https://blogs.memphis.edu/libraries/category/events/",
+        "https://player.fm/podcasts/Computer",
+        "https://player.fm/podcasts/Open-Source"
+      ]
+    },
+    "Data Science": {
+      "description": "Data Science is an interdisciplinary field focused on extracting meaningful insights from large and complex datasets. The curriculum blends computer science, statistics, and mathematics, covering topics like machine learning, data mining, and data visualization. Graduates are highly sought after for roles such as data scientist, data analyst, and machine learning engineer, where they help organizations make data-driven decisions.",
+      "resources": [
+        "https://www.belmontforum.org/wp-content/uploads/2019/10/CRA-Data-Management-language-v.1.4.pdf",
+        "https://www.belmontforum.org/wp-content/uploads/2019/10/CRA_Data_Digital_Outputs_Management_V2.pdf",
+        "https://www.belmontforum.org/wp-content/uploads/2017/10/Data-policy-1.pdf",
+        "https://www.easiio.com/best-data-science-undergraduate-programs/",
+        "https://www.computersciencedegreehub.com/best/bachelors-computer-science/",
+        "https://cse.washu.edu/academics/undergraduate/BS-Data-Science.html"
+      ]
+    },
+    "Mathematics": {
+      "description": "Mathematics is the foundational study of abstract structures, patterns, and logical reasoning, providing powerful tools for problem-solving. Students explore a wide range of subjects, from core topics like calculus and linear algebra to advanced areas such as abstract algebra and probability theory. The analytical skills gained are highly valued in diverse fields, leading to careers as actuaries, data scientists, quantitative analysts, and researchers.",
+      "resources": [
+        "https://oakhillstablesbedandbreakfast.com/why-to-study-mathematics-in-universities/",
+        "https://www.masters.edu/academics/schools/school-of-science-math-technology-health/mathematics/",
+        "https://greenesoxford.com/news/2025/01/31/why-study-a-level-further-mathematics-at-greenes-college-oxford/",
+        "https://www.marquette.edu/mathematical-and-statistical-sciences/undergraduate-program-overview.php",
+        "https://math.calpoly.edu/degree-bs",
+        "https://www.mathacademy.us/curriculum",
+        "https://academia.stackexchange.com/questions/48208/how-possible-is-it-to-do-mathematical-research-outside-academia",
+        "https://academia.stackexchange.com/questions/213289/how-much-new-mathematics-should-we-learn-during-the-phd-are-the-courses-we-take",
+        "http://www.careerzing.com/index.php/careezing-blog/q-a-majoring-in-math"
+      ]
+    }
+  }
+}
