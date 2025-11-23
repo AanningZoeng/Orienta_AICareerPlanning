@@ -176,9 +176,10 @@ MIT License - Feel free to use and modify
 
 - Built with [SpoonOS](https://xspoonai.github.io/) framework
 - Inspired by the need for intelligent career guidance
-- Created for Hackathon 2025
+- Created for SCOOP AI Hackathon 2025
 
 ---
 
 **Built with ❤️ using SpoonOS Multi-Agent Framework**
+
 
