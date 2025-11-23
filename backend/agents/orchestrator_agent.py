@@ -3,6 +3,10 @@ Orchestrator Agent - Coordinates the multi-agent workflow using SpoonOS Graph Sy
 """
 import asyncio
 from typing import Dict, Any, TypedDict, Optional, Annotated, List
+import json
+import os
+from datetime import datetime
+import uuid
 from spoon_ai.graph import StateGraph, END
 from spoon_ai.graph.builder import (
     DeclarativeGraphBuilder,
@@ -16,6 +20,7 @@ from spoon_ai.graph.config import GraphConfig
 from backend.agents.major_research_agent import create_major_research_agent
 from backend.agents.career_analysis_agent import create_career_analysis_agent
 from backend.agents.future_path_agent import create_future_path_agent
+from backend.config import Config
 
 
 class CareerPlanningState(TypedDict):
@@ -34,7 +39,7 @@ class OrchestratorAgent:
     Uses SpoonOS StateGraph for parallel execution and intelligent routing.
     """
     
-    def __init__(self, llm_provider: str = "openai", model_name: str = "gpt-4o"):
+    def __init__(self, llm_provider: str = None, model_name: str = None):
         """
         Initialize the orchestrator with agent instances.
         
@@ -42,13 +47,14 @@ class OrchestratorAgent:
             llm_provider: LLM provider to use (openai, anthropic, gemini)
             model_name: Model name to use
         """
-        self.llm_provider = llm_provider
-        self.model_name = model_name
-        
-        # Create agent instances
-        self.major_agent = create_major_research_agent(llm_provider, model_name)
-        self.career_agent = create_career_analysis_agent(llm_provider, model_name)
-        self.future_agent = create_future_path_agent(llm_provider, model_name)
+        # Use provided values or fall back to Config
+        self.llm_provider = llm_provider or Config.LLM_PROVIDER
+        self.model_name = model_name or Config.MODEL_NAME
+
+        # Create agent instances using resolved provider/model
+        self.major_agent = create_major_research_agent(self.llm_provider, self.model_name)
+        self.career_agent = create_career_analysis_agent(self.llm_provider, self.model_name)
+        self.future_agent = create_future_path_agent(self.llm_provider, self.model_name)
         
         # Build the graph workflow
         self.graph = self._build_graph()
@@ -270,28 +276,84 @@ class OrchestratorAgent:
             # Compile and execute the graph
             compiled_graph = self.graph.compile()
             final_state = await compiled_graph.invoke(initial_state)
-            
+
             if final_state.get("error"):
                 print(f"\n[Orchestrator] Workflow completed with errors: {final_state['error']}")
             else:
                 print(f"\n[Orchestrator] Workflow completed successfully!")
-            
+
+            # Persist the full state/result as JSON memory
+            try:
+                self._save_memory(final_state)
+            except Exception as e:
+                print(f"⚠️ Failed to save memory JSON: {e}")
+
             print(f"{'='*60}\n")
-            
+
             return final_state.get("result", {})
-            
+
         except Exception as e:
             print(f"\n[Orchestrator] Workflow failed: {str(e)}")
             print(f"{'='*60}\n")
-            
+
+            # Attempt to save partial state including the error
+            try:
+                error_state = {**initial_state, "error": str(e)}
+                self._save_memory(error_state)
+            except Exception:
+                pass
+
             return {
                 "error": f"Workflow execution failed: {str(e)}",
                 "user_query": user_query,
                 "majors": []
             }
 
+    def _save_memory(self, state: Dict[str, Any]) -> None:
+        """Save the provided workflow state to a JSON file under backend/data.
+
+        Writes two files:
+         - backend/data/memory_{timestamp}_{uuid}.json  (historical)
+         - backend/data/latest_memory.json             (overwritten each run)
+        """
+        base_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'backend', 'data')
+        # Normalize path
+        base_dir = os.path.abspath(base_dir)
+        os.makedirs(base_dir, exist_ok=True)
+
+        ts = datetime.utcnow().strftime('%Y%m%dT%H%M%SZ')
+        nid = uuid.uuid4().hex[:8]
+        hist_path = os.path.join(base_dir, f'memory_{ts}_{nid}.json')
+        latest_path = os.path.join(base_dir, 'latest_memory.json')
+
+        # Ensure JSON serializable: attempt to convert non-serializable objects
+        def _safe(obj):
+            try:
+                json.dumps(obj)
+                return obj
+            except Exception:
+                return str(obj)
+
+        safe_state = {}
+        for k, v in state.items():
+            safe_state[k] = v if isinstance(v, (dict, list, str, int, float, type(None), bool)) else _safe(v)
+
+        with open(hist_path, 'w', encoding='utf-8') as f:
+            json.dump(safe_state, f, ensure_ascii=False, indent=2)
+
+        with open(latest_path, 'w', encoding='utf-8') as f:
+            json.dump(safe_state, f, ensure_ascii=False, indent=2)
+
+        print(f"[Orchestrator] Memory saved: {hist_path}")
+
 
 # Factory function
-def create_orchestrator(llm_provider: str = "openai", model_name: str = "gpt-4o") -> OrchestratorAgent:
-    """Create an OrchestratorAgent with specified LLM configuration."""
-    return OrchestratorAgent(llm_provider=llm_provider, model_name=model_name)
+def create_orchestrator(llm_provider: str = None, model_name: str = None) -> OrchestratorAgent:
+    """Create an OrchestratorAgent with specified LLM configuration.
+
+    If no provider/model are supplied, fall back to values from `backend.config.Config`.
+    """
+    provider = llm_provider or Config.LLM_PROVIDER
+    model = model_name or Config.MODEL_NAME
+
+    return OrchestratorAgent(llm_provider=provider, model_name=model)
