@@ -7,8 +7,20 @@ import asyncio
 import os
 import json
 import glob
+import sqlite3
+import re
 from datetime import datetime
 from typing import Dict, Any, List, Optional
+from pathlib import Path
+
+# Third-party imports for vector similarity
+try:
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.metrics.pairwise import cosine_similarity
+except ImportError:
+    print("Warning: scikit-learn not installed. Job database features will be disabled.")
+    TfidfVectorizer = None
+    cosine_similarity = None
 
 # CRITICAL: Import Config and tools FIRST before SpoonAI
 from backend.tools.media_finder_tool import MediaFinderTool
@@ -45,7 +57,7 @@ Provide detailed, honest information about each career including pros and cons.
 Return data in structured JSON format.
 """
 
-    def __init__(self, llm_agent: object = None):
+    def __init__(self, llm_agent: object = None, db_path: str = None):
         if llm_agent is not None:
             self.llm_agent = llm_agent
         else:
@@ -58,6 +70,13 @@ Return data in structured JSON format.
 
         # Media finder tool used directly
         self.media_finder = MediaFinderTool()
+        
+        # Database path setup for real job data
+        if db_path:
+            self.db_path = Path(db_path)
+        else:
+            # Default to job_info.db in the same directory as this file
+            self.db_path = Path(__file__).resolve().parent / "job_info.db"
 
     async def identify_careers(self, major_name: str) -> List[str]:
         """
@@ -112,15 +131,165 @@ Return data in structured JSON format.
 
         return careers[:3]
 
+    # --- Job Database Helper Methods (from agent2) ---
+
+    def _parse_salary(self, salary_str: str) -> List[float]:
+        """Parses salary string like '$100k - $150k' into float list."""
+        if not salary_str:
+            return []
+        
+        s = salary_str.lower().replace(',', '')
+        numbers = re.findall(r'\d+(?:\.\d+)?', s)
+        if not numbers:
+            return []
+        
+        parsed_nums = []
+        for num in numbers:
+            val = float(num)
+            # Simple heuristic: if 'k' is in string and value < 1000, multiply by 1000
+            if 'k' in s and val < 1000: 
+                val *= 1000
+            parsed_nums.append(val)
+            
+        return parsed_nums
+
+    def _vec_similarity(self, target_job: str, threshold: float = 0.2) -> List[str]:
+        """Calculates TF-IDF cosine similarity to find matching job titles in DB."""
+        if not self.db_path.exists():
+            return []
+        
+        if TfidfVectorizer is None:
+            return []
+
+        conn = None
+        try:
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+            query = 'select "Job Title" from jobs'
+            cursor.execute(query)
+            raw_data = cursor.fetchall()
+            
+            db_titles = [item[0] for item in raw_data if item[0] is not None]
+            
+            if not db_titles:
+                return []
+
+            all_documents = [target_job] + db_titles
+            
+            tfidf_vectorizer = TfidfVectorizer()
+            tfidf_matrix = tfidf_vectorizer.fit_transform(all_documents)
+            
+            # Compute similarity between target (index 0) and all others
+            cosine_sim = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:])
+            scores = cosine_sim[0]
+            
+            results = list(zip(db_titles, scores))
+            # Sort by score descending
+            sorted_results = sorted(results, key=lambda x: x[1], reverse=True)
+            
+            filtered_job_list = [
+                title for title, score in sorted_results 
+                if score >= threshold
+            ]
+            return filtered_job_list
+
+        except Exception as e:
+            print(f"[CareerAnalysisAgent] Similarity calculation error: {e}")
+            return []
+        finally:
+            if conn:
+                conn.close()
+
+    def _fetch_job_db_data(self, target_job: str) -> Dict[str, Any]:
+        """Query job database and return real salary data and job examples."""
+        default_result = {
+            "salary": {"min": 0, "max": 0, "currency": "USD"},
+            "job_examples": [],
+            "db_match_count": 0
+        }
+
+        if not self.db_path.exists():
+            return default_result
+
+        conn = None
+        try:
+            # 1. Get similar titles using TF-IDF
+            similar_jobs = self._vec_similarity(target_job, threshold=0.2)
+            
+            if not similar_jobs:
+                return default_result
+
+            if len(similar_jobs) > 10:
+                similar_jobs = similar_jobs[:10]
+
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+            
+            # 2. SQL Query using 'IN' clause
+            placeholders = ','.join('?' for _ in similar_jobs)
+            query = f'''
+            SELECT "Job Title", Company, "Salary Range", "Job Description" 
+            FROM jobs
+            WHERE "Job Title" IN ({placeholders})
+            '''
+            
+            cursor.execute(query, similar_jobs)
+            rows = cursor.fetchall()
+            
+            all_salaries = []
+            examples = []
+            
+            for row in rows:
+                title, company, salary_text, desc = row
+                
+                # Parse salary
+                nums = self._parse_salary(salary_text)
+                all_salaries.extend(nums)
+                
+                # Format Description (truncate if too long)
+                clean_desc = desc[:300] + "..." if desc and len(desc) > 300 else desc
+
+                examples.append({
+                    "job_title": title,
+                    "company": company,
+                    "description": clean_desc,
+                    "salary_range": salary_text
+                })
+
+            salary_min = min(all_salaries) if all_salaries else 0
+            salary_max = max(all_salaries) if all_salaries else 0
+
+            return {
+                "salary": {
+                    "min": salary_min,
+                    "max": salary_max,
+                    "currency": "USD"
+                },
+                "job_examples": examples[:5],  # Limit to 5 examples
+                "db_match_count": len(examples)
+            }
+
+        except Exception as e:
+            print(f"[CareerAnalysisAgent] Database query error: {e}")
+            return default_result
+        finally:
+            if conn:
+                conn.close()
+
     async def analyze_career_simple(self, career_title: str, major_name: str = "") -> Dict[str, Any]:
-        """Analyze a career and return simplified {description, resources} structure.
+        """Analyze a career and return integrated data structure.
         
         Args:
             career_title: The career to analyze
             major_name: The major this career relates to (for context)
         
         Returns:
-            Dict with 'description' (LLM-generated text) and 'resources' (list of URLs)
+            Dict with:
+            - description: LLM-generated text
+            - resources: list of URLs from web search
+            - salary: real data from job database {min, max, currency}
+            - job_examples: list of real job postings from database
+            - db_match_count: number of matching jobs found
         """
         # Step 1: Generate description via LLM
         description = ""
@@ -148,9 +317,16 @@ Return data in structured JSON format.
         # Step 2: Generate resource URLs via LLM-generated search queries + DuckDuckGo
         resources = await self._generate_career_resources(career_title, major_name)
         
+        # Step 3: Query job database for real salary and job examples (async executor)
+        loop = asyncio.get_event_loop()
+        db_data = await loop.run_in_executor(None, self._fetch_job_db_data, career_title)
+        
         return {
             'description': description,
-            'resources': resources
+            'resources': resources,
+            'salary': db_data.get('salary', {"min": 0, "max": 0, "currency": "USD"}),
+            'job_examples': db_data.get('job_examples', []),
+            'db_match_count': db_data.get('db_match_count', 0)
         }
     
     async def _generate_career_resources(self, career_title: str, major_name: str = "") -> List[str]:
@@ -487,9 +663,11 @@ Return data in structured JSON format.
     def _save_to_database(self, user_query: str, career_data: Dict[str, Dict[str, Dict[str, Any]]], source_timestamp: str = ""):
         """Save career analysis results to JSON database.
         
+        Format: {major: {career: {description, resources, salary, job_examples, db_match_count}}}
+        
         Args:
             user_query: Original user query from major research
-            career_data: Dict[major_name, Dict[career_title, {description, resources}]]
+            career_data: Dict[major_name, Dict[career_title, {description, resources, salary, job_examples, db_match_count}]]
             source_timestamp: Timestamp from source major JSON file
         """
         try:
@@ -501,12 +679,27 @@ Return data in structured JSON format.
             filename = f"careers_{timestamp}.json"
             filepath = os.path.join(db_dir, filename)
             
-            # Prepare data structure
+            # Prepare data structure in the required format:
+            # {major: {career: {description, resources, salary, job_examples, db_match_count}}}
+            formatted_data = {}
+            for major_name, careers_dict in career_data.items():
+                formatted_data[major_name] = {}
+                for career_title, career_info in careers_dict.items():
+                    # Ensure all required fields are present
+                    formatted_data[major_name][career_title] = {
+                        'description': career_info.get('description', ''),
+                        'resources': career_info.get('resources', []),
+                        'salary': career_info.get('salary', {'min': 0, 'max': 0, 'currency': 'USD'}),
+                        'job_examples': career_info.get('job_examples', []),
+                        'db_match_count': career_info.get('db_match_count', 0)
+                    }
+            
+            # Wrap with metadata
             data = {
                 'timestamp': datetime.now().isoformat(),
                 'source_timestamp': source_timestamp,
                 'user_query': user_query,
-                'careers': career_data
+                'careers': formatted_data
             }
             
             # Write to timestamped file
@@ -519,6 +712,7 @@ Return data in structured JSON format.
                 json.dump(data, f, indent=2, ensure_ascii=False)
             
             print(f"[Database] Saved career analysis results to {filename}")
+            print(f"[Database] Format: {{major: {{career: {{description, resources, salary, job_examples, db_match_count}}}}}}")
         
         except Exception as e:
             print(f"[Database] Failed to save career results: {e}")
