@@ -122,7 +122,7 @@ Major names:"""
         # Last resort: return empty list (no hard-coded majors)
         return majors[:5]
     
-    async def research_majors(self, major_names: List[str]) -> List[Dict[str, Any]]:
+    async def research_majors(self, major_names: List[str]) -> Dict[str, Dict[str, Any]]:
         """
         Research detailed information about each major.
         
@@ -130,92 +130,92 @@ Major names:"""
             major_names: List of major names to research
             
         Returns:
-            List of major details including descriptions, requirements, and universities
+            Dict keyed by major name, value = {description: str, resources: [urls]}
         """
-        results = []
-        scraper = self.scraper
+        results = {}
 
-        async def _collect_major_resources(q: str) -> Dict[str, List[Dict[str, str]]]:
-            media = []
-            universities = []
-            blogs = []
-            others = []
-            try:
-                loop = asyncio.get_event_loop()
-                # university pages
-                uq = f"{q} degree program university"
-                ures = await loop.run_in_executor(None, lambda: safe_ddg(uq, max_results=8) or [])
-                for r in ures:
-                    href = r.get('href') or r.get('url') or r.get('link')
-                    title = r.get('title') or r.get('body') or r.get('snippet')
-                    if href and ('.edu' in href or 'university' in (title or '').lower()):
-                        universities.append({'title': title, 'url': href})
-                    if len(universities) >= 3:
-                        break
+        async def _generate_resources_via_llm(major: str) -> List[str]:
+            """Use LLM to generate search queries, then call safe_ddg and collect URLs."""
+            if self.llm_agent is None:
+                # fallback: use simple queries without LLM prompt
+                queries = [
+                    f"{major} youtube videos",
+                    f"{major} university websites",
+                    f"{major} podcasts personal articles"
+                ]
+            else:
+                # Ask LLM to generate targeted search queries for each category
+                try:
+                    prompt = (
+                        f"Generate 3 search queries to find online resources about the university major '{major}':\n"
+                        "1. A query to find YouTube videos or educational video content.\n"
+                        "2. A query to find official university program pages or department websites.\n"
+                        "3. A query to find podcasts, blogs, or personal articles about this major.\n\n"
+                        "Return the queries as a JSON array of 3 strings, e.g.: [\"query1\", \"query2\", \"query3\"]"
+                    )
+                    resp = await self.llm_agent.run(prompt)
+                    import re, json
+                    match = re.search(r'\[.*\]', str(resp), flags=re.S)
+                    if match:
+                        queries = json.loads(match.group(0))
+                        if not isinstance(queries, list) or len(queries) < 3:
+                            raise ValueError("LLM did not return 3 queries")
+                    else:
+                        raise ValueError("LLM response did not contain JSON array")
+                except Exception:
+                    # fallback to simple queries
+                    queries = [
+                        f"{major} youtube videos",
+                        f"{major} university websites",
+                        f"{major} podcasts personal articles"
+                    ]
 
-                    # videos
-                    vq = f"{q} university program overview site:youtube.com OR site:vimeo.com"
-                    vids = await loop.run_in_executor(None, lambda: safe_ddg(vq, max_results=6) or [])
-                    for r in vids:
+            # Execute each query and collect URLs
+            urls = []
+            loop = asyncio.get_event_loop()
+            for q in queries[:3]:
+                try:
+                    results_list = await loop.run_in_executor(None, lambda query=q: safe_ddg(query, max_results=3) or [])
+                    for r in results_list:
                         href = r.get('href') or r.get('url') or r.get('link')
-                        title = r.get('title') or r.get('body') or r.get('snippet')
-                        if href and ('youtube.com' in href or 'vimeo.com' in href) and len(media) < 2:
-                            media.append({'type': 'video', 'title': title, 'url': href})
-
-                    # blogs / program pages
-                    bq = f"{q} blog personal site career" 
-                    bres = await loop.run_in_executor(None, lambda: safe_ddg(bq, max_results=6) or [])
-                    for r in bres:
-                        href = r.get('href') or r.get('url') or r.get('link')
-                        title = r.get('title') or r.get('body') or r.get('snippet')
-                        if href and ('blog' in (title or '').lower() or 'medium.com' in (href or '')):
-                            blogs.append({'title': title, 'url': href})
-                        if len(blogs) >= 3:
-                            break
-            except Exception:
-                pass
-
-            # supplement with scraper tool if available
-            try:
-                if len(universities) < 2:
-                    s = await scraper.execute(major_name=q)
-                    if s.get('success'):
-                        data = s.get('data', {})
-                        for u in data.get('universities', [])[: (2 - len(universities))]:
-                            universities.append({'title': u.get('name') if isinstance(u, dict) else u, 'url': u.get('url') if isinstance(u, dict) else ''})
-                        if data.get('video_url') and len(media) < 2:
-                            media.append({'type': 'video', 'title': q + ' overview', 'url': data.get('video_url')})
-            except Exception:
-                pass
-
-            return {'media': media, 'universities': universities, 'blogs': blogs, 'others': others}
+                        if href and href not in urls:
+                            urls.append(href)
+                except Exception:
+                    continue
+            return urls[:9]  # cap total at ~9 URLs (3 per category)
 
         for major_name in major_names:
-            major_info = {}
-            try:
-                major_data = await scraper.execute(major_name=major_name)
-                if major_data.get('success'):
-                    major_info = major_data.get('data', {}).copy()
-            except Exception:
-                major_info = {}
+            # Step 1: Generate description via LLM (no web search for description)
+            description = ""
+            if self.llm_agent is not None:
+                try:
+                    prompt = (
+                        f"Provide a concise 2-4 sentence introduction to the university major '{major_name}'. "
+                        "Include typical topics studied and common career outcomes. Return plain text only."
+                    )
+                    resp = await self.llm_agent.run(prompt)
+                    text = str(resp or "").strip()
+                    # Take first paragraph
+                    if "\n\n" in text:
+                        description = text.split("\n\n")[0].strip()
+                    elif "\n" in text:
+                        description = text.split("\n")[0].strip()
+                    else:
+                        description = text
+                except Exception:
+                    description = ""
 
-            resources = await _collect_major_resources(major_name)
+            # Step 2: Generate resource URLs via LLM prompts + web search
+            resources = await _generate_resources_via_llm(major_name)
 
-            results.append({
-                'id': major_name.lower().replace(' ', '_'),
-                'name': major_name,
-                'description': major_info.get('description') or '',
-                'requirements': major_info.get('requirements') or [],
-                'duration': major_info.get('duration') or '',
-                'universities': resources.get('universities', []),
-                'media': resources.get('media', []),
-                'blogs': resources.get('blogs', []),
-                'source': major_info.get('source') or ''
-            })
+            results[major_name] = {
+                'description': description,
+                'resources': resources
+            }
 
         return results
     
-    async def process_query(self, user_query: str) -> Dict[str, Any]:
+    async def process_query(self, user_query: str) -> Dict[str, Dict[str, Any]]:
         """
         Main entry point: analyze query and research majors.
         
@@ -223,7 +223,7 @@ Major names:"""
             user_query: User's interests and career goals
             
         Returns:
-            Structured data with recommended majors and details
+            Dict keyed by major name with {description, resources}
         """
         # Step 1: Analyze interests and get major recommendations
         major_names = await self.analyze_user_interests(user_query)
@@ -231,11 +231,7 @@ Major names:"""
         # Step 2: Research each major in detail
         major_details = await self.research_majors(major_names)
         
-        return {
-            "user_query": user_query,
-            "recommended_majors": major_details,
-            "count": len(major_details)
-        }
+        return major_details
 
 
 # Factory function for easy instantiation
