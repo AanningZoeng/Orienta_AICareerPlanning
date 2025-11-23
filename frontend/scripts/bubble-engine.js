@@ -12,7 +12,7 @@ class BubbleTreeEngine {
         // 确保获取实际容器宽度
         const container = this.svg.parentElement;
         this.width = container.clientWidth || window.innerWidth;
-        this.height = 900;
+        this.height = 1100; // 增加高度以容纳四层节点
         
         this.svg.setAttribute('width', this.width);
         this.svg.setAttribute('height', this.height);
@@ -24,21 +24,32 @@ class BubbleTreeEngine {
         this.nodes = [];
         this.links = [];
         
-        // Node type configurations
+        // Node type configurations - 增大节点以容纳完整文本
         this.nodeConfig = {
-            root: { radius: 60, gradient: 'rootGradient', color: '#667eea' },
-            major: { radius: 50, gradient: 'majorGradient', color: '#f093fb' },
-            career: { radius: 40, gradient: 'careerGradient', color: '#4facfe' },
-            future: { radius: 35, gradient: 'futureGradient', color: '#43e97b' }
+            root: { radius: 80, gradient: 'rootGradient', color: '#667eea' },
+            major: { radius: 70, gradient: 'majorGradient', color: '#f093fb' },
+            career: { radius: 60, gradient: 'careerGradient', color: '#4facfe' },
+            future: { radius: 55, gradient: 'futureGradient', color: '#43e97b' }
         };
         
         // Layout settings - 使用实际宽度的中心
         this.centerX = this.width / 2;
-        this.centerY = 200;
-        this.levelSpacing = 280;
+        this.centerY = 150;
         
-        // Animation settings
-        this.animationDuration = 600;
+        // Layer Y positions - 每层固定高度
+        this.layerY = {
+            root: 150,
+            major: 400,
+            career: 650,
+            future: 900
+        };
+        
+        // Animation settings - 加快动画速度
+        this.animationDuration = 400;
+        
+        // Tooltip element
+        this.tooltip = null;
+        this.createTooltip();
         
         // Event handlers
         this.onNodeClick = null;
@@ -46,6 +57,88 @@ class BubbleTreeEngine {
         
         // 监听窗口大小变化
         window.addEventListener('resize', () => this.handleResize());
+    }
+    
+    /**
+     * 创建tooltip元素
+     */
+    createTooltip() {
+        this.tooltip = document.createElement('div');
+        this.tooltip.className = 'bubble-tooltip';
+        this.tooltip.style.display = 'none';
+        document.body.appendChild(this.tooltip);
+        
+        // 添加tooltip自身的悬停事件，保持显示
+        this.tooltip.addEventListener('mouseenter', () => {
+            // Tooltip保持显示
+        });
+        
+        this.tooltip.addEventListener('mouseleave', () => {
+            this.hideTooltip();
+        });
+    }
+    
+    /**
+     * 显示tooltip
+     */
+    showTooltip(node, event) {
+        if (!this.tooltip) return;
+        
+        let description = '';
+        
+        switch(node.type) {
+            case 'root':
+                description = 'Your career exploration query - click to see analysis status';
+                break;
+            case 'major':
+                description = node.data.description || 'University major - click to view details and expand careers';
+                // 限制30词
+                description = this.truncateDescription(description, 30);
+                break;
+            case 'career':
+                description = node.data.description || 'Career path - click to view salary, examples, and future progression';
+                description = this.truncateDescription(description, 30);
+                break;
+            case 'future':
+                description = 'Future career progression analysis - click to see 5-year statistics and paths';
+                break;
+        }
+        
+        this.tooltip.innerHTML = `
+            <div class="tooltip-title">${this.escapeHtml(node.name)}</div>
+            <div class="tooltip-desc">${this.escapeHtml(description)}</div>
+        `;
+        
+        this.tooltip.style.display = 'block';
+        this.tooltip.style.left = (event.pageX + 15) + 'px';
+        this.tooltip.style.top = (event.pageY + 15) + 'px';
+    }
+    
+    /**
+     * 隐藏tooltip
+     */
+    hideTooltip() {
+        if (this.tooltip) {
+            this.tooltip.style.display = 'none';
+        }
+    }
+    
+    /**
+     * 截断描述到指定词数
+     */
+    truncateDescription(text, maxWords) {
+        const words = text.split(/\s+/);
+        if (words.length <= maxWords) return text;
+        return words.slice(0, maxWords).join(' ') + '...';
+    }
+    
+    /**
+     * HTML转义
+     */
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
     
     /**
@@ -123,13 +216,15 @@ class BubbleTreeEngine {
         if (!rootNode) return;
         
         const majorCount = majors.length;
-        const angleStep = (2 * Math.PI) / majorCount;
-        const radius = 250;
+        const y = this.layerY.major; // 固定在major层
+        
+        // 计算水平分布
+        const totalWidth = this.width * 0.8; // 使用80%的宽度
+        const spacing = totalWidth / (majorCount + 1);
+        const startX = (this.width - totalWidth) / 2;
         
         majors.forEach((major, index) => {
-            const angle = angleStep * index - Math.PI / 2;
-            const x = this.centerX + radius * Math.cos(angle);
-            const y = this.centerY + this.levelSpacing + radius * Math.sin(angle) * 0.3;
+            const x = startX + spacing * (index + 1);
             
             const majorNode = {
                 id: `major-${index}`,
@@ -165,19 +260,19 @@ class BubbleTreeEngine {
         
         majorNode.expanded = true;
         
-        // 使用majorNode的当前位置(x, y)而不是targetX/targetY
         const parentX = majorNode.x;
         const parentY = majorNode.y;
+        const y = this.layerY.career; // 固定在career层
         
         const careerCount = careers.length;
-        const angleStep = (Math.PI * 1.2) / Math.max(careerCount - 1, 1);
-        const startAngle = -Math.PI / 3;
-        const radius = 180;
+        
+        // 计算career节点的水平分布，围绕父节点
+        const spreadWidth = Math.min(300 * careerCount, this.width * 0.4);
+        const spacing = spreadWidth / (careerCount + 1);
+        const startX = parentX - spreadWidth / 2;
         
         careers.forEach((career, index) => {
-            const angle = startAngle + angleStep * index;
-            const x = parentX + radius * Math.cos(angle);
-            const y = parentY + radius * Math.sin(angle) + 120;
+            const x = startX + spacing * (index + 1);
             
             const careerId = `${majorId}-career-${index}`;
             const careerNode = {
@@ -189,7 +284,8 @@ class BubbleTreeEngine {
                 targetX: x,
                 targetY: y,
                 data: career,
-                parent: majorId
+                parent: majorId,
+                children: []
             };
             
             this.nodes.push(careerNode);
@@ -215,14 +311,12 @@ class BubbleTreeEngine {
         
         careerNode.expanded = true;
         
-        // 使用careerNode的当前位置
         const parentX = careerNode.x;
         const parentY = careerNode.y;
+        const y = this.layerY.future; // 固定在future层
         
-        // Future path只有一个节点，放在career下方
-        const radius = 150;
+        // Future path节点直接在父节点下方
         const x = parentX;
-        const y = parentY + radius;
         
         const futureId = `${careerId}-future`;
         const futureNode = {
@@ -272,17 +366,31 @@ class BubbleTreeEngine {
             if (sourceNode && targetNode) {
                 const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                 
-                // 曲线路径 (三次贝塞尔曲线)
-                const midY = (sourceNode.y + targetNode.y) / 2;
-                const d = `M ${sourceNode.x} ${sourceNode.y} 
-                           C ${sourceNode.x} ${midY}, 
-                             ${targetNode.x} ${midY}, 
-                             ${targetNode.x} ${targetNode.y}`;
+                // 优化的曲线路径，适应层次布局
+                const sourceY = sourceNode.y + this.nodeConfig[sourceNode.type].radius;
+                const targetY = targetNode.y - this.nodeConfig[targetNode.type].radius;
+                
+                // 控制点在中间偏下
+                const controlY = sourceY + (targetY - sourceY) * 0.5;
+                
+                const d = `M ${sourceNode.x} ${sourceY} 
+                           C ${sourceNode.x} ${controlY}, 
+                             ${targetNode.x} ${controlY}, 
+                             ${targetNode.x} ${targetY}`;
                 
                 line.setAttribute('d', d);
                 line.setAttribute('class', 'tree-link');
                 line.setAttribute('data-source', link.source);
                 line.setAttribute('data-target', link.target);
+                
+                // 根据节点类型设置连线颜色
+                if (targetNode.type === 'major') {
+                    line.setAttribute('stroke', 'rgba(240, 147, 251, 0.4)');
+                } else if (targetNode.type === 'career') {
+                    line.setAttribute('stroke', 'rgba(79, 172, 254, 0.4)');
+                } else if (targetNode.type === 'future') {
+                    line.setAttribute('stroke', 'rgba(67, 233, 123, 0.4)');
+                }
                 
                 this.linksGroup.appendChild(line);
             }
@@ -320,28 +428,44 @@ class BubbleTreeEngine {
                 }
             });
             
-            nodeGroup.addEventListener('mouseenter', () => {
+            nodeGroup.addEventListener('mouseenter', (e) => {
                 circle.setAttribute('filter', 'url(#glow)');
+                this.showTooltip(node, e);
                 if (this.onNodeHover) {
                     this.onNodeHover(node);
                 }
             });
             
-            nodeGroup.addEventListener('mouseleave', () => {
+            nodeGroup.addEventListener('mouseleave', (e) => {
                 circle.setAttribute('filter', 'url(#dropShadow)');
+                // 检查是否移动到tooltip上
+                const relatedTarget = e.relatedTarget;
+                if (!this.tooltip || !this.tooltip.contains(relatedTarget)) {
+                    this.hideTooltip();
+                }
+            });
+            
+            nodeGroup.addEventListener('mousemove', (e) => {
+                if (this.tooltip && this.tooltip.style.display === 'block') {
+                    this.tooltip.style.left = (e.pageX + 15) + 'px';
+                    this.tooltip.style.top = (e.pageY + 15) + 'px';
+                }
             });
             
             nodeGroup.appendChild(circle);
             
-            // 文本标签
+            // 文本标签 - 显示完整名称
             const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             text.setAttribute('class', 'node-label');
             text.setAttribute('text-anchor', 'middle');
             text.setAttribute('dy', '0.35em');
             text.setAttribute('fill', 'white');
-            text.setAttribute('font-size', node.type === 'root' ? '16' : '14');
-            text.setAttribute('font-weight', node.type === 'root' ? 'bold' : '500');
-            text.textContent = this.truncateText(node.name, config.radius);
+            text.setAttribute('font-size', node.type === 'root' ? '15' : (node.type === 'future' ? '13' : '14'));
+            text.setAttribute('font-weight', node.type === 'root' ? 'bold' : '600');
+            
+            // 处理长文本，自动换行
+            const maxWidth = config.radius * 1.8;
+            this.wrapText(text, node.name, maxWidth);
             
             nodeGroup.appendChild(text);
             
@@ -419,7 +543,54 @@ class BubbleTreeEngine {
     }
     
     /**
-     * 截断文本以适应节点
+     * 文本换行处理
+     */
+    wrapText(textElement, text, maxWidth) {
+        const words = text.split(/\s+/);
+        const fontSize = parseFloat(textElement.getAttribute('font-size'));
+        const lineHeight = fontSize * 1.2;
+        
+        let lines = [];
+        let currentLine = '';
+        
+        // 简单估算每个单词的宽度
+        words.forEach(word => {
+            const testLine = currentLine ? currentLine + ' ' + word : word;
+            const estimatedWidth = testLine.length * fontSize * 0.6; // 粗略估算
+            
+            if (estimatedWidth > maxWidth && currentLine) {
+                lines.push(currentLine);
+                currentLine = word;
+            } else {
+                currentLine = testLine;
+            }
+        });
+        
+        if (currentLine) {
+            lines.push(currentLine);
+        }
+        
+        // 限制最多3行
+        if (lines.length > 3) {
+            lines = lines.slice(0, 3);
+            lines[2] = lines[2].substring(0, 15) + '...';
+        }
+        
+        // 计算起始Y位置，使文本居中
+        const startY = -(lines.length - 1) * lineHeight / 2;
+        
+        // 添加每一行
+        lines.forEach((line, i) => {
+            const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+            tspan.setAttribute('x', '0');
+            tspan.setAttribute('dy', i === 0 ? startY : lineHeight);
+            tspan.textContent = line;
+            textElement.appendChild(tspan);
+        });
+    }
+    
+    /**
+     * 截断文本以适应节点（已被wrapText替代）
      */
     truncateText(text, radius) {
         const maxLength = Math.floor(radius / 4);

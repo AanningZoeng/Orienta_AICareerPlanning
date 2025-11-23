@@ -64,47 +64,59 @@
 
                 <!-- Tree Canvas Container -->
                 <div class="tree-canvas-container" id="treeContainer">
-                    <svg id="treeCanvas" width="100%" height="900">
+                    <svg id="treeCanvas" width="100%" height="1100">
                         <defs>
-                            <!-- Gradient definitions -->
-                            <linearGradient id="rootGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#667eea;stop-opacity:0.9" />
-                                <stop offset="100%" style="stop-color:#764ba2;stop-opacity:0.9" />
-                            </linearGradient>
-                            <linearGradient id="majorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#f093fb;stop-opacity:0.85" />
-                                <stop offset="100%" style="stop-color:#f5576c;stop-opacity:0.85" />
-                            </linearGradient>
-                            <linearGradient id="careerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#4facfe;stop-opacity:0.8" />
-                                <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:0.8" />
-                            </linearGradient>
-                            <linearGradient id="futureGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#43e97b;stop-opacity:0.8" />
-                                <stop offset="100%" style="stop-color:#38f9d7;stop-opacity:0.8" />
-                            </linearGradient>
+                            <!-- Gradient definitions with 3D effect -->
+                            <radialGradient id="rootGradient" cx="35%" cy="35%">
+                                <stop offset="0%" style="stop-color:#8b9ef9;stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:#667eea;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#4a5db8;stop-opacity:1" />
+                            </radialGradient>
+                            <radialGradient id="majorGradient" cx="35%" cy="35%">
+                                <stop offset="0%" style="stop-color:#ffc4fb;stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:#f093fb;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#c86fc9;stop-opacity:1" />
+                            </radialGradient>
+                            <radialGradient id="careerGradient" cx="35%" cy="35%">
+                                <stop offset="0%" style="stop-color:#7fd5fe;stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:#4facfe;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#2d85cc;stop-opacity:1" />
+                            </radialGradient>
+                            <radialGradient id="futureGradient" cx="35%" cy="35%">
+                                <stop offset="0%" style="stop-color:#78ffa7;stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:#43e97b;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#2bb85e;stop-opacity:1" />
+                            </radialGradient>
                             
-                            <!-- Glow filter -->
+                            <!-- Enhanced Glow filter for 3D effect -->
                             <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-                                <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                                <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+                                <feComposite in="coloredBlur" in2="SourceAlpha" operator="in" result="glowBlur"/>
                                 <feMerge>
-                                    <feMergeNode in="coloredBlur"/>
+                                    <feMergeNode in="glowBlur"/>
+                                    <feMergeNode in="glowBlur"/>
                                     <feMergeNode in="SourceGraphic"/>
                                 </feMerge>
                             </filter>
                             
-                            <!-- Drop shadow -->
+                            <!-- Enhanced Drop shadow for depth -->
                             <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
-                                <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
-                                <feOffset dx="0" dy="2" result="offsetblur"/>
+                                <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+                                <feOffset dx="0" dy="3" result="offsetblur"/>
                                 <feComponentTransfer>
-                                    <feFuncA type="linear" slope="0.3"/>
+                                    <feFuncA type="linear" slope="0.4"/>
                                 </feComponentTransfer>
                                 <feMerge>
                                     <feMergeNode/>
                                     <feMergeNode in="SourceGraphic"/>
                                 </feMerge>
                             </filter>
+                            
+                            <!-- Specular highlight for 3D sphere effect -->
+                            <radialGradient id="sphereHighlight" cx="30%" cy="30%">
+                                <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.5" />
+                                <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0" />
+                            </radialGradient>
                         </defs>
                         
                         <!-- Links group -->

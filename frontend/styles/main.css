@@ -258,7 +258,36 @@ textarea::placeholder {
 }
 
 .tree-link {
-    transition: stroke 0.3s ease;
+    fill: none;
+    stroke: rgba(102, 126, 234, 0.3);
+    stroke-width: 2.5;
+    transition: all 0.3s ease;
+}
+
+.tree-link:hover {
+    stroke: rgba(102, 126, 234, 0.6);
+    stroke-width: 3;
+}
+
+/* Node circle styles */
+.node-circle {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Node label styles */
+.node-label {
+    pointer-events: none;
+    user-select: none;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Expand indicator animation */
+.expand-indicator {
+    transition: all 0.3s ease;
+}
+
+.tree-node:hover .expand-indicator {
+    filter: brightness(1.2);
 }
 
 /* Tree Legend */
