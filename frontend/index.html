@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Career Path Planner</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/bubbles.css">
+    <link rel="stylesheet" href="styles/details.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="container">
+            <h1 class="logo">
+                <span class="logo-icon">🎯</span>
+                AI Career Path Planner
+            </h1>
+            <p class="tagline">Discover your future through intelligent career guidance</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Search Section -->
+        <section class="search-section" id="searchSection">
+            <div class="container">
+                <div class="search-card">
+                    <h2>Tell us about your interests</h2>
+                    <p>Our AI will analyze your passions and recommend personalized career paths</p>
+                    
+                    <form id="careerForm">
+                        <textarea 
+                            id="userQuery" 
+                            placeholder="e.g., I love technology and helping people. I enjoy problem-solving and creative thinking..."
+                            rows="4"
+                            required
+                        ></textarea>
+                        
+                        <button type="submit" class="btn-primary" id="analyzeBtn">
+                            <span class="btn-icon">✨</span>
+                            <span>Analyze My Path</span>
+                            <span class="btn-loader" style="display: none;">
+                                <span class="loader"></span>
+                            </span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visualization Section -->
+        <section class="visualization-section" id="visualizationSection" style="display: none;">
+            <div class="container">
+                <!-- Breadcrumb Navigation -->
+                <div class="breadcrumb" id="breadcrumb">
+                    <span class="breadcrumb-item active" data-level="0">Majors</span>
+                </div>
+
+                <!-- Visualization Canvas -->
+                <div class="bubble-canvas-container">
+                    <canvas id="bubbleCanvas"></canvas>
+                    
+                    <!-- Legend -->
+                    <div class="legend">
+                        <div class="legend-item">
+                            <span class="legend-color major-color"></span>
+                            <span>University Majors</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color career-color"></span>
+                            <span>Career Paths</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color future-color"></span>
+                            <span>Future Directions</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Instructions -->
+                <div class="instructions">
+                    <p>💡 <strong>Hover</strong> over bubbles to see details • <strong>Click</strong> to explore further</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Detail Modal -->
+    <div class="modal" id="detailModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content" id="modalContent">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <div id="modalBody">
+                <!-- Content will be dynamically loaded -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3>AI is analyzing your career path...</h3>
+            <p>Please wait while our agents research majors, careers, and future possibilities</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="scripts/bubble-engine.js"></script>
+    <script src="scripts/detail-view.js"></script>
+    <script src="scripts/main.js"></script>
+</body>
+</html>

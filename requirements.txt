@@ -1,0 +1,9 @@
+spoon-ai-sdk
+flask
+flask-cors
+python-dotenv
+pydantic
+httpx
+beautifulsoup4
+pytest
+pytest-asyncio
