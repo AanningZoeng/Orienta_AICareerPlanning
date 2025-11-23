@@ -278,6 +278,175 @@ class DetailViewManager {
             `;
         }
         
+        // 展开Future Path按钮
+        if (!node.expanded) {
+            content += `
+                <div class="detail-section action-section">
+                    <button class="btn-expand-future" data-career-id="${node.id}" data-career-title="${this.escapeHtml(data.title)}">
+                        <span class="btn-icon">🔮</span>
+                        <span class="btn-text">Explore Future Path</span>
+                        <span class="btn-hint">Call Future Path Agent</span>
+                    </button>
+                </div>
+            `;
+        } else {
+            content += `
+                <div class="detail-section action-hint">
+                    <p>✅ <strong>Future path explored</strong> - View progression node in the tree</p>
+                </div>
+            `;
+        }
+        
+        this.modalBody.innerHTML = content;
+        this.show();
+    }
+    
+    /**
+     * 显示Future Path节点详情
+     */
+    showFutureDetails(node) {
+        const data = node.data;
+        
+        let content = `
+            <div class="detail-header">
+                <div class="detail-icon future-icon">🔮</div>
+                <h2 class="detail-title">Future Path: ${this.escapeHtml(data.career)}</h2>
+            </div>
+        `;
+        
+        // 时间范围
+        if (data.timeframe) {
+            content += `
+                <div class="detail-section">
+                    <h3>⏱️ Timeframe</h3>
+                    <p><strong>${this.escapeHtml(data.timeframe)}</strong> career progression analysis</p>
+                </div>
+            `;
+        }
+        
+        // 统计数据
+        if (data.statistics) {
+            content += `
+                <div class="detail-section">
+                    <h3>📊 Career Progression Statistics</h3>
+                    <div class="statistics-grid">`;
+            
+            const stats = data.statistics;
+            if (stats.promoted) {
+                content += `
+                    <div class="stat-card promoted">
+                        <div class="stat-percentage">${stats.promoted.percentage}%</div>
+                        <div class="stat-label">Promoted</div>
+                        <div class="stat-desc">${this.escapeHtml(stats.promoted.description)}</div>
+                    </div>
+                `;
+            }
+            if (stats.same_role) {
+                content += `
+                    <div class="stat-card same-role">
+                        <div class="stat-percentage">${stats.same_role.percentage}%</div>
+                        <div class="stat-label">Same Role</div>
+                        <div class="stat-desc">${this.escapeHtml(stats.same_role.description)}</div>
+                    </div>
+                `;
+            }
+            if (stats.changed_company) {
+                content += `
+                    <div class="stat-card changed">
+                        <div class="stat-percentage">${stats.changed_company.percentage}%</div>
+                        <div class="stat-label">Changed Company</div>
+                        <div class="stat-desc">${this.escapeHtml(stats.changed_company.description)}</div>
+                    </div>
+                `;
+            }
+            if (stats.changed_field) {
+                content += `
+                    <div class="stat-card changed-field">
+                        <div class="stat-percentage">${stats.changed_field.percentage}%</div>
+                        <div class="stat-label">Changed Field</div>
+                        <div class="stat-desc">${this.escapeHtml(stats.changed_field.description)}</div>
+                    </div>
+                `;
+            }
+            
+            content += `
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 常见进阶路径
+        if (data.common_progressions && data.common_progressions.length > 0) {
+            content += `
+                <div class="detail-section">
+                    <h3>🛤️ Common Career Progressions</h3>
+                    <div class="progression-list">
+                        ${data.common_progressions.map(prog => `
+                            <div class="progression-item">
+                                <span class="progression-icon">➡️</span>
+                                <span class="progression-text">${this.escapeHtml(prog)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 见解和建议
+        if (data.insights && data.insights.length > 0) {
+            content += `
+                <div class="detail-section">
+                    <h3>💡 Key Insights</h3>
+                    <div class="insights-list">
+                        ${data.insights.map(insight => `
+                            <div class="insight-item">
+                                <span class="insight-icon">✔️</span>
+                                <p>${this.escapeHtml(insight)}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 学习资源
+        if (data.resources && data.resources.length > 0) {
+            content += `
+                <div class="detail-section">
+                    <h3>📖 Career Development Resources</h3>
+                    <div class="resource-list">
+                        ${data.resources.map((resource, index) => {
+                            let url, title, type;
+                            
+                            if (typeof resource === 'string') {
+                                url = resource;
+                                try {
+                                    const urlObj = new URL(resource);
+                                    title = urlObj.hostname.replace('www.', '').replace('m.', '');
+                                } catch (e) {
+                                    title = `Resource ${index + 1}`;
+                                }
+                                type = 'website';
+                            } else {
+                                url = resource.url || '#';
+                                title = resource.title || `Resource ${index + 1}`;
+                                type = resource.type || 'website';
+                            }
+                            
+                            return `
+                                <div class="resource-item">
+                                    <a href="${url}" target="_blank" rel="noopener">
+                                        ${this.getResourceIcon(type)}
+                                        ${this.escapeHtml(title)}
+                                    </a>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
         this.modalBody.innerHTML = content;
         this.show();
     }

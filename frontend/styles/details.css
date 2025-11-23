@@ -450,6 +450,180 @@
 }
 
 /* ============================================
+   Future Path Specific Styles
+   ============================================ */
+.future-icon {
+    background: linear-gradient(135deg, #43e97b, #38f9d7);
+}
+
+.btn-expand-future {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-lg) var(--spacing-xl);
+    background: linear-gradient(135deg, #43e97b, #38f9d7);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(67, 233, 123, 0.3);
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.btn-expand-future:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(67, 233, 123, 0.4);
+}
+
+.btn-expand-future:active {
+    transform: translateY(0);
+}
+
+.btn-expand-future .btn-icon {
+    font-size: 2rem;
+}
+
+.btn-expand-future .btn-text {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.btn-expand-future .btn-hint {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+.statistics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.stat-card {
+    background: linear-gradient(135deg, rgba(79, 172, 254, 0.1), rgba(0, 242, 254, 0.1));
+    border: 2px solid rgba(79, 172, 254, 0.3);
+    border-radius: 16px;
+    padding: var(--spacing-md);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(79, 172, 254, 0.2);
+}
+
+.stat-card.promoted {
+    background: linear-gradient(135deg, rgba(67, 233, 123, 0.1), rgba(56, 249, 215, 0.1));
+    border-color: rgba(67, 233, 123, 0.4);
+}
+
+.stat-card.same-role {
+    background: linear-gradient(135deg, rgba(240, 147, 251, 0.1), rgba(245, 87, 108, 0.1));
+    border-color: rgba(240, 147, 251, 0.3);
+}
+
+.stat-card.changed {
+    background: linear-gradient(135deg, rgba(250, 208, 46, 0.1), rgba(250, 177, 46, 0.1));
+    border-color: rgba(250, 208, 46, 0.3);
+}
+
+.stat-card.changed-field {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    border-color: rgba(102, 126, 234, 0.3);
+}
+
+.stat-percentage {
+    font-size: 2.5rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: var(--spacing-xs);
+}
+
+.stat-label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.stat-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+.progression-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+}
+
+.progression-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: rgba(79, 172, 254, 0.05);
+    border-left: 3px solid #4facfe;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.progression-item:hover {
+    background: rgba(79, 172, 254, 0.1);
+    transform: translateX(8px);
+}
+
+.progression-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.progression-text {
+    font-size: 1rem;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.insights-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.insight-item {
+    display: flex;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background: linear-gradient(135deg, rgba(67, 233, 123, 0.05), rgba(56, 249, 215, 0.05));
+    border-radius: 12px;
+    border: 1px solid rgba(67, 233, 123, 0.2);
+}
+
+.insight-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    color: #43e97b;
+}
+
+.insight-item p {
+    margin: 0;
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+/* ============================================
    Responsive Design
    ============================================ */
 @media (max-width: 768px) {

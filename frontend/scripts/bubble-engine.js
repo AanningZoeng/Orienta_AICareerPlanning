@@ -28,7 +28,8 @@ class BubbleTreeEngine {
         this.nodeConfig = {
             root: { radius: 60, gradient: 'rootGradient', color: '#667eea' },
             major: { radius: 50, gradient: 'majorGradient', color: '#f093fb' },
-            career: { radius: 40, gradient: 'careerGradient', color: '#4facfe' }
+            career: { radius: 40, gradient: 'careerGradient', color: '#4facfe' },
+            future: { radius: 35, gradient: 'futureGradient', color: '#43e97b' }
         };
         
         // Layout settings - 使用实际宽度的中心
@@ -206,6 +207,51 @@ class BubbleTreeEngine {
     }
     
     /**
+     * 展开Career节点 - 添加Future Path子节点
+     */
+    expandCareer(careerId, futurePath) {
+        const careerNode = this.nodes.find(n => n.id === careerId);
+        if (!careerNode || careerNode.expanded) return;
+        
+        careerNode.expanded = true;
+        
+        // 使用careerNode的当前位置
+        const parentX = careerNode.x;
+        const parentY = careerNode.y;
+        
+        // Future path只有一个节点，放在career下方
+        const radius = 150;
+        const x = parentX;
+        const y = parentY + radius;
+        
+        const futureId = `${careerId}-future`;
+        const futureNode = {
+            id: futureId,
+            type: 'future',
+            name: 'Future Path',
+            x: parentX,  // Start from parent for animation
+            y: parentY,
+            targetX: x,
+            targetY: y,
+            data: futurePath,
+            parent: careerId
+        };
+        
+        this.nodes.push(futureNode);
+        this.links.push({
+            source: careerId,
+            target: futureId
+        });
+        
+        careerNode.children = careerNode.children || [];
+        careerNode.children.push(futureId);
+        
+        // 先渲染连线，再执行动画
+        this.render();
+        this.animateNodes();
+    }
+    
+    /**
      * 渲染树结构
      */
     render() {
@@ -299,8 +345,8 @@ class BubbleTreeEngine {
             
             nodeGroup.appendChild(text);
             
-            // 扩展状态指示器 (for majors)
-            if (node.type === 'major') {
+            // 扩展状态指示器 (for majors and careers)
+            if (node.type === 'major' || node.type === 'career') {
                 const indicator = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                 indicator.setAttribute('r', '10');
                 indicator.setAttribute('cx', config.radius - 10);

@@ -415,6 +415,70 @@ def career_analysis():
         }), 500
 
 
+@app.route('/api/future-path-analysis', methods=['POST'])
+def future_path_analysis():
+    """
+    Frontend-friendly endpoint for Future Path Agent.
+    Returns future career progression paths for a specific career.
+    
+    Request body:
+        {
+            "career_title": "Software Engineer",
+            "years": 5  // optional, default 5
+        }
+    
+    Response:
+        {
+            "success": true,
+            "future_paths": [
+                {
+                    "id": "...",
+                    "career": "Software Engineer",
+                    "timeframe": "5 years",
+                    "statistics": {...},
+                    "common_progressions": [...],
+                    "insights": [...]
+                }
+            ]
+        }
+    """
+    try:
+        from backend.agents.future_path_agent import create_future_path_agent
+        
+        data = request.get_json()
+        career_title = data.get('career_title', '')
+        years = data.get('years', 5)
+        
+        if not career_title:
+            return jsonify({
+                'success': False,
+                'error': 'Career title cannot be empty'
+            }), 400
+        
+        # Create agent
+        agent = create_future_path_agent(
+            llm_provider=Config.LLM_PROVIDER,
+            model_name=Config.MODEL_NAME
+        )
+        
+        # Analyze progression for this career
+        result = asyncio.run(agent.analyze_progression(career_title, years))
+        
+        return jsonify({
+            'success': True,
+            'future_path': result
+        })
+        
+    except Exception as e:
+        print(f"[ERROR] Future path analysis failed: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+
 @app.route('/api/detail/major/<major_id>', methods=['GET'])
 def get_major_detail(major_id):
     """
@@ -490,7 +554,10 @@ def main():
     print(f"[INFO] API documentation:")
     print(f"   POST /api/analyze - Analyze career interests (full pipeline)")
     print(f"   POST /api/research-majors - Research majors only")
+    print(f"   POST /api/major-research - Frontend major research endpoint")
     print(f"   POST /api/analyze-careers - Analyze careers for a major")
+    print(f"   POST /api/career-analysis - Frontend career analysis endpoint")
+    print(f"   POST /api/future-path-analysis - Frontend future path analysis endpoint")
     print(f"   GET  /api/health - Health check")
     print(f"   GET  /api/detail/major/<id> - Get major details")
     print(f"   GET  /api/detail/career/<id> - Get career details")

@@ -27,6 +27,7 @@ class CareerPlanningApp {
         this.majorsData = null;
         this.majorsFullData = {};  // 存储完整的major详细信息
         this.careersData = {};
+        this.futurePathsData = {};  // 存储future path数据
         
         this.setupEventListeners();
     }
@@ -129,7 +130,32 @@ class CareerPlanningApp {
             }
         } 
         else if (node.type === 'career') {
+            // 显示career详情，并绑定展开future path按钮
             this.detailView.showCareerDetails(node);
+            
+            // 等待DOM渲染完成后，绑定展开按钮事件
+            await this.delay(100);
+            const expandBtn = document.querySelector('.btn-expand-future');
+            if (expandBtn) {
+                expandBtn.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    const careerId = expandBtn.dataset.careerId;
+                    const careerTitle = expandBtn.dataset.careerTitle;
+                    
+                    // 关闭模态框
+                    this.detailView.hide();
+                    await this.delay(300);
+                    
+                    // 展开future path
+                    const careerNode = this.treeEngine.getNode(careerId);
+                    if (careerNode) {
+                        await this.expandCareerWithFuturePath(careerNode);
+                    }
+                });
+            }
+        }
+        else if (node.type === 'future') {
+            this.detailView.showFutureDetails(node);
         }
     }
     
@@ -172,6 +198,74 @@ class CareerPlanningApp {
             console.error('Career expansion error:', error);
             this.hideLoading();
             this.showError('Career analysis failed: ' + error.message);
+        }
+    }
+    
+    /**
+     * 展开Career节点并加载Future Path数据
+     */
+    async expandCareerWithFuturePath(careerNode) {
+        const careerTitle = careerNode.data.title;
+        
+        this.showLoading('future', `Future Path Agent is analyzing career progression for "${careerTitle}"...`);
+        
+        try {
+            // 检查是否已有缓存
+            if (!this.futurePathsData[careerTitle]) {
+                const futureResponse = await this.callFuturePathAgent(careerTitle);
+                
+                if (futureResponse.success) {
+                    this.futurePathsData[careerTitle] = futureResponse.future_path;
+                } else {
+                    throw new Error(futureResponse.error || 'Future path analysis failed');
+                }
+            }
+            
+            // 展开节点
+            const futurePath = this.futurePathsData[careerTitle];
+            this.treeEngine.expandCareer(careerNode.id, futurePath);
+            
+            this.updateLoadingStep('future', 'complete', '✅ Future path analysis completed!');
+            await this.delay(1000);
+            this.hideLoading();
+        } catch (error) {
+            console.error('Future path expansion error:', error);
+            this.hideLoading();
+            this.showError('Career analysis failed: ' + error.message);
+        }
+    }
+    
+    /**
+     * 展开Career节点并加载Future Path数据
+     */
+    async expandCareerWithFuturePath(careerNode) {
+        const careerTitle = careerNode.data.title;
+        
+        this.showLoading('future', `Future Path Agent is analyzing career progression for "${careerTitle}"...`);
+        
+        try {
+            // 检查是否已有缓存
+            if (!this.futurePathsData[careerTitle]) {
+                const futureResponse = await this.callFuturePathAgent(careerTitle);
+                
+                if (futureResponse.success) {
+                    this.futurePathsData[careerTitle] = futureResponse.future_path;
+                } else {
+                    throw new Error(futureResponse.error || 'Future path analysis failed');
+                }
+            }
+            
+            // 展开节点
+            const futurePath = this.futurePathsData[careerTitle];
+            this.treeEngine.expandCareer(careerNode.id, futurePath);
+            
+            this.updateLoadingStep('future', 'complete', '✅ Future path analysis completed!');
+            await this.delay(1000);
+            this.hideLoading();
+        } catch (error) {
+            console.error('Future path expansion error:', error);
+            this.hideLoading();
+            this.showError('Future path analysis failed: ' + error.message);
         }
     }
     
@@ -226,6 +320,105 @@ class CareerPlanningApp {
     }
     
     /**
+     * API调用: Future Path Agent
+     */
+    async callFuturePathAgent(careerTitle) {
+        try {
+            const response = await fetch(`${this.apiBaseUrl}/future-path-analysis`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ career_title: careerTitle, years: 5 })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            return await response.json();
+        } catch (error) {
+            console.error('API call failed:', error);
+            
+            // 如果API失败，使用模拟数据
+            console.warn('Using mock data for development');
+            return this.getMockCareersData(majorName);
+        }
+    }
+    
+    /**
+     * API调用: Future Path Agent
+     */
+    async callFuturePathAgent(careerTitle) {
+        try {
+            const response = await fetch(`${this.apiBaseUrl}/future-path-analysis`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ career_title: careerTitle, years: 5 })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
+            return await response.json();
+        } catch (error) {
+            console.error('API call failed:', error);
+            
+            // 如果API失败，使用模拟数据
+            console.warn('Using mock data for development');
+            return this.getMockFuturePathData(careerTitle);
+        }
+    }
+    
+    /**
+     * 模拟数据 - Future Path
+     */
+    getMockFuturePathData(careerTitle) {
+        return {
+            success: true,
+            future_path: {
+                id: `${careerTitle.toLowerCase().replace(/\s+/g, '_')}_future`,
+                career: careerTitle,
+                timeframe: "5 years",
+                statistics: {
+                    promoted: {
+                        percentage: 45,
+                        description: "45% of professionals were promoted to higher positions"
+                    },
+                    same_role: {
+                        percentage: 30,
+                        description: "30% remained in similar roles with increased responsibility"
+                    },
+                    changed_company: {
+                        percentage: 15,
+                        description: "15% moved to different companies for better opportunities"
+                    },
+                    changed_field: {
+                        percentage: 10,
+                        description: "10% transitioned to different fields or industries"
+                    }
+                },
+                common_progressions: [
+                    `Senior ${careerTitle} (35%)`,
+                    `Lead/Principal ${careerTitle} (25%)`,
+                    "Engineering Manager (20%)",
+                    "Technical Architect (15%)",
+                    "Director of Engineering (5%)"
+                ],
+                insights: [
+                    "Strong technical skills are essential for advancement",
+                    "Leadership and communication skills become increasingly important",
+                    "Continuous learning and staying updated with industry trends is critical",
+                    "Building a professional network opens up more opportunities"
+                ],
+                resources: [
+                    { title: "Career Progression Guide", url: "https://example.com/career-guide", type: "article" },
+                    { title: "Leadership Development Course", url: "https://example.com/leadership", type: "course" }
+                ]
+            }
+        };
+    }
+    
+    /**
      * 模拟数据 - Major Research
      */
     getMockMajorsData(query) {
@@ -272,6 +465,55 @@ class CareerPlanningApp {
                     ]
                 }
             ]
+        };
+    }
+    
+    /**
+     * 模拟数据 - Future Path
+     */
+    getMockFuturePathData(careerTitle) {
+        return {
+            success: true,
+            future_path: {
+                id: `${careerTitle.toLowerCase().replace(/\s+/g, '_')}_future`,
+                career: careerTitle,
+                timeframe: "5 years",
+                statistics: {
+                    promoted: {
+                        percentage: 45,
+                        description: "45% of professionals were promoted to higher positions"
+                    },
+                    same_role: {
+                        percentage: 30,
+                        description: "30% remained in similar roles with increased responsibility"
+                    },
+                    changed_company: {
+                        percentage: 15,
+                        description: "15% moved to different companies for better opportunities"
+                    },
+                    changed_field: {
+                        percentage: 10,
+                        description: "10% transitioned to different fields or industries"
+                    }
+                },
+                common_progressions: [
+                    "Senior ${careerTitle} (35%)",
+                    "Lead/Principal ${careerTitle} (25%)",
+                    "Engineering Manager (20%)",
+                    "Technical Architect (15%)",
+                    "Director of Engineering (5%)"
+                ],
+                insights: [
+                    "Strong technical skills are essential for advancement",
+                    "Leadership and communication skills become increasingly important",
+                    "Continuous learning and staying updated with industry trends is critical",
+                    "Building a professional network opens up more opportunities"
+                ],
+                resources: [
+                    { title: "Career Progression Guide", url: "https://example.com/career-guide", type: "article" },
+                    { title: "Leadership Development Course", url: "https://example.com/leadership", type: "course" }
+                ]
+            }
         };
     }
     
