@@ -1,0 +1,75 @@
+{
+  "timestamp": "2025-11-23T10:19:16.069595",
+  "user_query": "I love linguistics!",
+  "majors": {
+    "Linguistics": {
+      "description": "A Linguistics major involves the scientific study of language, encompassing its structure, meaning, and use. Students explore topics like phonetics, syntax, semantics, and sociolinguistics. Common career paths include language teaching, translation, speech pathology, and computational linguistics.",
+      "resources": [
+        "https://www.youtube.com/watch?v=ZNKCuFmXb3g",
+        "https://www.youtube.com/playlist?list=PLGEeWalCiW5iMHaphJ3nIPA8DBiihwbNK",
+        "https://www.youtube.com/watch?v=WnYDv-TWE8w",
+        "https://en.m.wikipedia.org/wiki/Linguistics",
+        "https://en.m.wikipedia.org/wiki/Outline_of_linguistics",
+        "https://www.britannica.com/science/linguistics",
+        "https://en.wikipedia.org/wiki/Linguistics",
+        "https://linguistics.ucla.edu/undergraduate/what-is-linguistics/"
+      ]
+    },
+    "Computational Linguistics": {
+      "description": "Computational Linguistics combines linguistics with computer science to develop computational models of human language. Students study natural language processing, machine learning, and programming to analyze and generate language data. Graduates often pursue careers as data scientists, NLP engineers, or computational linguists in tech companies or research institutions.",
+      "resources": [
+        "https://zakruti.com/education/crash_course/video-3708",
+        "https://www.superlinguo.com/post/641226709301116928/crash-course-linguistics-the-full-series",
+        "https://techxplore.com/news/2024-06-ai-companies-language-youtube-archive.html",
+        "https://edurank.org/cs/computational-linguistics/",
+        "https://www.compling.uw.edu/",
+        "https://www.unr.edu/degrees/majors/computational-linguistics",
+        "https://toppodcast.com/podcast_feeds/lingthusiasm-a-podcast-thats-enthusiastic-about-linguistics/",
+        "https://ivy.fm/tag/language",
+        "http://tekhead.it/blog/2016/09/time-to-try-something-new-how-about-podcasting/"
+      ]
+    },
+    "English Language and Literature": {
+      "description": "English Language and Literature majors study the history, structure, and evolution of the English language, alongside analyzing literary works from various periods and cultures. Students develop critical thinking, reading, and writing skills. Career paths include teaching, journalism, publishing, editing, and content creation.",
+      "resources": [
+        "https://www.youtube.com/c/EnglishLiteratureandLanguage/videos",
+        "https://languageartsclassroom.com/20-youtube-channels-for-language-arts-teachers/",
+        "https://youtubedownload.minitool.com/news/literature-youtube-channels.html",
+        "https://duckduckgo.com/y.js?ad_domain=wilson.edu&ad_provider=bingv7aa&ad_type=txad&click_metadata=gZFf2VGfhQocIVqmHO2NxNIs2mda0HRdJPco_2PiJKxnrkW2ZV3jWf-YBM0v_iSyKZpmd5sFqDu4LEn5yAr3TbSo51b1bFTdmZW2ZrcsJKfyLRTDflGkRPYq010Dfbsd.C8bpPUP38JcTMZy_nX0tcA&rut=a4c3254076518daedd17d5bd235c67706494d91e62539ee62cc806889ad0a134&u3=https://www.bing.com/aclick?ld=e86RP-IZP9vDhITw53y0WBdTVUCUwzGbWA9vAr-kvY15ybQH_8D2v7FKo7S6M5ipceWZIn5iVMCe2h557OLQ1cUgbuU4QJMoPOsevs8apIao3e7pLXhBNXOgZFDULH4Jx7xrsy9JJEC1awKn7KOHRP8QrDKM3lEHpcejjomQ4gRLLKt_ergA51X5zM3YzQ6PWYONhkG1nxTwhQDnlID_FfRYBFSKE&u=aHR0cHMlM2ElMmYlMmZ3d3cud2lsc29uLmVkdSUyZm1hc3Rlci1odW1hbml0aWVzJTNmbXNjbGtpZCUzZDczNzFkMzlmYzZhYzFkYzJlODNhYmFiYzk2YmU2ZTJjJTI2dXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fbWVkaXVtJTNkY3BjJTI2dXRtX2NhbXBhaWduJTNkTWFzdGVycyUyNTIwUHJvZ3JhbSUyNTIwLSUyNTIwSHVtYW5pdGllcyUyNnV0bV90ZXJtJTNkbWFzdGVyJTI1MjBodW1hbml0aWVzJTI1MjBsaXRlcmF0dXJlJTI2dXRtX2NvbnRlbnQlM2RFbmdsaXNoJTI1MjBMYW5ndWFnZSUyNTIwYW5kJTI1MjBMaXRlcmF0dXJl&rlid=7371d39fc6ac1dc2e83ababc96be6e2c&vqd=4-286770997185821865892823773732280841393&iurl={1}IG=B170AB75DFEB4BDAAE898F81593BAE61&CID=12EC58DB1D716D9F268A4E761CA46C60&ID=DevEx,5045.1",
+        "https://www.pace.edu/program/english-language-and-literature-ba",
+        "https://www.universities.com/programs/english-language-and-literature-degrees",
+        "https://online.maryville.edu/blog/literature-major-vs-english-major/",
+        "https://carleton.ca/english/life-in-english-student-blogs/amanda-seed/",
+        "https://banterlcrowe.blogs.brynmawr.edu/2014/01/31/i-am-english-major/"
+      ]
+    },
+    "Cognitive Science": {
+      "description": "Cognitive Science is an interdisciplinary field that explores the nature of intelligence and the mind. Students study topics like perception, learning, memory, language, and reasoning, drawing from psychology, computer science, neuroscience, and philosophy. Graduates find careers in fields such as human-computer interaction, artificial intelligence, education, and research.",
+      "resources": [
+        "https://www.researchgate.net/publication/353481754_YouTube_for_Academics_Exploring_Learning_Habits_of_Post_Graduate_Students",
+        "https://www.researchgate.net/publication/233995041_YouTube_as_a_Platform_for_Publishing_Clinical_Skills_Training_Videos",
+        "https://genes2brains2mind2me.com/tag/youtube/",
+        "https://cogs.indiana.edu/",
+        "https://cogs.indiana.edu/undergraduate/index.html",
+        "http://www.canadian-universities.net/Universities/Programs/Cognitive_Science-British_Columbia.html",
+        "https://www.ucdavis.edu/majors/blog/what-can-i-do-with-cognitive-science-major",
+        "https://blog.collegevine.com/cognitive-science-major-introduction",
+        "https://lsa.umich.edu/lsa/academics/majors-minors/cognitive-science-major.html"
+      ]
+    },
+    "Communication Sciences and Disorders": {
+      "description": "Communication Sciences and Disorders focuses on the study of human communication and its disorders. Students learn about speech, language, hearing, and swallowing processes, as well as various communication disorders and their treatment. Graduates typically pursue careers as speech-language pathologists or audiologists, working in schools, hospitals, clinics, and private practices.",
+      "resources": [
+        "https://www.youtube.com/playlist?list=PLPqGM2oOUffrYiV5epVJNEwcY37DOKtqa",
+        "https://www.youtube.com/watch?v=cziURghO0NM",
+        "https://commdisorders.cci.fsu.edu/about-the-school/videos/",
+        "https://www.uwsp.edu/programs/degree/communication-sciences-and-disorders/",
+        "https://louisville.edu/programs/communication-sciences-and-disorders-bs",
+        "https://www.gcu.edu/degree-programs/bachelors-communication-sciences-disorders",
+        "https://player.fm/podcasts/Social-Sciences",
+        "https://player.fm/podcasts/Psychology-Education",
+        "https://player.fm/podcasts/Therapy"
+      ]
+    }
+  }
+}

@@ -240,10 +240,27 @@ Return only a JSON list of 3-5 major names (no explanations):"""
                 try:
                     prompt = (
                         f"Provide a concise 2-4 sentence introduction to the university major '{major_name}'. "
-                        "Include typical topics studied and common career outcomes. Return plain text only."
+                        "Include typical topics studied and common career outcomes. "
+                        "Do NOT say 'I don't have a specific tool' or similar meta-commentary. "
+                        "Just provide the factual description directly. Return plain text only."
                     )
                     resp = await self.llm_agent.run(prompt)
                     text = str(resp or "").strip()
+                    
+                    # Filter out meta-commentary responses
+                    if any(phrase in text.lower() for phrase in [
+                        "i don't have", "i do not have", "specific tool", 
+                        "general knowledge", "based on my knowledge"
+                    ]):
+                        # Regenerate with more direct prompt
+                        direct_prompt = (
+                            f"Write a 2-3 sentence description of the {major_name} major. "
+                            f"What do students study in {major_name}? What careers can they pursue? "
+                            "Be direct and factual."
+                        )
+                        resp = await self.llm_agent.run(direct_prompt)
+                        text = str(resp or "").strip()
+                    
                     # Take first paragraph
                     if "\n\n" in text:
                         description = text.split("\n\n")[0].strip()
@@ -251,6 +268,13 @@ Return only a JSON list of 3-5 major names (no explanations):"""
                         description = text.split("\n")[0].strip()
                     else:
                         description = text
+                    
+                    # Final validation: reject if still contains meta-commentary
+                    if any(phrase in description.lower() for phrase in [
+                        "i don't have", "i do not have", "specific tool"
+                    ]):
+                        description = ""
+                        
                 except Exception:
                     description = ""
 

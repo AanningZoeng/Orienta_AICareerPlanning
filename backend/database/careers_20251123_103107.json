@@ -1,0 +1,632 @@
+{
+  "timestamp": "2025-11-23T10:31:07.757233",
+  "source_timestamp": "2025-11-23T10:28:41.759284",
+  "user_query": "I love coding and math",
+  "careers": {
+    "Computer Science": {
+      "Software Engineer": {
+        "description": "Software engineers design, develop, and test software applications and systems. They typically work in collaborative team environments, using programming languages and software development methodologies. Career growth potential includes roles like senior engineer, team lead, architect, or engineering manager.",
+        "resources": [
+          "https://h30434.www3.hp.com/t5/Printer-Setup-Software-Drivers/HP-Scan-Software/td-p/9106238",
+          "https://h30434.www3.hp.com/t5/Printer-Setup-Software-Drivers/bd-p/Software",
+          "https://h30434.www3.hp.com/t5/Printer-Setup-Software-Drivers/download-for-laserJetP-1102W/td-p/9437034",
+          "https://research.com/careers/software-engineering-careers",
+          "https://www.coursera.org/articles/software-engineer-salary",
+          "https://www.universities.com/computer-science/software-engineering-degree-guide",
+          "https://www.youtube.com/watch?v=JweC6Rg8s4U",
+          "https://linearb.io/blog/best-software-podcasts",
+          "https://podcast.feedspot.com/software_engineering_podcasts/"
+        ],
+        "salary": {
+          "min": 80000.0,
+          "max": 220000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Software Engineer",
+            "company": "Google",
+            "description": "Design and develop scalable software systems. Work with cross-functional teams to deliver high-quality products.",
+            "salary_range": "$120k - $180k"
+          },
+          {
+            "job_title": "Software Engineer",
+            "company": "Microsoft",
+            "description": "Build cloud-based solutions and services. Collaborate with product managers and designers.",
+            "salary_range": "$110k - $170k"
+          },
+          {
+            "job_title": "Senior Software Engineer",
+            "company": "Amazon",
+            "description": "Lead technical design and architecture decisions. Mentor junior engineers.",
+            "salary_range": "$150k - $220k"
+          },
+          {
+            "job_title": "Software Developer",
+            "company": "Apple",
+            "description": "Develop innovative applications for iOS and macOS platforms.",
+            "salary_range": "$130k - $190k"
+          },
+          {
+            "job_title": "Backend Engineer",
+            "company": "Meta",
+            "description": "Build scalable backend services and APIs. Work with distributed systems.",
+            "salary_range": "$140k - $200k"
+          }
+        ],
+        "db_match_count": 10
+      },
+      "Data Scientist": {
+        "description": "Data scientists analyze large datasets to extract meaningful insights and develop data-driven solutions. They typically work in collaborative environments, using programming languages, statistical methods, and machine learning techniques. Career growth potential includes roles like senior data scientist, data science manager, or data science architect.",
+        "resources": [
+          "https://adasci.org/",
+          "https://www.analyticsdegrees.org/resources/analytics-associations-and-organizations/",
+          "https://library.wit.edu/guides/data-science/organizations-associations",
+          "https://duckduckgo.com/y.js?ad_domain=euspert.com&ad_provider=bingv7aa&ad_type=txad&click_metadata=e73S3nM6RQC9JHdpnk1Xn7O-zWatPt9iPL2bbWEDgBZjoeFDnZZldfitPJWdzasbCmyGbGuHkcg8BAdxRekDvVS4epjN7aimCY7Ypj4LpEePjtZJKlQ91sIxqP0KCH4O.1x5x3ltzu-3qhaXr_UboUA&rut=48da686795861f4130f78e2eb273ff4a1f9f563103c3f3d98fd111bceb9afb0f&u3=https://www.bing.com/aclick?ld=e8XMpiD86ZxTu8Qo1TIKO0pTVUCUzF-hpXitU1ms0IaxMP4pdsxcGiO-Nm6cbP8tPv6PGlcjztBb99v0CsZzWBPHe1GTNIOBPrz_y2dA0cSSCgCJ4Y2fT85mZpuFeS-uJj2qaJhwx-h2d-K9i1UuJNujf17Tk7lkxt0WwnBgxsW3rwDUDFsipNDOmmPtqHM0PSHbmPCWA7DH1FYJeEmjVjQ0ijjbw&u=aHR0cHMlM2ElMmYlMmZ1cy5ldXNwZXJ0LmNvbSUyZmpvYi1vZmZlcnMlMmZyZCUzZnNlYXJjaCUzZGRhdGElMmJzY2llbmNlJTI2bG9jYXRpb24lM2QlMjZhcGklM2R0JTI2X2MlM2QxJTI2X2wlM2Q4NjQ0OSUyNm1zY2xraWQlM2Q1ZjYwYTkxMDVlNmQxNjhjY2IyNGMwMzMwY2ZiY2E4MQ&rlid=5f60a9105e6d168ccb24c0330cfbca81&vqd=4-20732808900139798745110194885447686790&iurl={1}IG=EDAA63CD0A2C46A89DDFDDD1765BB650&CID=2A416594BDDF6C410BB87339BC486D62&ID=DevEx,5046.1",
+          "https://www.bls.gov/ooh/math/data-scientists.htm",
+          "https://www.usdsi.org/data-science-insights/resources/salary-guide-2025-for-data-science-professionals",
+          "https://www.belmontforum.org/wp-content/uploads/2019/10/CRA-Data-Management-language-v.1.4.pdf",
+          "https://www.belmontforum.org/wp-content/uploads/2019/10/CRA_Data_Digital_Outputs_Management_V2.pdf",
+          "https://www.belmontforum.org/wp-content/uploads/2017/10/Data-policy-1.pdf"
+        ],
+        "salary": {
+          "min": 90000.0,
+          "max": 250000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Data Scientist",
+            "company": "Google",
+            "description": "Apply machine learning to solve complex business problems. Analyze large datasets.",
+            "salary_range": "$130k - $190k"
+          },
+          {
+            "job_title": "Data Scientist",
+            "company": "Netflix",
+            "description": "Build recommendation systems and personalization algorithms.",
+            "salary_range": "$140k - $200k"
+          },
+          {
+            "job_title": "Senior Data Scientist",
+            "company": "Uber",
+            "description": "Lead data-driven decision making. Develop predictive models.",
+            "salary_range": "$160k - $230k"
+          },
+          {
+            "job_title": "Data Analyst",
+            "company": "Airbnb",
+            "description": "Analyze user behavior and business metrics. Create data visualizations.",
+            "salary_range": "$90k - $140k"
+          },
+          {
+            "job_title": "Research Scientist",
+            "company": "DeepMind",
+            "description": "Conduct cutting-edge AI research. Publish papers in top conferences.",
+            "salary_range": "$150k - $250k"
+          }
+        ],
+        "db_match_count": 5
+      },
+      "Web Developer": {
+        "description": "Web developers create and maintain websites and web applications. They typically work in collaborative teams or independently, using programming languages like HTML, CSS, and JavaScript. Career growth potential includes roles like senior web developer, front-end architect, back-end developer, or web development manager.",
+        "resources": [
+          "https://en.wikipedia.org/wiki/SAE_International",
+          "https://www.submitindustry.com/top-website-developers-in-chennai-building-modern-websites-that-drive-results/",
+          "https://www.cbinsights.com/company/webdeveloperspro",
+          "https://salarieshub.com/web-developer-salary-guide-career-outlook/",
+          "https://www.roberthalf.com/us/en/job-details/web-developer",
+          "https://collegegrad.com/education/computer-technology-and-it/web-development",
+          "https://artists.youtube/",
+          "https://www.youtube.com/playlist?list=PLrUvQ8wQgr6SvKgZbws3rwbHcwXP1bSrb",
+          "https://www.linkedin.com/posts/mclarenjon_hubspot-community-developer-podcast-activity-6854793294363422720-9UPm"
+        ],
+        "salary": {
+          "min": 105000.0,
+          "max": 190000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Software Developer",
+            "company": "Apple",
+            "description": "Develop innovative applications for iOS and macOS platforms.",
+            "salary_range": "$130k - $190k"
+          },
+          {
+            "job_title": "Full Stack Developer",
+            "company": "Atlassian",
+            "description": "Develop end-to-end web applications. Work with Node.js and React.",
+            "salary_range": "$110k - $160k"
+          },
+          {
+            "job_title": "Frontend Developer",
+            "company": "Adobe",
+            "description": "Create beautiful user interfaces. Work with design systems.",
+            "salary_range": "$105k - $155k"
+          },
+          {
+            "job_title": "Mobile Developer",
+            "company": "Uber",
+            "description": "Develop cross-platform mobile apps. Use React Native or Flutter.",
+            "salary_range": "$110k - $170k"
+          }
+        ],
+        "db_match_count": 4
+      }
+    },
+    "Mathematics": {
+      "Actuary": {
+        "description": "Actuaries analyze financial risks and uncertainties, often in the insurance and finance industries. They use mathematical and statistical models to assess probabilities of events and develop strategies to minimize risk. Career growth potential includes roles like senior actuary, actuarial manager, or consultant.",
+        "resources": [
+          "https://www.collegevaluesonline.com/lists/5-professional-membership-associations-for-actuaries/",
+          "https://www.actuary.org/membership/",
+          "https://career.actuary.com/actuarial-societies-organizations/",
+          "https://in.indeed.com/career-advice/career-development/actuarial-science-careers",
+          "https://salarieshub.com/actuary-salary-guide-and-career-outlook/",
+          "https://www.vintti.com/blog/actuary-salary-deciphering-the-pay-in-actuarial-science",
+          "https://www.youtube.com/channel/UCKxgukKbWx23BaErgv5Rm-g",
+          "https://www.youtube.com/c/VLifeJournal",
+          "https://videos.feedspot.com/actuary_youtube_channels/"
+        ],
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "currency": "USD"
+        },
+        "job_examples": [],
+        "db_match_count": 0
+      },
+      "Statistician": {
+        "description": "Statisticians collect, analyze, and interpret data to solve real-world problems across various fields. They apply statistical methods and models to draw conclusions and make predictions. Career growth potential includes roles like senior statistician, statistical consultant, or research scientist.",
+        "resources": [
+          "https://en.wikipedia.org/wiki/American_Statistical_Association",
+          "https://libguides.cfcc.edu/c.php?g=604688&p=4191138",
+          "https://www.niss.org/news/statisticians-consumer-products-biopharm-industries-highlighted-virtual-career-fair",
+          "https://www.stanford.edu/",
+          "https://www.stanford.edu/admission/",
+          "https://www.stanford.edu/about/",
+          "https://www.youtube.com/watch?v=_EnoTvnx2gQ",
+          "https://www.youtube.com/watch?v=IkzO2_Im1vA",
+          "https://blog.youtube/"
+        ],
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "currency": "USD"
+        },
+        "job_examples": [],
+        "db_match_count": 0
+      },
+      "Data Analyst": {
+        "description": "Data analysts collect, clean, and analyze data to identify trends and insights that can inform business decisions. They typically work in office environments, using tools like spreadsheets, SQL, and data visualization software. Career growth potential includes roles like senior data analyst, data scientist, or business intelligence analyst.",
+        "resources": [
+          "https://en.wikipedia.org/wiki/Chartered_Financial_Analyst",
+          "https://novoresume.com/career-blog/data-analyst-resume",
+          "https://www.mastersindatascience.org/careers/business-analyst/",
+          "https://www.coursera.org/articles/how-much-do-data-analysts-make-salary-guide",
+          "https://365datascience.com/career-advice/data-analyst-job-outlook-2025/",
+          "https://www.jobstera.com/articles/en/data-analyst-career-guide-2025",
+          "https://www.youtube.com/playlist?list=PLo0oTKi2fPNjU4Jq4LjnpaPMEvdrtZIJ6",
+          "https://www.youtube.com/watch?v=4uCPltIg0tg",
+          "https://www.youtube.com/watch?v=Xo5bwhnpec8"
+        ],
+        "salary": {
+          "min": 90000.0,
+          "max": 230000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Data Scientist",
+            "company": "Google",
+            "description": "Apply machine learning to solve complex business problems. Analyze large datasets.",
+            "salary_range": "$130k - $190k"
+          },
+          {
+            "job_title": "Data Scientist",
+            "company": "Netflix",
+            "description": "Build recommendation systems and personalization algorithms.",
+            "salary_range": "$140k - $200k"
+          },
+          {
+            "job_title": "Senior Data Scientist",
+            "company": "Uber",
+            "description": "Lead data-driven decision making. Develop predictive models.",
+            "salary_range": "$160k - $230k"
+          },
+          {
+            "job_title": "Data Analyst",
+            "company": "Airbnb",
+            "description": "Analyze user behavior and business metrics. Create data visualizations.",
+            "salary_range": "$90k - $140k"
+          },
+          {
+            "job_title": "Cybersecurity Analyst",
+            "company": "Microsoft",
+            "description": "Monitor and respond to security incidents. Implement security controls.",
+            "salary_range": "$100k - $150k"
+          }
+        ],
+        "db_match_count": 5
+      }
+    },
+    "Software Engineering": {
+      "Software Engineer": {
+        "description": "Software engineers design, develop, test, and maintain software applications and systems. They work collaboratively in teams, utilizing programming languages, software development methodologies, and engineering principles. Career growth potential includes roles like senior engineer, team lead, architect, or engineering manager.",
+        "resources": [
+          "https://nsose.org/",
+          "https://jobstars.com/it-professional-associations-organizations/",
+          "https://www.nspe.org/",
+          "https://365datascience.com/career-advice/data-engineer-job-outlook-2025/",
+          "https://outstandingstar.com/software-engineer/",
+          "https://www.glassdoor.com/Salaries/data-engineer-salary-SRCH_KO0,13.htm",
+          "https://www.youtube.com/watch?v=-mHqJuPXcgY",
+          "https://www.aihirely.com/blog/google-senior-software-engineer-youtube-interview-experience-share",
+          "https://www.glassdoor.co.in/Interview/software-engineer-youtube-interview-questions-SRCH_KO0,25_IP4.htm"
+        ],
+        "salary": {
+          "min": 80000.0,
+          "max": 220000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Software Engineer",
+            "company": "Google",
+            "description": "Design and develop scalable software systems. Work with cross-functional teams to deliver high-quality products.",
+            "salary_range": "$120k - $180k"
+          },
+          {
+            "job_title": "Software Engineer",
+            "company": "Microsoft",
+            "description": "Build cloud-based solutions and services. Collaborate with product managers and designers.",
+            "salary_range": "$110k - $170k"
+          },
+          {
+            "job_title": "Senior Software Engineer",
+            "company": "Amazon",
+            "description": "Lead technical design and architecture decisions. Mentor junior engineers.",
+            "salary_range": "$150k - $220k"
+          },
+          {
+            "job_title": "Software Developer",
+            "company": "Apple",
+            "description": "Develop innovative applications for iOS and macOS platforms.",
+            "salary_range": "$130k - $190k"
+          },
+          {
+            "job_title": "Backend Engineer",
+            "company": "Meta",
+            "description": "Build scalable backend services and APIs. Work with distributed systems.",
+            "salary_range": "$140k - $200k"
+          }
+        ],
+        "db_match_count": 10
+      },
+      "Software Architect": {
+        "description": "Software architects design the high-level structure of software systems, ensuring they meet performance, scalability, and security requirements. They work closely with development teams, providing guidance and technical leadership. Career growth potential includes roles like chief architect, principal engineer, or technology director.",
+        "resources": [
+          "https://www.iasaglobal.org/",
+          "https://jobstars.com/it-professional-associations-organizations/",
+          "https://technologymagazine.com/top10/top-10-technology-associations",
+          "https://h30434.www3.hp.com/t5/Printer-Setup-Software-Drivers/bd-p/Software",
+          "https://h30434.www3.hp.com/t5/Notebook-Software-and-How-To-Questions/Driver-on-the-touchpad-on-the-windows-11/td-p/9436663",
+          "https://h30434.www3.hp.com/t5/Desktop-Software-and-How-To-Questions/down-load-HP-support-Assistance/td-p/9231859",
+          "https://www.youtube.com/watch?v=k843i-e_f1w",
+          "https://www.youtube.com/watch?v=eTlR4myEDSs",
+          "https://www.youtube.com/watch?v=zVVvWDGi6gU"
+        ],
+        "salary": {
+          "min": 80000.0,
+          "max": 220000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Software Engineer",
+            "company": "Google",
+            "description": "Design and develop scalable software systems. Work with cross-functional teams to deliver high-quality products.",
+            "salary_range": "$120k - $180k"
+          },
+          {
+            "job_title": "Software Engineer",
+            "company": "Microsoft",
+            "description": "Build cloud-based solutions and services. Collaborate with product managers and designers.",
+            "salary_range": "$110k - $170k"
+          },
+          {
+            "job_title": "Senior Software Engineer",
+            "company": "Amazon",
+            "description": "Lead technical design and architecture decisions. Mentor junior engineers.",
+            "salary_range": "$150k - $220k"
+          },
+          {
+            "job_title": "Software Developer",
+            "company": "Apple",
+            "description": "Develop innovative applications for iOS and macOS platforms.",
+            "salary_range": "$130k - $190k"
+          },
+          {
+            "job_title": "Software Consultant",
+            "company": "Accenture",
+            "description": "Advise clients on technology solutions. Implement custom software.",
+            "salary_range": "$90k - $140k"
+          }
+        ],
+        "db_match_count": 6
+      },
+      "DevOps Engineer": {
+        "description": "DevOps engineers automate and streamline the software development lifecycle, focusing on collaboration and communication between development and operations teams. They work with tools for continuous integration, continuous delivery, and infrastructure as code. Career growth potential includes roles like senior DevOps engineer, DevOps manager, or cloud architect.",
+        "resources": [
+          "https://conferences.techwell.com/archives/devopswest-2016/expo/sponsors-exhibitors.html",
+          "https://conferences.techwell.com/archives/devopswest-2017/expo/sponsors-exhibitors.html",
+          "https://www.knowledgehut.com/devops-courses",
+          "https://www.glassdoor.com/Salaries/devops-engineer-salary-SRCH_KO0,15.htm",
+          "https://www.glassdoor.com/Salaries/devops-consultant-salary-SRCH_KO0,17.htm",
+          "https://www.glassdoor.com/Salaries/entry-level-devops-engineer-salary-SRCH_KO0,27.htm",
+          "https://en.wikipedia.org/wiki/DevOps",
+          "https://zhuanlan.zhihu.com/p/562036793",
+          "https://azure.microsoft.com/en-us/products/devops/?msockid=279070d6b2686019080c667bb32f617e"
+        ],
+        "salary": {
+          "min": 80000.0,
+          "max": 180000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Software Engineer",
+            "company": "Google",
+            "description": "Design and develop scalable software systems. Work with cross-functional teams to deliver high-quality products.",
+            "salary_range": "$120k - $180k"
+          },
+          {
+            "job_title": "Software Engineer",
+            "company": "Microsoft",
+            "description": "Build cloud-based solutions and services. Collaborate with product managers and designers.",
+            "salary_range": "$110k - $170k"
+          },
+          {
+            "job_title": "DevOps Engineer",
+            "company": "Google",
+            "description": "Manage cloud infrastructure and CI/CD pipelines. Ensure system reliability.",
+            "salary_range": "$120k - $180k"
+          },
+          {
+            "job_title": "Software Engineer",
+            "company": "Early-stage Startup",
+            "description": "Wear multiple hats. Build products from scratch in fast-paced environment.",
+            "salary_range": "$80k - $130k + equity"
+          }
+        ],
+        "db_match_count": 4
+      }
+    },
+    "Data Science": {
+      "Data Scientist": {
+        "description": "Data Scientists analyze large datasets to extract meaningful insights and develop data-driven solutions for business problems. They typically work in collaborative environments, using programming languages and statistical tools to build predictive models and communicate findings to stakeholders. Career growth potential is high, with opportunities to specialize in areas like machine learning, artificial intelligence, or data engineering, leading to roles with increased responsibility and compensation.",
+        "resources": [
+          "https://www.businessgrape.com/2021/11/the-top-data-science-and-analytics.html",
+          "https://libguides.cfcc.edu/c.php?g=604688&p=4191138",
+          "https://www.mysphere.net/career-path/data-science-associations-communities/page/2/",
+          "https://www.belmontforum.org/wp-content/uploads/2019/10/CRA-Data-Management-language-v.1.4.pdf",
+          "https://www.belmontforum.org/wp-content/uploads/2019/10/CRA_Data_Digital_Outputs_Management_V2.pdf",
+          "https://www.belmontforum.org/wp-content/uploads/2017/10/Data-policy-1.pdf",
+          "https://www.youtube.com/playlist?list=PLo0oTKi2fPNjU4Jq4LjnpaPMEvdrtZIJ6",
+          "https://www.datacamp.com/blog/the-ultimate-list-of-data-science-podcasts-to-listen-to-right-now",
+          "https://datacareerpodcast.com/"
+        ],
+        "salary": {
+          "min": 90000.0,
+          "max": 250000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Data Scientist",
+            "company": "Google",
+            "description": "Apply machine learning to solve complex business problems. Analyze large datasets.",
+            "salary_range": "$130k - $190k"
+          },
+          {
+            "job_title": "Data Scientist",
+            "company": "Netflix",
+            "description": "Build recommendation systems and personalization algorithms.",
+            "salary_range": "$140k - $200k"
+          },
+          {
+            "job_title": "Senior Data Scientist",
+            "company": "Uber",
+            "description": "Lead data-driven decision making. Develop predictive models.",
+            "salary_range": "$160k - $230k"
+          },
+          {
+            "job_title": "Data Analyst",
+            "company": "Airbnb",
+            "description": "Analyze user behavior and business metrics. Create data visualizations.",
+            "salary_range": "$90k - $140k"
+          },
+          {
+            "job_title": "Research Scientist",
+            "company": "DeepMind",
+            "description": "Conduct cutting-edge AI research. Publish papers in top conferences.",
+            "salary_range": "$150k - $250k"
+          }
+        ],
+        "db_match_count": 5
+      },
+      "Data Analyst": {
+        "description": "Data Analysts interpret data, analyze results using statistical techniques, and provide ongoing reports. They often work in office settings across various industries, collaborating with different teams to identify trends and insights. Career growth can lead to senior analyst roles, data science positions, or management opportunities.",
+        "resources": [
+          "https://en.wikipedia.org/wiki/Chartered_Financial_Analyst",
+          "https://novoresume.com/career-blog/data-analyst-resume",
+          "https://www.mastersindatascience.org/careers/business-analyst/",
+          "https://www.belmontforum.org/wp-content/uploads/2019/10/CRA-Data-Management-language-v.1.4.pdf",
+          "https://www.belmontforum.org/wp-content/uploads/2019/10/CRA_Data_Digital_Outputs_Management_V2.pdf",
+          "https://www.belmontforum.org/wp-content/uploads/2017/10/Data-policy-1.pdf",
+          "https://music.youtube.com/podcast/ji1g0mQUPAY",
+          "https://datacareerjumpstart.com/post/become-data-analyst-2025-no-experience-melody-santos",
+          "https://roadmap.sh/data-analyst"
+        ],
+        "salary": {
+          "min": 90000.0,
+          "max": 230000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Data Scientist",
+            "company": "Google",
+            "description": "Apply machine learning to solve complex business problems. Analyze large datasets.",
+            "salary_range": "$130k - $190k"
+          },
+          {
+            "job_title": "Data Scientist",
+            "company": "Netflix",
+            "description": "Build recommendation systems and personalization algorithms.",
+            "salary_range": "$140k - $200k"
+          },
+          {
+            "job_title": "Senior Data Scientist",
+            "company": "Uber",
+            "description": "Lead data-driven decision making. Develop predictive models.",
+            "salary_range": "$160k - $230k"
+          },
+          {
+            "job_title": "Data Analyst",
+            "company": "Airbnb",
+            "description": "Analyze user behavior and business metrics. Create data visualizations.",
+            "salary_range": "$90k - $140k"
+          },
+          {
+            "job_title": "Cybersecurity Analyst",
+            "company": "Microsoft",
+            "description": "Monitor and respond to security incidents. Implement security controls.",
+            "salary_range": "$100k - $150k"
+          }
+        ],
+        "db_match_count": 5
+      },
+      "Machine Learning Engineer": {
+        "description": "",
+        "resources": [
+          "https://seniorexecutive.com/best-ai-professional-associations-benefits-reviews/",
+          "https://adasci.org/",
+          "https://www.50pros.com/articles/top-15-ai-associations",
+          "https://www.coursera.org/articles/machine-learning-salary",
+          "https://365datascience.com/career-advice/career-guides/machine-learning-engineer-job-outlook-2025/",
+          "https://onlinedegrees.sandiego.edu/machine-learning-engineer-career/",
+          "https://player.fm/podcasts/Machinelearning",
+          "https://player.fm/podcasts/Web-Development-Education",
+          "https://player.fm/podcasts/Education-Tech"
+        ],
+        "salary": {
+          "min": 150000.0,
+          "max": 250000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Machine Learning Engineer",
+            "company": "OpenAI",
+            "description": "Research and develop advanced ML models. Work on cutting-edge AI systems.",
+            "salary_range": "$150k - $250k"
+          }
+        ],
+        "db_match_count": 1
+      }
+    },
+    "Statistics": {
+      "Statistics Specialist": {
+        "description": "",
+        "resources": [
+          "https://en.wikipedia.org/wiki/List_of_international_professional_associations",
+          "https://utsc.calendar.utoronto.ca/specialist-program-statistics-statistical-science-stream-science-scspe2279f",
+          "https://careers.mta.org/jobs/15763173-statistical-specialist-slash-senior-statistical-specialist-tcu",
+          "https://www.zippia.com/data-specialist-jobs/",
+          "https://zipdo.co/data-specialist-salary-statistics/",
+          "https://www.glassdoor.com/Salaries/data-specialist-s-salary-SRCH_KO0,17.htm",
+          "https://www.youtube.com/playlist?list=PLmhYbyvYlArMSQprKJIt2hClY8su5zOiQ",
+          "https://www.datainterview.com/blog/statistics-interview-questions",
+          "https://towardsdatascience.com/cracking-statistics-interviews-for-data-scientists-711a63bcb375/"
+        ],
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "currency": "USD"
+        },
+        "job_examples": [],
+        "db_match_count": 0
+      },
+      "Statistics Analyst": {
+        "description": "",
+        "resources": [
+          "https://www.statista.com/",
+          "https://www.statista.com/topics/760/united-states/",
+          "https://www.statista.com/topics/13216/us-tariffs/",
+          "https://www.healthgrad.com/healthcare/data-analyst/",
+          "https://365datascience.com/career-advice/data-analyst-job-outlook-2025/",
+          "https://loanscholarship.com/entry-level-data-analyst-salary-education-and-career-outlook/",
+          "https://www.youtube.com/watch?v=_nKq-xroOvA",
+          "https://www.datacamp.com/blog/statistics-interview-questions",
+          "https://www.cvowl.com/blog/statistical-analyst-interview-questions-answers"
+        ],
+        "salary": {
+          "min": 90000.0,
+          "max": 150000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Data Analyst",
+            "company": "Airbnb",
+            "description": "Analyze user behavior and business metrics. Create data visualizations.",
+            "salary_range": "$90k - $140k"
+          },
+          {
+            "job_title": "Cybersecurity Analyst",
+            "company": "Microsoft",
+            "description": "Monitor and respond to security incidents. Implement security controls.",
+            "salary_range": "$100k - $150k"
+          }
+        ],
+        "db_match_count": 2
+      },
+      "Statistics Consultant": {
+        "description": "",
+        "resources": [
+          "https://untalent.org/jobs/statistics-consultant",
+          "https://www.chanakyaresearch.com/statistics-consultant.php",
+          "https://www.statisticssolutions.com/statistics-consultants-and-dissertations/",
+          "https://careerkarma.com/careers/data-consultant/",
+          "https://www.payscale.com/research/US/Job=Data_Consultant/Salary",
+          "https://www.coursera.org/articles/data-consultant",
+          "https://www.quintly.com/blog/how-to-make-use-of-youtube-analytics-for-video-marketing",
+          "https://www.orbitmedia.com/blog/blogging-statistics/",
+          "https://databox.com/measure-podcast-interview-marketing-metrics"
+        ],
+        "salary": {
+          "min": 90000.0,
+          "max": 145000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Software Consultant",
+            "company": "Accenture",
+            "description": "Advise clients on technology solutions. Implement custom software.",
+            "salary_range": "$90k - $140k"
+          },
+          {
+            "job_title": "Technical Consultant",
+            "company": "Deloitte",
+            "description": "Provide technical expertise to enterprise clients.",
+            "salary_range": "$95k - $145k"
+          }
+        ],
+        "db_match_count": 2
+      }
+    }
+  }
+}

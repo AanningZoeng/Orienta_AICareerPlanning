@@ -315,10 +315,27 @@ Return data in structured JSON format.
                 prompt = (
                     f"Provide a concise 2-4 sentence description of the career '{career_title}'{context}. "
                     "Include typical responsibilities, work environment, and career growth potential. "
+                    "Do NOT say 'I don't have a specific tool' or similar meta-commentary. "
+                    "Just provide the factual description directly. "
                     "Return plain text only (no markdown, no formatting)."
                 )
                 resp = await self.llm_agent.run(prompt)
                 text = str(resp or "").strip()
+                
+                # Filter out meta-commentary responses
+                if any(phrase in text.lower() for phrase in [
+                    "i don't have", "i do not have", "specific tool", 
+                    "general knowledge", "based on my knowledge"
+                ]):
+                    # Regenerate with more direct prompt
+                    direct_prompt = (
+                        f"Write a 2-3 sentence description of the {career_title} career. "
+                        f"What does a {career_title} do? What skills are needed? "
+                        "Be direct and factual."
+                    )
+                    resp = await self.llm_agent.run(direct_prompt)
+                    text = str(resp or "").strip()
+                
                 # Take first paragraph
                 if "\n\n" in text:
                     description = text.split("\n\n")[0].strip()
@@ -326,6 +343,13 @@ Return data in structured JSON format.
                     description = text.split("\n")[0].strip()
                 else:
                     description = text
+                
+                # Final validation: reject if still contains meta-commentary
+                if any(phrase in description.lower() for phrase in [
+                    "i don't have", "i do not have", "specific tool"
+                ]):
+                    description = ""
+                    
             except Exception as e:
                 print(f"[CareerAnalysisAgent] LLM description failed for {career_title}: {e}")
                 description = ""

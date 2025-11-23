@@ -1,0 +1,445 @@
+{
+  "timestamp": "2025-11-23T10:21:38.824703",
+  "source_timestamp": "2025-11-23T10:19:16.069595",
+  "user_query": "I love linguistics!",
+  "careers": {
+    "Linguistics": {
+      "Translator": {
+        "description": "Translators convert written or spoken content from one language to another, ensuring accuracy and cultural relevance. They often work in diverse settings, including offices, remotely, or on-site for clients, translating documents, websites, or interpreting conversations. Career growth can lead to specialization in specific industries, project management, or advanced translation technologies.",
+        "resources": [
+          "https://www.atanet.org/career-education/student-resources/translation-interpreting-courses/",
+          "https://www.degreequery.com/queries/degree-need-become-translator/",
+          "https://learn.org/careers/how-to-become-a-linguistics-professional-educational-requirements",
+          "https://www.bls.gov/ooh/media-and-communication/interpreters-and-translators.htm",
+          "https://www.becomeopedia.com/jobs-for-linguistics-majors/",
+          "https://translatormind.com/how-much-can-a-translator-make-2025-salary-guide/",
+          "https://www.youtube.com/watch?v=bLqRh3-tSwU",
+          "https://www.youtube.com/watch?v=X9i5pgg3AWU",
+          "https://www.youtube.com/watch?v=jNnkfHbmH6U"
+        ],
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "currency": "USD"
+        },
+        "job_examples": [],
+        "db_match_count": 0
+      },
+      "Editor": {
+        "description": "Editors review and revise written material to ensure accuracy, clarity, and consistency. They often work in publishing houses, media companies, or as freelancers, editing books, articles, or other content. Career growth can lead to senior editor roles, content management positions, or specialization in specific subject areas.",
+        "resources": [
+          "https://mlc.ua.edu/linguistics/professional-organizations/",
+          "https://lib.guides.umd.edu/c.php?g=326405&p=3414417",
+          "https://linguistics.unc.edu/for-students/career-development/",
+          "https://www.tenforums.com/tutorials/79976-open-local-group-policy-editor-windows-10-a.html",
+          "https://www.tenforums.com/tutorials/154427-how-add-local-group-policy-editor-control-panel-windows.html",
+          "https://www.tenforums.com/tutorials/80190-update-group-policy-settings-windows-10-a.html"
+        ],
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "currency": "USD"
+        },
+        "job_examples": [],
+        "db_match_count": 0
+      },
+      "Teacher": {
+        "description": "Teachers with linguistics degrees often specialize in language instruction, teaching English as a Second Language (ESL) or foreign languages. They work in schools, universities, or private language centers, developing curricula and assessing student progress. Career growth can lead to roles as department heads, curriculum developers, or educational consultants.",
+        "resources": [
+          "https://linguistics.ucdavis.edu/teaching-public-schools",
+          "https://www.linguistics.ucsb.edu/graduate",
+          "https://www.depts.ttu.edu/english/programs_degrees/grad_certificates/linguistics/index.php",
+          "https://www.gradschoolcenter.com/language/",
+          "https://englishsyllabus.com/linguistics-major-and-careers/",
+          "https://research.com/careers/linguistics-jobs",
+          "https://www.youtube.com/@LinguisticsPodcast/podcasts",
+          "https://allthingslinguistic.com/post/176495707872/a-very-long-list-of-linguistics-youtube-channels",
+          "https://videos.feedspot.com/linguistics_youtube_channels/"
+        ],
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "currency": "USD"
+        },
+        "job_examples": [],
+        "db_match_count": 0
+      }
+    },
+    "Computational Linguistics": {
+      "Natural Language Processing Engineer": {
+        "description": "Natural Language Processing (NLP) Engineers develop algorithms and models that enable computers to understand and process human language. They typically work in tech companies or research institutions, building applications like chatbots, machine translation systems, and sentiment analysis tools. Career growth can lead to roles as senior engineers, team leads, or research scientists specializing in advanced NLP techniques.",
+        "resources": [
+          "https://direct.mit.edu/coli/article/51/3/1009/128736/Natural-Language-Processing-RELIES-on-Linguistics",
+          "https://clutch.co/developers/artificial-intelligence/natural-language-processing",
+          "https://www.iaswww.com/apr/Science/Social_Sciences/Linguistics/Computational_Linguistics/",
+          "https://www.coursera.org/articles/nlp-engineer-salary",
+          "https://onlinedegrees.sandiego.edu/nlp-engineer-career/",
+          "https://www.linkedin.com/pulse/natural-language-processing-nlp-salary-guide-2025-what-ai-8t9bc",
+          "https://www.radicalai.org/e16-emily-bender",
+          "https://www.mosaicx.com/blog/nlp-finance-applications",
+          "https://www.sussex.ac.uk/study/undergraduate/courses/english-language-and-linguistics-with-tesol-ba"
+        ],
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "currency": "USD"
+        },
+        "job_examples": [],
+        "db_match_count": 0
+      },
+      "Computational Linguist": {
+        "description": "Computational linguists apply computational methods to analyze and model human language. They often work in research institutions, tech companies, or government agencies, developing language models, creating linguistic resources, and improving natural language processing systems. Career growth can lead to roles as senior researchers, project managers, or consultants specializing in specific areas of computational linguistics.",
+        "resources": [
+          "https://www.aclweb.org/",
+          "https://naclo.org/",
+          "https://www.sjsu.edu/cs/programs/mscl/index.php",
+          "https://es.ccm.net/aplicaciones-e-internet/redes-sociales-y-mensajeria/915-que-hacer-si-olvidaste-tu-contrasena-de-facebook/",
+          "https://es.ccm.net/aplicaciones-e-internet/redes-sociales-y-mensajeria/1001-como-eliminar-tu-cuenta-de-facebook/",
+          "https://es.ccm.net/aplicaciones-e-internet/redes-sociales-y-mensajeria/2916-como-buscar-personas-en-facebook/",
+          "https://www.youtube.com/watch?v=ukoLOEY6tEY",
+          "https://www.linguisticscareercast.com/",
+          "https://theinterviewportal.com/2024/11/29/computational-linguist-interview/"
+        ],
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "currency": "USD"
+        },
+        "job_examples": [],
+        "db_match_count": 0
+      },
+      "Data Scientist": {
+        "description": "Data Scientists analyze large datasets to extract meaningful insights and inform decision-making. With a computational linguistics background, they often focus on text and language data, working in various industries like tech, finance, and healthcare. Career growth can lead to roles as senior data scientists, data science managers, or specialized roles in areas like machine learning and AI.",
+        "resources": [
+          "https://aclweb.org/",
+          "https://adasci.org/",
+          "https://www.purdue.edu/science/careers/build_professional_profile/professional_orgs/data_science_orgs.html",
+          "https://www.belmontforum.org/wp-content/uploads/2019/10/CRA-Data-Management-language-v.1.4.pdf",
+          "https://www.belmontforum.org/wp-content/uploads/2019/10/CRA_Data_Digital_Outputs_Management_V2.pdf",
+          "https://www.belmontforum.org/wp-content/uploads/2017/10/Data-policy-1.pdf",
+          "https://www.youtube.com/playlist?list=PLo0oTKi2fPNjU4Jq4LjnpaPMEvdrtZIJ6",
+          "https://www.datacamp.com/blog/the-ultimate-list-of-data-science-podcasts-to-listen-to-right-now",
+          "https://theinterviewportal.com/2024/11/29/computational-linguist-interview/"
+        ],
+        "salary": {
+          "min": 90000.0,
+          "max": 250000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Data Scientist",
+            "company": "Google",
+            "description": "Apply machine learning to solve complex business problems. Analyze large datasets.",
+            "salary_range": "$130k - $190k"
+          },
+          {
+            "job_title": "Data Scientist",
+            "company": "Netflix",
+            "description": "Build recommendation systems and personalization algorithms.",
+            "salary_range": "$140k - $200k"
+          },
+          {
+            "job_title": "Senior Data Scientist",
+            "company": "Uber",
+            "description": "Lead data-driven decision making. Develop predictive models.",
+            "salary_range": "$160k - $230k"
+          },
+          {
+            "job_title": "Data Analyst",
+            "company": "Airbnb",
+            "description": "Analyze user behavior and business metrics. Create data visualizations.",
+            "salary_range": "$90k - $140k"
+          },
+          {
+            "job_title": "Research Scientist",
+            "company": "DeepMind",
+            "description": "Conduct cutting-edge AI research. Publish papers in top conferences.",
+            "salary_range": "$150k - $250k"
+          }
+        ],
+        "db_match_count": 5
+      }
+    },
+    "English Language and Literature": {
+      "Writer": {
+        "description": "",
+        "resources": [
+          "https://vk.com/wall-228168804_14666",
+          "https://www.britannica.com/art/English-literature",
+          "https://www.linkedin.com/posts/english-language-and-literature_englishlanguage-englishlearning-englishspeaking-activity-7284172562698313728-YzU4",
+          "https://www.bls.gov/ooh/media-and-communication/writers-and-authors.htm",
+          "https://www.zippia.com/writer-jobs/trends/",
+          "https://salaryvista.com/writers-and-authors",
+          "https://en.wikipedia.org/wiki/Podcast",
+          "https://iimskills.com/how-good-is-career-in-content-writing/",
+          "https://www.linkedin.com/pulse/from-writer-tech-my-pubgenius-journey-pubgenius-in1ef"
+        ],
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "currency": "USD"
+        },
+        "job_examples": [],
+        "db_match_count": 0
+      },
+      "Editor": {
+        "description": "Editors review, revise, and prepare written material for publication, ensuring accuracy, clarity, and adherence to style guidelines. They work in various settings, including publishing houses, newspapers, magazines, and online media, often collaborating with writers and other editors. Career growth can lead to senior editor positions, managing editor roles, or specialization in specific genres or subject areas.",
+        "resources": [
+          "https://lbbl.nsu.edu/guide/english/professional_groups",
+          "https://www.the-efa.org/about/",
+          "https://www.pensite.org/",
+          "https://www.careerexplorer.com/careers/editor/",
+          "https://www.zippia.com/writer-and-editor-atlanta-ga-jobs/",
+          "https://hk.jobsdb.com/career-advice/role/video-editor/salary",
+          "https://www.tenforums.com/tutorials/79976-open-local-group-policy-editor-windows-10-a.html",
+          "https://www.tenforums.com/tutorials/125696-export-import-registry-keys-windows.html",
+          "https://www.tenforums.com/tutorials/154427-how-add-local-group-policy-editor-control-panel-windows.html"
+        ],
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "currency": "USD"
+        },
+        "job_examples": [],
+        "db_match_count": 0
+      },
+      "Teacher": {
+        "description": "Teachers with English Language and Literature degrees educate students in reading, writing, and literary analysis. They work in schools, colleges, and universities, developing lesson plans, grading assignments, and fostering critical thinking skills. Career growth can lead to roles as department heads, curriculum specialists, or professors specializing in specific literary periods or genres.",
+        "resources": [
+          "https://ncte.org/",
+          "https://www.csun.edu/tnevpdc/eelatpo.html",
+          "https://www.teachingenglish.org.uk/",
+          "https://resilienteducator.com/teaching-careers/english-teacher/",
+          "https://teach.com/careers/become-a-teacher/teaching-career/salary-and-benefits/",
+          "https://www.zippia.com/conversational-english-teacher-jobs/",
+          "https://www.youtube.com/watch?v=0ifapOb-jz0",
+          "https://www.bravenewteaching.com/home/episode206",
+          "https://maggiemcintyre.substack.com/p/a-day-in-the-life-of-your-favorite"
+        ],
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "currency": "USD"
+        },
+        "job_examples": [],
+        "db_match_count": 0
+      }
+    },
+    "Cognitive Science": {
+      "Data Scientist": {
+        "description": "Data Scientists analyze complex data sets to extract meaningful insights and inform strategic decisions. They typically work in office environments, collaborating with cross-functional teams to develop and implement data-driven solutions. Career growth potential is high, with opportunities to advance into leadership roles or specialize in areas like machine learning or artificial intelligence. Cognitive Science graduates bring a unique understanding of human behavior and cognition to this field.",
+        "resources": [
+          "https://www.belmontforum.org/wp-content/uploads/2019/10/CRA-Data-Management-language-v.1.4.pdf",
+          "https://www.belmontforum.org/wp-content/uploads/2019/10/CRA_Data_Digital_Outputs_Management_V2.pdf",
+          "https://www.belmontforum.org/wp-content/uploads/2017/10/Data-policy-1.pdf",
+          "https://www.franksworld.com/2023/08/30/adam-ross-nelson-on-getting-started-in-a-data-science-career/",
+          "http://www.franksworld.com/2023/08/30/adam-ross-nelson-on-getting-started-in-a-data-science-career/",
+          "https://player.fm/podcasts/Science-Education"
+        ],
+        "salary": {
+          "min": 90000.0,
+          "max": 250000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Data Scientist",
+            "company": "Google",
+            "description": "Apply machine learning to solve complex business problems. Analyze large datasets.",
+            "salary_range": "$130k - $190k"
+          },
+          {
+            "job_title": "Data Scientist",
+            "company": "Netflix",
+            "description": "Build recommendation systems and personalization algorithms.",
+            "salary_range": "$140k - $200k"
+          },
+          {
+            "job_title": "Senior Data Scientist",
+            "company": "Uber",
+            "description": "Lead data-driven decision making. Develop predictive models.",
+            "salary_range": "$160k - $230k"
+          },
+          {
+            "job_title": "Data Analyst",
+            "company": "Airbnb",
+            "description": "Analyze user behavior and business metrics. Create data visualizations.",
+            "salary_range": "$90k - $140k"
+          },
+          {
+            "job_title": "Research Scientist",
+            "company": "DeepMind",
+            "description": "Conduct cutting-edge AI research. Publish papers in top conferences.",
+            "salary_range": "$150k - $250k"
+          }
+        ],
+        "db_match_count": 5
+      },
+      "UX Researcher": {
+        "description": "UX Researchers with a Cognitive Science background investigate user behaviors and needs through various research methods to inform product design. They conduct user interviews, usability testing, and analyze data to identify areas for improvement. The work environment is typically office-based, collaborating with designers and product managers, with opportunities for career growth into senior research roles or leadership positions.",
+        "resources": [
+          "https://www.interaction-design.org/literature/topics/ux-research",
+          "https://www.interaction-design.org/literature/topics/ux-designers",
+          "https://www.interaction-design.org/literature/topics/ux-design",
+          "https://careerkarma.com/careers/ux-researcher/",
+          "https://research.com/careers/cognitive-psychology-careers",
+          "https://research.com/advice/neuroscience-vs-cognitive-science-degree",
+          "https://revisionpath.com/tag/podcaster/",
+          "https://player.fm/podcasts/User-Experience",
+          "https://player.fm/podcasts/Productivity"
+        ],
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "currency": "USD"
+        },
+        "job_examples": [],
+        "db_match_count": 0
+      },
+      "Software Engineer": {
+        "description": "Software engineers design, develop, and test software applications, often working in collaborative team environments. Cognitive Science graduates can leverage their understanding of human cognition to create user-friendly and efficient software. Career growth includes opportunities to specialize in areas like AI, machine learning, or full-stack development, potentially leading to roles as team leads or architects.",
+        "resources": [
+          "https://charteredsoftwaredeveloper.org/",
+          "https://nsose.org/",
+          "https://usssea.org/",
+          "https://365datascience.com/career-advice/data-engineer-job-outlook-2025/",
+          "https://outstandingstar.com/software-engineer/",
+          "https://www.glassdoor.com/Salaries/data-engineer-salary-SRCH_KO0,13.htm",
+          "https://www.youtube.com/watch?v=Kh0KVaCVXY8",
+          "https://www.glassdoor.com/Interview/YouTube-Software-Engineer-Interview-Questions-EI_IE40803.0,7_KO8,25.htm",
+          "https://www.interviewquery.com/interview-guides/youtube-software-engineer"
+        ],
+        "salary": {
+          "min": 80000.0,
+          "max": 220000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Software Engineer",
+            "company": "Google",
+            "description": "Design and develop scalable software systems. Work with cross-functional teams to deliver high-quality products.",
+            "salary_range": "$120k - $180k"
+          },
+          {
+            "job_title": "Software Engineer",
+            "company": "Microsoft",
+            "description": "Build cloud-based solutions and services. Collaborate with product managers and designers.",
+            "salary_range": "$110k - $170k"
+          },
+          {
+            "job_title": "Senior Software Engineer",
+            "company": "Amazon",
+            "description": "Lead technical design and architecture decisions. Mentor junior engineers.",
+            "salary_range": "$150k - $220k"
+          },
+          {
+            "job_title": "Software Developer",
+            "company": "Apple",
+            "description": "Develop innovative applications for iOS and macOS platforms.",
+            "salary_range": "$130k - $190k"
+          },
+          {
+            "job_title": "Backend Engineer",
+            "company": "Meta",
+            "description": "Build scalable backend services and APIs. Work with distributed systems.",
+            "salary_range": "$140k - $200k"
+          }
+        ],
+        "db_match_count": 10
+      }
+    },
+    "Communication Sciences and Disorders": {
+      "Communication Sciences Specialist": {
+        "description": "",
+        "resources": [
+          "https://www.associationofsciencecommunicators.org/",
+          "https://jobstars.com/communications-professional-associations-organizations/",
+          "https://aceweb.org/",
+          "https://research.com/careers/communications-careers",
+          "https://research.com/careers/data-science-careers",
+          "https://research.com/advice/different-types-of-technical-communication-degrees-and-their-salaries",
+          "https://www.youtube.com/watch?v=UOVKzIjUlWU",
+          "https://www.cvowl.com/blog/communications-specialist-interview-questions-answers",
+          "https://www.mockinterviewpro.com/interview-questions/communications-specialist"
+        ],
+        "salary": {
+          "min": 0,
+          "max": 0,
+          "currency": "USD"
+        },
+        "job_examples": [],
+        "db_match_count": 0
+      },
+      "Communication Sciences Analyst": {
+        "description": "",
+        "resources": [
+          "https://www.natcom.org/",
+          "https://jobstars.com/communications-professional-associations-organizations/",
+          "https://www.associationofsciencecommunicators.org/",
+          "https://www.linkedin.com/pulse/exciting-career-opportunities-data-analysis-trans-it-he8sf",
+          "https://herovired.com/learning-hub/blogs/data-analyst-vs-data-scientist",
+          "https://datamites.com/blog/the-rise-of-data-analytics-careers-in-pune-what-you-need-to-know/",
+          "https://www.jarnoldassociates.com/blog/search/category/Internet+of+Things",
+          "https://s12k.com/tag/interview/",
+          "https://zinatullin.com/category/interview/page/2/"
+        ],
+        "salary": {
+          "min": 90000.0,
+          "max": 150000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Data Analyst",
+            "company": "Airbnb",
+            "description": "Analyze user behavior and business metrics. Create data visualizations.",
+            "salary_range": "$90k - $140k"
+          },
+          {
+            "job_title": "Cybersecurity Analyst",
+            "company": "Microsoft",
+            "description": "Monitor and respond to security incidents. Implement security controls.",
+            "salary_range": "$100k - $150k"
+          }
+        ],
+        "db_match_count": 2
+      },
+      "Communication Sciences Consultant": {
+        "description": "",
+        "resources": [
+          "https://www.iaswww.com/apr/Business/Business_Services/Communications/Associations/",
+          "https://www.meetup.com/Professional-Technical-Consultants-Association-PATCA/",
+          "https://collaborativecommunications.com/",
+          "https://www.bls.gov/ooh/",
+          "https://www.salary.com/research/salary/posting/communications-consultant-salary",
+          "https://www.zippia.com/consultant-jobs/trends/",
+          "https://s12k.com/tag/interview/",
+          "https://www.jarnoldassociates.com/blog/search/category/Internet+of+Things",
+          "https://bloggers.feedspot.com/communication_blogs/"
+        ],
+        "salary": {
+          "min": 90000.0,
+          "max": 145000.0,
+          "currency": "USD"
+        },
+        "job_examples": [
+          {
+            "job_title": "Software Consultant",
+            "company": "Accenture",
+            "description": "Advise clients on technology solutions. Implement custom software.",
+            "salary_range": "$90k - $140k"
+          },
+          {
+            "job_title": "Technical Consultant",
+            "company": "Deloitte",
+            "description": "Provide technical expertise to enterprise clients.",
+            "salary_range": "$95k - $145k"
+          }
+        ],
+        "db_match_count": 2
+      }
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "timestamp": "2025-11-23T10:24:46.529645",
+  "user_query": "I love coding",
+  "majors": {
+    "Computer Science": {
+      "description": "Computer Science is a major that focuses on the theoretical foundations of computing and their application in computer systems. Students typically study algorithms, data structures, programming languages, and software design. Common career outcomes include software developer, data scientist, and systems analyst.",
+      "resources": [
+        "https://www.youtube.com/watch?v=IjJziggxn_0",
+        "https://ai.plainenglish.io/computer-science-explained-in-17-minutes-a-friendly-guide-you-c-25990698ad47",
+        "https://www.latheabusaid.com/20-of-the-best-computer-science-channels-on-you-tube/",
+        "https://www.usnews.com/best-graduate-schools/top-science-schools/computer-science-rankings",
+        "https://www.pdx.edu/computer-science/",
+        "https://www.regis.edu/academics/majors-and-programs/undergraduate/computer-science-bs-online",
+        "https://a16z.com/podcast/a16z-podcast-a-podcast-about-podcasting/",
+        "https://player.fm/podcasts/Computer",
+        "https://player.fm/podcasts/Unix"
+      ]
+    },
+    "Software Engineering": {
+      "description": "Software Engineering focuses on the principles and practices of designing, developing, and maintaining software systems. Students learn about software development methodologies, testing, and project management. Common career paths include software engineer, software architect, and quality assurance engineer.",
+      "resources": [
+        "https://www.tiktok.com/discover/hardest-engineering-major-interview",
+        "https://dishcuss.com/explore/engineering-explained-youtube",
+        "https://www.mtu.edu/engineering/about/salary/",
+        "https://h30434.www3.hp.com/t5/Printer-Setup-Software-Drivers/HP-Scan-Software/td-p/9106238",
+        "https://h30434.www3.hp.com/t5/Printer-Setup-Software-Drivers/bd-p/Software",
+        "https://h30434.www3.hp.com/t5/Printer-Setup-Software-Drivers/download-for-laserJetP-1102W/td-p/9437034",
+        "https://a16z.com/podcast/a16z-podcast-a-podcast-about-podcasting/",
+        "https://brandongaille.com/turn-your-blog-into-a-podcast/",
+        "https://www.allbusiness.com/why-podcasts-better-than-blogs-154854-1.html"
+      ]
+    },
+    "Computer Engineering": {
+      "description": "Computer Engineering combines electrical engineering and computer science, focusing on the design and development of computer systems and hardware. Students study topics like digital logic, embedded systems, and computer architecture. Common career outcomes include hardware engineer, embedded systems developer, and computer architect.",
+      "resources": [
+        "https://en.wikipedia.org/wiki/Computer_engineering",
+        "https://www.youtube.com/watch?v=avZTQgLs064",
+        "https://www.tiktok.com/discover/engineering-major-explained",
+        "https://www.usnews.com/best-graduate-schools/top-engineering-schools/computer-engineering-rankings",
+        "https://www.scu.edu/engineering/academic-programs/department-of-computer-engineering/",
+        "https://www.universities.com/programs/computer-engineering-degrees",
+        "https://a16z.com/podcast/a16z-podcast-a-podcast-about-podcasting/",
+        "https://blog.applian.com/tag/best-podcasts/",
+        "https://brandongaille.com/turn-your-blog-into-a-podcast/"
+      ]
+    },
+    "Information Technology": {
+      "description": "Information Technology (IT) focuses on the application of technology to solve business and organizational problems. Students study networking, database management, cybersecurity, and IT project management. Common career outcomes include IT support specialist, network administrator, and cybersecurity analyst.",
+      "resources": [
+        "https://alemnishokran.com/en/information-systems-and-technology/",
+        "https://www.linkedin.com/pulse/how-i-started-my-information-technology-career-strange-chris-lamitie",
+        "https://www.tiktok.com/discover/mis-major-explained?lang=ru-RU",
+        "https://ell.stackexchange.com/questions/152129/what-is-the-difference-between-information-on-about-and-information-of",
+        "https://ell.stackexchange.com/questions/11583/provide-information-on-of-or-about-something",
+        "https://ell.stackexchange.com/questions/17748/information-or-informations",
+        "https://duckduckgo.com/y.js?ad_domain=libsyn.com&ad_provider=bingv7aa&ad_type=txad&click_metadata=xPdnPHrWbzOylnc24oN4orcReMQFrJYyakcCyerleCrxq_EWBO0D6oo0D8crgXRstNvZm1lOMIaKHlgQeGQLJk2_fziNNKvassFZxObzd24CJppXynQPFg46QgL_5vd6.2ArgAFysd4BLAvML-MkC6A&rut=6b51d21a4d6a21f25b8a27d86ea5efe9e802a19090917d667ce510e6f68cf0ca&u3=https://www.bing.com/aclick?ld=e8g_vUskULQiNP4Xebk4mTYTVUCUzXChEtcfy0qiuDK7HS3aFeK8pnROHt8CYzWIcJQlynnpWfbnKqU-8sr4_s-SB105_HEYWabhwrAiphb8EzGc3YgqtLpXnZkA7wOurqcKwwC4eic-_d0KvRyTGYQY03w7Df30MhUQ06SiGR-jmwmgLKc868bEE08j2XRbtD02TKjnKdSvY6qxNRzsA_ySW3xtQ&u=aHR0cHMlM2ElMmYlMmZsaWJzeW4uY29tJTJmcG9kY2FzdC1ob3N0aW5nLWxwLWIlMmYlM2Z1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RjcGMlMjZ1dG1fY29udGVudCUzZHBvZGNhc3QtYmVnaW5uZXJzJTI2dXRtX3Rlcm0lM2R0aXBzJTI1MjBzdWNjZXNzZnVsJTI1MjBwb2RjYXN0JTI2dXRtX2NhbXBhaWduJTNkUGFpZCUyYlNlYXJjaCUyYlVTQSUyYkNhbXBhaWduJTJiVjIlMjZ1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RwcGMlMjZoc2FfYWNjJTNkNTg0OTE1NDk5MCUyNmhzYV9jYW0lM2QyMDgxODcxNDk3OSUyNmhzYV9ncnAlM2QxMjQxMzQ5NzQyODg2MTU5JTI2aHNhX2FkJTNkJTI2aHNhX3NyYyUzZHMlMjZoc2FfdGd0JTNka3dkLTc3NTg0NzU0MjgxNTM1JTNhbG9jLTcxMjg0JTI2aHNhX2t3JTNkdGlwcyUyNTIwc3VjY2Vzc2Z1bCUyNTIwcG9kY2FzdCUyNmhzYV9tdCUzZGIlMjZoc2FfbmV0JTNkYWR3b3JkcyUyNmhzYV92ZXIlM2QzJTI2bXNjbGtpZCUzZDI3OTRjMThkZTFiMDFlOTI5OGMzYThhZWIwZDkzNzVk&rlid=2794c18de1b01e9298c3a8aeb0d9375d&vqd=4-18937008924795510389552823710436037431&iurl={1}IG=E0801C7AC91842EFA3CE8B211C2FB555&CID=22B5D86FA1DA641C1C68CEC2A04D658C&ID=DevEx,5046.1",
+        "https://www.coursera.org/articles/it-and-tech-podcasts",
+        "https://thectoclub.com/career/it-podcasts/"
+      ]
+    },
+    "Data Science": {
+      "description": "Data Science is an interdisciplinary field that focuses on extracting knowledge and insights from data. Students study statistics, machine learning, data visualization, and database management. Common career outcomes include data scientist, data analyst, and machine learning engineer.",
+      "resources": [
+        "https://www.belmontforum.org/wp-content/uploads/2019/10/CRA-Data-Management-language-v.1.4.pdf",
+        "https://www.belmontforum.org/wp-content/uploads/2019/10/CRA_Data_Digital_Outputs_Management_V2.pdf",
+        "https://www.belmontforum.org/wp-content/uploads/2017/10/Data-policy-1.pdf",
+        "https://www.usnews.com/best-colleges/rankings/computer-science/data-analytics-science",
+        "https://edurank.org/cs/data-science/us/",
+        "https://www.datasciencedegreeprograms.net/rankings/masters-data-science/",
+        "https://www.coursera.org/articles/data-science-podcasts",
+        "https://www.datacamp.com/blog/the-ultimate-list-of-data-science-podcasts-to-listen-to-right-now",
+        "https://365datascience.com/trending/15-data-science-podcasts/"
+      ]
+    }
+  }
+}
